@@ -1,0 +1,83 @@
+/* Estilos elegantes y minimalistas para la galería de trabajos */
+
+/* Estilo de los títulos y subtítulos */
+.section-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 2rem;
+  }
+  
+  .section-subtitle {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 1.2rem;
+    color: #777;
+    margin-bottom: 3rem;
+  }
+  
+  /* Contenedor para la galería de trabajos */
+  .trabajos-container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+  }
+  
+  /* Galería de trabajos estilo grid */
+  .trabajos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  
+  /* Estilo para cada ítem de trabajo */
+  .trabajo-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+  }
+  
+  /* Imágenes responsivas y ajustadas uniformemente */
+  .trabajo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+    border-radius: 10px;
+  }
+  
+  /* Efecto de hover en las imágenes */
+  .trabajo-item:hover .trabajo-img {
+    transform: scale(1.1);
+  }
+  
+  /* Superposición con el título del trabajo */
+  .trabajo-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  /* Mostrar superposición al pasar el mouse */
+  .trabajo-item:hover .trabajo-overlay {
+    opacity: 1;
+  }
+  
+  /* Estilo del título dentro de la superposición */
+  .trabajo-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 1.5rem;
+    color: white;
+    text-align: center;
+  }
+  

@@ -1,0 +1,47 @@
+/* src/styles/components/header.css */
+.logo {
+    width: 80px; /* Ajustar el tamaño del logo */
+    height: auto;
+  }
+  
+  .navbar {
+    padding: 10px 0;
+    background-color: #fff;
+  }
+  
+  .nav-link {
+    font-size: 14px;
+    margin: 0 20px;
+    color: #333;
+  }
+  
+  .nav-link:hover {
+    color: pink;
+  }
+  
+  .search-icon {
+    font-size: 18px;
+    color: #333;
+    cursor: pointer;
+  }
+  
+  .search-icon i {
+    margin-left: 20px;
+  }
+  
+  .dropdown-menu {
+    background-color: #f8f9fa;
+    border: none;
+  }
+  
+  .dropdown-item {
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .dropdown-item:hover {
+    background-color: #e2e6ea;
+    color: pink;
+  }
+  
+  

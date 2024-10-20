@@ -1,0 +1,81 @@
+/* Estilos para la tarjeta del formulario */
+.custom-card {
+    border-radius: 12px;
+    background: linear-gradient(to bottom right, #fff, #f9f9f9);
+    border: none;
+    padding: 20px;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  
+  /* Título del formulario */
+  .form-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 15px;
+  }
+  
+  /* Estilos para los inputs */
+  .custom-input {
+    border-radius: 6px;
+    padding: 8px;
+    font-size: 0.9rem;
+    border: 1px solid #ddd;
+    transition: border-color 0.3s ease;
+  }
+  
+  .custom-input:focus {
+    border-color: #6c63ff;
+    box-shadow: none;
+  }
+  
+  /* Botón de envío */
+  .custom-btn {
+    background-color: #6c63ff;
+    border: none;
+    padding: 8px 16px;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .custom-btn:hover {
+    background-color: #5548d9;
+    transform: translateY(-2px);
+  }
+  
+  /* Ajustes de tamaño del formulario */
+  .appointment-form {
+    padding: 30px 0;
+    text-align: center;
+  }
+  
+  .custom-card .form-group {
+    margin-bottom: 12px;
+  }
+  
+  /* Ajuste de tamaño y márgenes para pantallas más pequeñas */
+  @media (max-width: 768px) {
+    .custom-card {
+      padding: 15px;
+      max-width: 100%;
+    }
+  
+    .form-title {
+      font-size: 1.3rem;
+    }
+  
+    .custom-btn {
+      font-size: 0.9rem;
+      padding: 7px 14px;
+    }
+  
+    .custom-input {
+      padding: 7px;
+      font-size: 0.85rem;
+    }
+  }
+  
