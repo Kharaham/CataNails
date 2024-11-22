@@ -1,29 +1,22 @@
-import "../../styles/components/services.css";
+import "../../styles/components/services.css"; // Usamos el CSS unificado
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; // Para la navegación
-import fondobotox from "../../assets/images/services/botox.jpg"; // Ajusta la ruta según sea necesario
-import { collection, getDocs } from "firebase/firestore"; // Firebase
-import { Table, Card } from "react-bootstrap"; // Para las tablas y estilo
-import { db } from "../../firebase/firebaseServicios"; // Firebase configuración
+import { useNavigate } from "react-router-dom";
+import { collection, getDocs } from "firebase/firestore";
+import { Card, Container, Row, Col, Button } from "react-bootstrap";
+import { db } from "../../firebase/firebaseServicios";
 
 const BotoxCapilar = () => {
-  const navigate = useNavigate(); // Inicializa useNavigate para la navegación
+  const navigate = useNavigate();
+  const [services, setServices] = useState([]);
 
-  const handleAgendarClick = () => {
-    navigate("/agendar-cita"); // Navega al formulario de agendar cita
-  };
-
-  const [services, setServices] = useState([]); // Estado para los servicios
-
-  // Función para obtener los servicios desde Firebase
   useEffect(() => {
     fetchServices();
   }, []);
 
   const fetchServices = async () => {
     try {
-      const servicesCollection = collection(db, "botoxcapilar"); // Colección de Botox Capilar en Firebase
+      const servicesCollection = collection(db, "botoxcapilar");
       const servicesSnapshot = await getDocs(servicesCollection);
       const servicesList = servicesSnapshot.docs.map((doc) => ({
         id: doc.id,
@@ -35,56 +28,68 @@ const BotoxCapilar = () => {
     }
   };
 
+  const handleAgendarClick = () => {
+    navigate("/agendar-cita");
+  };
+
   return (
-    <div className="container botox-container mt-5">
-      {/* Imagen principal */}
-      <div className="header-image-container">
-        <img
-          src={fondobotox}
-          alt="Botox Capilar"
-          className="img-fluid w-100 header-image rounded shadow-sm"
-        />
+    <Container className="service-container mt-5">
+      <Row className="text-center mt-4">
+        <Col>
+          <h2 className="display-4 title">Botox Capilar</h2>
+          <p className="lead text-muted">
+            Renueva la vida de tu cabello con nuestros tratamientos de Botox
+            Capilar. Recupera el brillo, la suavidad y la vitalidad para un look
+            perfecto.
+          </p>
+        </Col>
+      </Row>
+
+      <Row className="justify-content-center mt-4">
+        {services.map((service) => (
+          <Col
+            key={service.id}
+            xs={12}
+            sm={6}
+            md={4}
+            lg={3}
+            className="mb-4 d-flex justify-content-center"
+          >
+            <Card className="service-card shadow-sm">
+              {/* Imagen del servicio */}
+              {service.ImagenUrl && (
+                <Card.Img
+                  variant="top"
+                  src={service.ImagenUrl}
+                  alt={service.Nombre}
+                  className="service-card-image"
+                />
+              )}
+              <Card.Body className="d-flex flex-column justify-content-between">
+                <Card.Title className="text-center">{service.Nombre}</Card.Title>
+                <Card.Subtitle className="mb-2 text-muted text-center">
+                  {service.Tipo || "No especificado"}
+                </Card.Subtitle>
+                <Card.Text className="text-center">
+                  <strong>Precio:</strong> ${service.Precio}
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+        ))}
+      </Row>
+
+      {/* Botón "Agendar" fuera de las tarjetas */}
+      <div className="text-center my-4">
+        <Button
+          variant="custom"
+          className="agendar-btn"
+          onClick={handleAgendarClick}
+        >
+          Agendar
+        </Button>
       </div>
-
-      {/* Título principal */}
-      <h2 className="text-center display-4 mt-4 mb-4 title">Botox Capilar</h2>
-      <p className="lead text-center text-muted">
-        Renueva la vida de tu cabello con nuestros tratamientos de Botox
-        Capilar. Recupera el brillo, la suavidad y la vitalidad para un look
-        perfecto.
-      </p>
-
-      {/* Tabla de servicios dinámicos obtenidos desde Firebase */}
-      <Card>
-        <Card.Body>
-          <Table striped bordered hover responsive>
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Tipo</th>
-                <th>Precio</th>
-              </tr>
-            </thead>
-            <tbody>
-              {services.map((service) => (
-                <tr key={service.id || service.Nombre}>
-                  <td>{service.Nombre}</td>
-                  <td>{service.Tipo}</td>
-                  <td>{service.Precio}</td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        </Card.Body>
-      </Card>
-
-      {/* Botón para agendar una cita */}
-      <div className="text-center mt-4 mb-5">
-        <button className="btn btn-primary" onClick={handleAgendarClick}>
-          Agenda con Nosotros
-        </button>
-      </div>
-    </div>
+    </Container>
   );
 };
 

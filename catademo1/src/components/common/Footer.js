@@ -1,62 +1,98 @@
 import React from "react";
+import "@fortawesome/fontawesome-free/css/all.min.css"; // Asegúrate de incluir esta línea
 import "../../styles/components/footer.css";
+import { Link } from "react-router-dom"; // Importa Link para navegación
 
 const Footer = () => {
   return (
     <footer className="footer bg-dark text-white">
       <div className="container">
         <div className="row">
-          {/* Columna 1: Información de la empresa */}
-          <div className="col-lg-4 col-md-6 mb-4">
+          <div className="col-lg-3 col-md-6 mb-4">
             <h5 className="mb-3">CataaNails</h5>
             <p>
-              Servicios profesionales de manicura, pedicura y estética para
-              realzar tu belleza. Nos apasiona lo que hacemos.
+              Servicios profesionales de manicura, pedicura, alisados permanentes y botox capilar.
+              Resaltamos tu Belleza, nos apasiona lo que hacemos.
             </p>
           </div>
-
-          {/* Columna 2: Enlaces rápidos */}
-          <div className="col-lg-4 col-md-6 mb-4">
+          <div className="col-lg-3 col-md-6 mb-4">
             <h5 className="mb-3">Enlaces Rápidos</h5>
             <ul className="list-unstyled">
               <li>
-                <a href="#inicio" className="text-white">
+                <Link to="/" className="footer-link">
                   Inicio
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#trabajos-realizados" className="text-white">
+                <Link to="/trabajos-realizados" className="footer-link">
                   Trabajos Realizados
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#about" className="text-white">
+                <Link to="/about" className="footer-link">
                   About
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
-
-          {/* Columna 3: Redes sociales */}
-          <div className="col-lg-4 col-md-6 mb-4">
-            <h5 className="mb-3">Síguenos</h5>
-            <div className="d-flex justify-content-start">
-              <a href="#!" className="text-white me-3">
+          <div className="col-lg-3 col-md-6 mb-4">
+            <h5 className="mb-3 text-center">Síguenos</h5>
+            <div className="social-icons d-flex justify-content-center">
+              <a
+                href="https://facebook.com"
+                className="text-white me-3"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <i className="fab fa-facebook-f"></i>
               </a>
-              <a href="#!" className="text-white me-3">
+              <a
+                href="https://instagram.com"
+                className="text-white me-3"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <i className="fab fa-instagram"></i>
               </a>
-              <a href="#!" className="text-white me-3">
+              <a
+                href="https://wa.me/tu_numero"
+                className="text-white me-3"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <i className="fab fa-whatsapp"></i>
               </a>
-              <a href="#!" className="text-white">
+              <a
+                href="https://tiktok.com"
+                className="text-white"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <i className="fab fa-tiktok"></i>
               </a>
             </div>
           </div>
+          <div className="col-lg-3 col-md-6 mb-4">
+            <h5 className="mb-3">Contacto</h5>
+            <p>
+              Teléfono:{" "}
+              <a href="tel:+56912345678" className="text-white">
+                +56 9 1234 5678
+              </a>
+            </p>
+            <p>
+              Correo:{" "}
+              <a
+                href="https://mail.google.com/mail/?view=cm&fs=1&to=danielariassm@gmail.com"
+                className="text-white"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                danielariassm@gmail.com
+              </a>
+            </p>
+          </div>
         </div>
-
         <div className="row mt-4">
           <div className="col text-center">
             <p className="small">

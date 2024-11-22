@@ -1,47 +1,91 @@
 /* src/styles/components/header.css */
 .logo {
-    width: 80px; /* Ajustar el tamaño del logo */
-    height: auto;
-  }
-  
+  width: 80px; /* Ajustar el tamaño del logo */
+  height: auto;
+}
+
+.navbar {
+  padding: 10px 0;
+  background-color: #fff;
+  display: flex;
+  justify-content: space-between; /* Asegura que los elementos estén bien distribuidos */
+  align-items: center; /* Centra verticalmente los elementos */
+}
+
+.nav-links {
+  display: flex; /* Flexbox para las opciones del menú */
+  flex-wrap: wrap; /* Permite que las opciones del menú se ajusten */
+}
+
+.nav-link {
+  font-size: 14px;
+  margin: 0 20px;
+  color: #333;
+}
+
+.nav-link:hover {
+  color: #e91e63;
+}
+
+.search-icon {
+  font-size: 18px;
+  color: #333;
+  cursor: pointer;
+}
+
+.search-icon i {
+  margin-left: 20px;
+}
+
+.dropdown-menu {
+  background-color: #f8f9fa;
+  border: none;
+}
+
+.dropdown-item {
+  font-size: 14px;
+  color: #333;
+}
+
+.dropdown-item:hover {
+  background-color: #e2e6ea;
+  color: #e91e63;
+}
+
+/* Media Queries para Responsividad */
+@media (max-width: 768px) {
   .navbar {
-    padding: 10px 0;
-    background-color: #fff;
+      flex-direction: column; /* Cambia a columna en pantallas pequeñas */
+      align-items: flex-start; /* Alinea a la izquierda */
   }
-  
+
+  .nav-links {
+      width: 100%; /* Ocupar todo el ancho */
+      justify-content: space-between; /* Espaciado entre los elementos */
+  }
+
   .nav-link {
-    font-size: 14px;
-    margin: 0 20px;
-    color: #333;
+      margin: 10px 0; /* Espaciado vertical entre links */
+      width: 100%; /* Ocupar el 100% del ancho disponible */
+      text-align: center; /* Centra el texto */
   }
-  
-  .nav-link:hover {
-    color: pink;
-  }
-  
+
   .search-icon {
-    font-size: 18px;
-    color: #333;
-    cursor: pointer;
+      font-size: 16px; /* Tamaño de ícono más pequeño */
+      margin-top: 10px; /* Espaciado superior */
   }
-  
-  .search-icon i {
-    margin-left: 20px;
+}
+
+@media (max-width: 480px) {
+  .nav-link {
+      font-size: 12px; /* Tamaño de fuente más pequeño */
   }
-  
-  .dropdown-menu {
-    background-color: #f8f9fa;
-    border: none;
+
+  .search-icon {
+      font-size: 14px; /* Tamaño de ícono más pequeño */
   }
-  
-  .dropdown-item {
-    font-size: 14px;
-    color: #333;
+
+  .logo {
+      width: 60px; /* Logo más pequeño en pantallas muy pequeñas */
   }
-  
-  .dropdown-item:hover {
-    background-color: #e2e6ea;
-    color: pink;
-  }
-  
-  
+}

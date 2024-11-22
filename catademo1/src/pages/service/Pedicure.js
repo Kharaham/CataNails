@@ -1,19 +1,13 @@
-import "../../styles/components/services.css";
+import "../../styles/components/services.css"; // Usamos el CSS unificado
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; // Importa useNavigate
-import fondopie from "../../assets/images/services/pies.jpg";
+import { useNavigate } from "react-router-dom";
 import { collection, getDocs } from "firebase/firestore";
-import { Table, Card } from "react-bootstrap";
+import { Card, Container, Row, Col, Button } from "react-bootstrap";
 import { db } from "../../firebase/firebaseServicios";
 
-const Manicure = () => {
-  const navigate = useNavigate(); // Inicializa useNavigate
-
-  const handleAgendarClick = () => {
-    navigate("/agendar-cita"); // Navega al formulario de agendar cita
-  };
-
+const Pedicure = () => {
+  const navigate = useNavigate();
   const [services, setServices] = useState([]);
 
   useEffect(() => {
@@ -34,53 +28,59 @@ const Manicure = () => {
     }
   };
 
+  const handleAgendarClick = () => {
+    navigate("/agendar-cita");
+  };
+
   return (
-<div className="container pedicure-container mt-5">
-      {/* Imagen principal */}
-      <div className="header-image-container">
-        <img 
-          src={fondopie} 
-          alt="Pies" 
-          className="img-fluid w-100 header-image rounded shadow-sm" 
-        />
-      </div>
+    <Container className="service-container mt-5">
+      <Row className="text-center mt-4">
+        <Col>
+          <h2 className="display-4 title">Pedicure</h2>
+          <p className="lead text-muted">
+            Cuida de tus pies con nuestros servicios especiales. Desde pedicuras
+            tradicionales hasta tratamientos completos.
+          </p>
+        </Col>
+      </Row>
 
-      {/* Título principal */}
-      <h2 className="text-center display-4 mt-4 mb-4 title">Pies</h2>
-      <p className="lead text-center text-muted">
-        Cuida de tus pies con nuestros servicios especiales. Desde pedicuras tradicionales hasta tratamientos completos.
-      </p>
-      <Card>
-        <Card.Body>
-          <Table striped bordered hover responsive>
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Tipo</th>
-                <th>Precio</th>
-              </tr>
-            </thead>
-            <tbody>
-              {services.map((service) => (
-                <tr key={service.id || service.Nombre}>
-                  <td>{service.Nombre}</td>
-                  <td>{service.Tipo}</td>
-                  <td>{service.Precio}</td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        </Card.Body>
-      </Card>
+      <Row className="justify-content-center mt-4">
+        {services.map((service) => (
+          <Col key={service.id} xs={12} sm={6} md={4} lg={3} className="mb-4 d-flex justify-content-center">
+            <Card className="service-card shadow-sm">
+              {service.ImagenUrl && (
+                <Card.Img
+                  variant="top"
+                  src={service.ImagenUrl}
+                  alt={service.Nombre}
+                  className="service-card-image"
+                />
+              )}
+              <Card.Body className="d-flex flex-column justify-content-between">
+                <Card.Title className="text-center">{service.Nombre}</Card.Title>
+                <Card.Subtitle className="mb-2 text-muted text-center">
+                  {service.Tipo || "No especificado"}
+                </Card.Subtitle>
+                <Card.Text className="text-center">
+                  <strong>Precio:</strong> ${service.Precio}
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+        ))}
+      </Row>
 
-      {/* Botón Agendar */}
-      <div className="text-center mt-4 mb-5">
-        <button className="btn btn-primary" onClick={handleAgendarClick}>
-          Agenda con Nosotros
-        </button>
+      <div className="text-center my-4">
+        <Button
+          variant="custom"
+          className="agendar-btn"
+          onClick={handleAgendarClick}
+        >
+          Agendar
+        </Button>
       </div>
-    </div>
+    </Container>
   );
 };
 
-export default Manicure;
+export default Pedicure;

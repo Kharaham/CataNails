@@ -1,102 +1,122 @@
-/* Contenedor general */
-.service-container {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 40px;
-    background-color: #f9f9f9;
+/* Estilos generales para todos los servicios */
+.service-card {
+    border: none;
     border-radius: 10px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 350px;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
-/* Imagen principal */
-.header-image-container {
-    margin-bottom: 40px;
+.service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
-.header-image {
-    max-height: 350px;
+.service-card .card-title {
+    font-weight: bold;
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 2px;
+}
+
+.service-card .card-subtitle {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-bottom: 5px;
+}
+
+.service-card .card-text {
+    color: #666;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+}
+
+.service-card-image {
+    width: 100%;
+    height: 180px;
     object-fit: cover;
-    border-radius: 10px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    transition: transform 0.3s ease;
 }
+
+.service-card-image:hover {
+    transform: scale(1.05);
+}
+
+/* Ajustes responsivos */
+@media (max-width: 768px) {
+    .service-card {
+        width: 90%;
+        min-height: 300px;
+    }
+}
+
+/* Estilos del botón "Agendar" */
+/* Estilos del botón "Agendar" */
+/* Estilos del botón "Agendar" */
+.agendar-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #e91e63; /* Color de fondo */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    margin: 0 auto 20px auto; /* Centrado horizontal y separación del footer */
+    text-align: center;
+    cursor: pointer;
+    max-width: 400px; /* Ancho máximo del botón para pantallas grandes */
+    width: 100%; /* Hace que el botón ocupe todo el ancho disponible */
+}
+
+.agendar-btn:hover {
+    background-color: #d81b60; /* Color al pasar el cursor */
+    transform: translateY(-3px); /* Efecto de elevación */
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3); /* Sombra más intensa */
+}
+
+/* Ajustes responsivos para el botón de agendar */
+@media (max-width: 768px) {
+    .agendar-btn {
+        max-width: 95%; /* Asegura que el botón ocupe el 95% del contenedor */
+        min-width: 250px; /* Asegura que el botón tenga un tamaño suficiente */
+        padding: 14px 20px; /* Aumenta el padding para hacerlo más fácil de tocar */
+        font-size: 18px; /* Tamaño de fuente mayor para mejorar la legibilidad */
+    }
+}
+
+/* Ajustes para pantallas aún más pequeñas */
+@media (max-width: 480px) {
+    .agendar-btn {
+        max-width: 95%; /* Hacerlo ocupar el 95% en pantallas muy pequeñas */
+        min-width: 250px; /* Asegura un buen tamaño mínimo */
+        padding: 16px 20px; /* Aumenta el padding para mejorar la accesibilidad */
+        font-size: 18px; /* Tamaño de fuente mayor */
+    }
+}
+
 
 /* Título principal */
-.title {
+.display-4 {
     font-family: 'Playfair Display', serif;
-    font-size: 3rem;
+    font-size: 2.5rem;
     color: #333;
+    position: relative;
     text-transform: uppercase;
-    margin-bottom: 20px;
-    letter-spacing: 2px;
 }
 
-/* Subtítulo */
-p.lead {
-    font-family: 'Roboto', sans-serif;
-    font-size: 1.1rem;
-    color: #7d7d7d;
-    margin-bottom: 30px;
-    text-align: center;
-}
-
-/* Sección de servicios */
-.service-section {
-    padding: 40px 0;
-    border-bottom: 1px solid #eaeaea;
-}
-
-.section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.8rem;
-    color: #444;
-    text-align: left;
-    margin-bottom: 15px;
-    letter-spacing: 1px;
-}
-
-.list-group-item {
-    border: none;
-    padding: 15px 0;
-    font-size: 1.1rem;
-    color: #555;
-    background-color: transparent;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.list-group-item:last-child {
-    border-bottom: none;
-}
-
-.list-group-item:hover {
-    background-color: #f5f5f5;
-}
-
-.price {
-    font-size: 1.1rem;
-    font-weight: bold;
-    color: #333;
-}
-
-.badge {
-    font-size: 1.1rem;
-    padding: 8px 12px;
-    background-color: #e9ecef;
-    color: #333;
-}
-
-@media (max-width: 768px) {
-    .title {
-        font-size: 2.5rem;
-    }
-
-    .service-item {
-        font-size: 1rem;
-    }
-
-    .price {
-        font-size: 1rem;
-    }
-}
-.botox-container .text-center {
-    margin-bottom: 50px; /* Ajusta el valor según sea necesario */
+.display-4::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 4px;
+    background-color: #ff79c6;
+    margin: 10px auto;
+    border-radius: 2px;
 }

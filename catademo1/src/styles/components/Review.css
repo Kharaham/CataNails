@@ -1,0 +1,134 @@
+/* Contenedor principal para la sección de reseñas */
+.reviews-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+/* Título de la sección */
+.section-title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Estilos para el formulario de reseña */
+.review-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.rating .star {
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #ddd; /* Color de las estrellas vacías (gris claro) */
+}
+
+.rating .star.filled {
+  color: #ffd700; /* Color de las estrellas llenas (amarillo) */
+}
+
+.submit-review-button {
+  padding: 10px;
+  border: none;
+  background-color: #e91e63;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.submit-review-button:hover {
+  background-color: #d81b60;
+}
+
+.review-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+/* Información de reseña */
+.review-info {
+  flex: 1;
+}
+
+/* Estilo del nombre del autor y estrellas */
+.review-author {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.review-rating .star {
+  font-size: 1.2rem; /* Asegúrate de que el tamaño sea consistente */
+  color: #ddd; /* Color de las estrellas vacías (gris claro) */
+}
+
+.review-rating .star.filled {
+  color: #ffd700; /* Color de las estrellas llenas (amarillo) */
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.page-button {
+  margin: 0 5px;
+  padding: 5px 10px;
+  border: none;
+  background-color: #e91e63;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.page-button:hover {
+  background-color: #d81b60;
+}
+
+.page-button.active {
+  background-color: #d81b60;
+  font-weight: bold;
+}
+
+/* Estilos para la lista de reseñas */
+.reviews-list {
+  display: grid; /* Cambia a grid */
+  grid-template-columns: repeat(3, 1fr); /* 3 columnas */
+  gap: 20px; /* Espacio entre los elementos */
+  width: 100%;
+  max-width: 1200px; /* Ajusta según necesites */
+  margin-top: 20px;
+}
+
+/* Estilos para cada tarjeta de reseña */
+.review-card {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s; /* Añadir un efecto al hover */
+}
+
+.review-card:hover {
+  transform: scale(1.02); /* Aumenta ligeramente al pasar el mouse */
+}
+.review-profile-pic {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}

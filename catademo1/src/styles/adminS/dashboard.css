@@ -1,0 +1,247 @@
+/* Ajustes generales */
+.dashboard-container {
+  padding: 20px;
+}
+
+/* Estilo para citas pendientes */
+.appointment-item.pending {
+  background-color: #FFF9C4; /* Amarillo claro */
+  border-left: 5px solid #FFEB3B;
+}
+
+/* Estilo para citas realizadas */
+.appointment-item.completed {
+  background-color: #C8E6C9; /* Verde claro */
+  border-left: 5px solid #4CAF50;
+}
+
+/* Estilos para citas */
+.appointment-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.appointment-item:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilos para tarjetas */
+.custom-card {
+  text-align: center;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+  margin-bottom: 20px;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+}
+
+.custom-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Colores específicos por tipo de tarjeta */
+.custom-card.clientes-card {
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+}
+
+.custom-card.ingresos-card {
+  background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+}
+
+.custom-card.citas-pendientes-card {
+  background: linear-gradient(135deg, #ffebee, #ffcdd2);
+}
+
+.custom-card.citas-realizadas-card {
+  background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+}
+
+/* Responsive Design */
+
+/* Dispositivos pequeños (smartphones) */
+@media (max-width: 576px) {
+  .custom-card {
+    padding: 15px;
+    font-size: 14px;
+    margin-bottom: 15px;
+  }
+
+  .dashboard-container .row {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .dashboard-container .col-3 {
+    flex: 0 0 48%;
+    max-width: 48%;
+    margin: 1%;
+  }
+
+  .appointment-item {
+    flex-direction: column;  /* Hace que las citas se apilen verticalmente */
+    align-items: flex-start;
+  }
+
+  .appointment-item .appointment-details {
+    font-size: 14px;
+  }
+}
+
+/* Tablets y pantallas medianas */
+@media (min-width: 577px) and (max-width: 768px) {
+  .custom-card {
+    padding: 18px;
+    font-size: 16px;
+  }
+
+  .appointment-item {
+    flex-direction: row; /* Mantiene la disposición en fila */
+  }
+}
+
+/* Pantallas grandes */
+@media (min-width: 769px) and (max-width: 1199px) {
+  .custom-card {
+    padding: 20px;
+    font-size: 18px;
+  }
+
+  .appointment-item {
+    flex-direction: row; /* Mantiene la disposición en fila */
+  }
+}
+
+/* Pantallas extra grandes */
+@media (min-width: 1200px) {
+  .appointment-item {
+    padding: 20px;
+  }
+
+  .appointment-item div {
+    font-size: 18px;
+  }
+
+  .custom-card {
+    padding: 25px;
+    font-size: 20px;
+  }
+
+  .dashboard-container {
+    padding: 30px;
+  }
+}
+
+.appointment-item.canceled {
+  background-color: #f8d7da; /* Fondo rojo claro */
+  color: #721c24; /* Texto rojo oscuro */
+  border-left: 5px solid #f5c6cb; /* Borde rojo */
+}
+
+/* Ajustes adicionales para pantallas muy pequeñas */
+@media (max-width: 767px) {
+  .appointment-card {
+    margin-bottom: 10px; /* Asegura espacio entre tarjetas */
+    padding: 15px; /* Aumenta el padding para dispositivos pequeños */
+  }
+
+  .appointment-item {
+    margin-bottom: 20px; /* Aumenta el margen entre citas */
+  }
+
+  /* Ajustes para citas realizadas */
+  .appointment-item.completed {
+    padding: 12px;
+    font-size: 14px;
+  }
+}
+
+/* Encabezado del popover */
+.popover-header-custom {
+  background-color: #563d7c; /* Color elegante, púrpura oscuro */
+  color: #fff; /* Texto blanco */
+  font-weight: 600;
+  text-align: center;
+  border-bottom: 2px solid #6c5ab8; /* Línea decorativa */
+  padding: 0.75rem;
+  border-radius: 0.5rem 0.5rem 0 0; /* Bordes redondeados en la parte superior */
+}
+
+/* Cuerpo del popover */
+.popover-body-custom {
+  background-color: #f9f9fb; /* Fondo claro y limpio */
+  color: #333; /* Texto oscuro */
+  padding: 1.25rem;
+  border-radius: 0 0 0.5rem 0.5rem; /* Bordes redondeados en la parte inferior */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+}
+
+/* Lista de citas */
+.citas-list {
+  list-style: none; /* Sin viñetas */
+  padding: 0;
+  margin: 0;
+}
+
+/* Ítems individuales de la lista */
+.cita-item {
+  border-bottom: 1px solid #ddd; /* Línea divisoria */
+  padding: 0.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  transition: background-color 0.3s ease;
+}
+
+.cita-item:last-child {
+  border-bottom: none; /* Sin borde en el último elemento */
+}
+
+/* Detalles de cada cita */
+.cita-detail {
+  font-size: 0.9rem;
+  color: #555; /* Texto en gris intermedio */
+}
+
+.cita-item:hover {
+  background-color: #f1f1f5; /* Fondo claro al pasar el mouse */
+  border-radius: 0.25rem;
+}
+
+/* Texto cuando no hay citas */
+.no-citas-text {
+  font-size: 0.95rem;
+  color: #999; /* Texto gris claro */
+  text-align: center;
+  font-style: italic; /* Añade estilo cursivo */
+  padding: 0.5rem 0;
+}
+
+/* Efectos adicionales */
+.popover {
+  border: none; /* Sin borde estándar */
+  border-radius: 0.5rem; /* Bordes redondeados generales */
+  overflow: hidden;
+}
+
+.popover::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 12px;
+  background-color: #563d7c; /* Color del encabezado */
+  transform: rotate(45deg); /* Flecha */
+  z-index: -1;
+}

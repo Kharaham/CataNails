@@ -1,139 +1,203 @@
 .home-container {
-    font-family: 'Arial', sans-serif;
-    color: #333;
-  }
-  
-  /* Hero Section */
-  .hero-section {
-    background: url('/src/assets/images/home/fondo.jpg') no-repeat center center;
-    background-size: cover;
-    padding: 100px 20px;
-    text-align: center;
-    color: #fff;
-  }
-  
+  font-family: 'Arial', sans-serif;
+  color: #333;
+}
+
+/* Hero Section */
+.hero-section {
+  background: url('/src/assets/images/home/fondo6.jpg') no-repeat center center;
+  background-size: cover;
+  padding: 100px 20px;
+  text-align: center;
+  color: #fff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.hero-title {
+  font-size: 60px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: white;
+}
+
+.hero-subtitle {
+  font-size: 18px;
+  font-weight: 300;
+
+}
+
+/* Services Section */
+.services-section {
+  padding: 50px 20px;
+  background-color: #f9f9f9;
+  text-align: center;
+}
+
+.section-title  {
+  font-size: 36px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+.text-center {
+  font-family: 'Roboto', sans-serif;
+  color: var(--text-color);
+  font-size: 20px;
+}
+.services-grid {
+  display: flex;
+  flex-wrap: wrap; /* Permite que los elementos se ajusten en múltiples filas */
+  justify-content: center;
+  gap: 20px;
+}
+
+.service-cardHome {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 270px;
+  height: 450px;
+  text-align: center;
+}
+
+.service-image {
+  width: 100%; /* Ocupar el 100% del ancho disponible */
+  height: 200px; /* Altura fija para todas las imágenes */
+  object-fit: cover; /* Asegura que la imagen se recorte pero mantenga su proporción */
+  border-radius: 8px;
+}
+
+.service-name {
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 15px;
+}
+
+.service-description {
+  font-size: 14px;
+  color: #666;
+}
+
+/* Estilos para la sección de la profesional */
+.professional-section {
+  background-color: #f8f9fa; /* Fondo suave para la sección */
+  padding: 40px 20px; /* Espaciado interno */
+  border-radius: 10px; /* Bordes redondeados */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem; /* Tamaño de fuente del título */
+  color: #333; /* Color del texto */
+}
+
+.professional-image {
+  width: 150px; /* Ancho de la imagen */
+  height: 150px; /* Alto de la imagen */
+  object-fit: cover; /* Ajuste de la imagen */
+}
+
+.professional-description {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.1rem; /* Tamaño de fuente de la descripción */
+  color: #666; /* Color de texto más suave */
+  max-width: 600px; /* Ancho máximo para el texto */
+  line-height: 1.5; /* Espaciado entre líneas */
+  margin: 0 auto; /* Centrar el texto */
+}
+
+/* Branches Section */
+.branches-section {
+  padding: 30px 20px;
+  background-color: #f0f0f0;
+  text-align: center;
+}
+
+.section-subtitle {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+/* Asegurando que las imágenes de la galería tengan el mismo tamaño que el mapa */
+.gallery-image {
+  width: 100%; /* Para ocupar todo el ancho disponible */
+  height: auto; /* Permite que la altura se ajuste proporcionalmente */
+  max-height: 400px; /* Altura máxima para evitar que sea demasiado alta */
+  object-fit: cover; /* Mantiene la proporción de la imagen sin deformarla */
+}
+
+/* Botón de agendar */
+.schedule-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #e91e63;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.schedule-button:hover {
+  background-color: #d81b60;
+}
+
+.gallery-home {
+  display: flex;
+  flex-wrap: wrap; /* Permite que las imágenes se ajusten en múltiples filas */
+  gap: 15px;
+  justify-content: center;
+}
+
+.gallery-image {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.location-container {
+  max-width: 3000px;
+  margin-right: 40px;
+}
+
+/* Media Queries para Responsive Design */
+@media (max-width: 768px) {
   .hero-title {
-    font-size: 48px;
-    font-weight: bold;
-    margin-bottom: 10px;
+      font-size: 36px; /* Tamaño más pequeño en pantallas pequeñas */
   }
-  
+
   .hero-subtitle {
-    font-size: 18px;
-    font-weight: 300;
+      font-size: 16px; /* Tamaño más pequeño en pantallas pequeñas */
   }
-  
-  /* Services Section */
-  .services-section {
-    padding: 50px 20px;
-    background-color: #f9f9f9;
-    text-align: center;
-  }
-  
+
   .section-title {
-    font-size: 36px;
-    margin-bottom: 30px;
-    text-align: center;
+      font-size: 28px; /* Tamaño más pequeño en pantallas pequeñas */
   }
-  
+
+  .service-cardHome {
+      width: 90%; /* Ancho más pequeño en pantallas pequeñas */
+      height: auto; /* Permite que la altura se ajuste automáticamente */
+  }
+
   .services-grid {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
+      flex-direction: column; /* Cambia a columna en pantallas pequeñas */
+      align-items: center; /* Centra los elementos */
   }
-  
-  .service-card {
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    width: 270px;
-    height: 500px;
-    text-align: center;
-  }
-  
-  .service-image {
-    width: 100%; /* Ocupar el 100% del ancho disponible */
-    height: 200px; /* Altura fija para todas las imágenes */
-    object-fit: cover; /* Asegura que la imagen se recorte pero mantenga su proporción */
-    border-radius: 8px;
-  }
-  
-  .service-name {
-    font-size: 20px;
-    font-weight: 600;
-    margin-top: 15px;
-  }
-  
-  .service-description {
-    font-size: 14px;
-    color: #666;
-  }
-  
-  /* Estilos para la sección de la profesional */
-  .professional-section {
-    background-color: #f8f9fa; /* Fondo suave para la sección */
-    padding: 40px 20px; /* Espaciado interno */
-    border-radius: 10px; /* Bordes redondeados */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Sombra sutil */
-  }
-  
-  .section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 2.5rem; /* Tamaño de fuente del título */
-    color: #333; /* Color del texto */
-  }
-  
+
   .professional-image {
-    width: 150px; /* Ancho de la imagen */
-    height: 150px; /* Alto de la imagen */
-    object-fit: cover; /* Ajuste de la imagen */
+      width: 100px; /* Ancho más pequeño en pantallas pequeñas */
+      height: 100px; /* Alto más pequeño en pantallas pequeñas */
   }
-  
-  .professional-description {
-    font-family: 'Roboto', sans-serif;
-    font-size: 1.1rem; /* Tamaño de fuente de la descripción */
-    color: #666; /* Color de texto más suave */
-    max-width: 600px; /* Ancho máximo para el texto */
-    line-height: 1.5; /* Espaciado entre líneas */
-    margin: 0 auto; /* Centrar el texto */
-  }
-  
-  
-  /* Branches Section */
-  .branches-section {
-    padding: 50px 20px;
-    background-color: #f0f0f0;
-    text-align: center;
-  }
-  
-  .section-subtitle {
-    font-size: 16px;
-    margin-bottom: 20px;
-  }
-  
-  /* Asegurando que las imágenes de la galería tengan el mismo tamaño que el mapa */
-  .gallery-image {
-    width: 100%; /* Para ocupar todo el ancho disponible */
-    height: 400px; /* Altura igual a la del mapa */
-    object-fit: cover; /* Mantiene la proporción de la imagen sin deformarla */
-  }
-  /* Botón de agendar */
+
   .schedule-button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #e91e63;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
+      width: 100%; /* Botón ocupa el 100% del ancho en pantallas pequeñas */
   }
-  
-  .schedule-button:hover {
-    background-color: #d81b60;
+
+  .gallery-home {
+      flex-direction: column; /* Cambia a columna en pantallas pequeñas */
   }
-  
-  
-  
+}

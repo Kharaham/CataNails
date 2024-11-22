@@ -1,0 +1,151 @@
+/* Contenedor general */
+.user-management-container {
+  width: 90%;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Tabla */
+.user-management-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 8px;
+  font-size: 0.9rem;
+  background-color: transparent;
+}
+
+/* Encabezados de la tabla */
+.user-management-table th {
+  background-color: #e91e63;
+  color: #fff;
+  padding: 12px;
+  text-align: center;
+  font-weight: 600;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+/* Filas de la tabla */
+.user-management-table td {
+  background-color: #ffffff;
+  padding: 12px;
+  text-align: center;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Efecto de hover en filas */
+.user-management-table tr:hover {
+  transform: scale(1.01);
+}
+
+/* Botón de incrementar puntos */
+.btn-increment {
+  background-color: #28a745; /* Verde */
+  color: #ffffff;
+  border: none;
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s, transform 0.2s;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-increment:hover {
+  background-color: #218838; /* Verde más oscuro */
+  transform: scale(1.05);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-increment:active {
+  background-color: #1e7e34;
+  transform: scale(0.95);
+}
+
+/* Botón de eliminar */
+.btn-delete {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-delete:hover {
+  background-color: #c82333;
+}
+
+/* Color alterno en filas */
+.user-management-table tr:nth-child(even) td {
+  background-color: #f2f6fc;
+}
+
+/* Ajustes responsivos */
+@media (max-width: 768px) {
+  .user-management-container {
+      padding: 15px;
+      width: 100%;
+  }
+
+  .user-management-table {
+      font-size: 0.8rem;
+  }
+
+  .user-management-table th, .user-management-table td {
+      padding: 8px;
+  }
+}
+
+@media (max-width: 576px) {
+  .user-management-container {
+      padding: 10px;
+      width: 100%;
+  }
+
+  .user-management-table, .user-management-table thead, .user-management-table tbody, .user-management-table th, .user-management-table td, .user-management-table tr {
+      display: block;
+      width: 100%;
+  }
+
+  /* Encabezado como parte de cada fila */
+  .user-management-table tr {
+      margin-bottom: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Estilos de los encabezados en dispositivos pequeños */
+  .user-management-table th {
+      display: none;
+  }
+
+  .user-management-table td {
+      text-align: left;
+      padding: 10px;
+      position: relative;
+  }
+
+  /* Muestra los títulos de los encabezados en cada celda */
+  .user-management-table td:before {
+      content: attr(data-label);
+      font-weight: bold;
+      width: 50%;
+      display: inline-block;
+      color: #6c757d;
+  }
+
+  /* Ajuste del botón de eliminar */
+  .btn-delete {
+      width: 100%;
+      padding: 8px;
+      margin-top: 8px;
+      font-size: 0.9rem;
+  }
+}

@@ -1,45 +1,115 @@
 /* Estilos del Footer */
 .footer {
-    padding: 40px 0;
-    background-color: #222;
-    color: #fff;
-  }
+  padding: 40px 0;
+  background-color: #222; /* Color de fondo oscuro */
+  color: #fff; /* Color de texto blanco */
+  position: relative; /* Para asegurar que el footer esté correctamente posicionado */
+}
+
+.footer h5 {
+  font-size: 18px; /* Aumenta el tamaño de los encabezados */
+  font-weight: bold; /* Hace el texto más negrita */
+  margin-bottom: 15px;
+  text-align: center; /* Centra el encabezado */
+}
+
+.footer p {
+  font-size: 14px; /* Tamaño del texto de párrafo */
+  line-height: 1.5; /* Mejora la legibilidad */
+}
+
+.footer a {
+  color: white; /* Color de los enlaces */
+  text-decoration: none; /* Sin subrayado */
+  transition: color 0.3s ease; /* Transición suave en el hover */
+}
+
+.footer a:hover {
+  color: rgb(233, 30, 99); /* Cambia el color del texto en hover */
+}
+
+.footer .fab {
+  font-size: 24px; /* Aumenta el tamaño de los iconos de redes sociales */
+  margin: 0 15px; /* Espaciado horizontal entre iconos */
+  transition: color 0.3s ease; /* Transición suave en el hover */
+}
+
+.footer .social-icons {
+  display: flex; /* Utiliza flexbox */
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Centra verticalmente */
+}
+
+.footer .fab:hover {
+  color: rgb(233, 30, 99); /* Cambia el color al pasar el ratón sobre los iconos */
+}
+
+.footer .small {
+  font-size: 12px; /* Tamaño del texto pequeño */
+  color: white; /* Color gris claro */
+}
+
+.footer .col-lg-4, .footer .col-md-6 {
+  padding-bottom: 20px; /* Espaciado inferior de las columnas */
+}
+
+.footer .text-center {
+  text-align: center; 
+  color: white;/* Centra el texto */
+}
+
+
+/* Efecto hover para los enlaces */
+.footer .footer-link {
+  position: relative;
   
+}
+
+.footer .footer-link::after {
+  content: '';
+  display: block;
+/* Inicialmente sin ancho */
+  background: rgb(233, 30, 99); /* Color de la línea */
+ /* Transición suave */
+  margin-top: 5px; /* Espaciado entre el texto y la línea */
+  position: relative;
+}
+
+.footer .footer-link:hover::after {
+  width: 100%; /* Ancho completo al pasar el ratón */
+}
+
+/* Agrega una línea separadora entre secciones (opcional) */
+.footer .separator {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 20px 0; /* Margen para la línea separadora */
+}
+@media (max-width: 768px) {
+  .footer {
+    padding: 10px 0; /* Reduce significativamente el padding vertical */
+  }
+
   .footer h5 {
-    font-size: 16px;
-    font-weight: bold;
-    margin-bottom: 15px;
+    font-size: 14px; /* Reduce aún más el tamaño de los encabezados */
+    margin-bottom: 8px; /* Reduce el margen inferior */
   }
-  
-  .footer p {
-    font-size: 14px;
+
+  .footer p, .footer .small {
+    font-size: 10px; /* Reduce aún más el tamaño del texto */
+    line-height: 1.2; /* Reduce la altura de la línea para hacer el texto más compacto */
+    margin: 5px 0; /* Agrega un pequeño margen para mantener consistencia */
   }
-  
-  .footer a {
-    color: #aaa;
-    text-decoration: none;
-    transition: color 0.3s ease;
-  }
-  
-  .footer a:hover {
-    color: #fff;
-  }
-  
+
   .footer .fab {
-    font-size: 18px;
-    margin-right: 10px;
+    font-size: 18px; /* Reduce el tamaño de los iconos */
+    margin: 0 5px; /* Reduce el espaciado entre los iconos */
   }
-  
-  .footer .small {
-    font-size: 12px;
-    color: #777;
-  }
-  
+
   .footer .col-lg-4, .footer .col-md-6 {
-    padding-bottom: 20px;
+    padding-bottom: 5px; /* Reduce aún más el espaciado inferior de las columnas */
   }
-  
-  .footer .fab:hover {
-    color: #007bff;
+
+  .footer .social-icons {
+    margin-top: 10px; /* Reduce el margen superior de las secciones de iconos */
   }
-  
+}

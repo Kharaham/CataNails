@@ -1,0 +1,137 @@
+.admin-trabajos-container {
+    width: 100%;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  
+  h2, h3 {
+    color: #333;
+    font-weight: 600;
+  }
+  
+  .upload-section {
+    margin-bottom: 30px;
+  }
+  
+  .upload-section .form-control {
+    margin-bottom: 15px;
+  }
+  
+  .upload-section button {
+    width: 100%;
+  }
+  
+  .trabajos-list {
+    margin-top: 30px;
+  }
+  
+  .trabajos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+  }
+  
+  .trabajo-item {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .trabajo-item:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  .trabajo-title {
+    font-size: 16px;
+    text-align: center;
+    color: #333;
+    margin: 10px 0;
+  }
+  
+  .trabajo-actions {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .progress {
+    margin-top: 10px;
+  }
+  
+  .trabajo-img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    margin-bottom: 10px;
+  }
+  
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .pagination .btn {
+    margin: 0 5px;
+  }
+  
+  .btn-subir {
+    background-color: #e91e63;
+  }
+  
+  .btn-subir:hover {
+    transform: scale(1.02);
+    background-color: #e91e63;
+    border-bottom-color: 1px white;
+    color: white;
+  }
+  
+  /* Ajustes responsivos */
+  @media (max-width: 768px) {
+    .trabajos-grid {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 15px;
+    }
+  
+    .trabajo-title {
+      font-size: 14px;
+    }
+  
+    .trabajo-img {
+      height: 100px;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .trabajos-grid {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+  
+    .trabajo-item {
+      padding: 8px;
+    }
+  
+    .trabajo-title {
+      font-size: 13px;
+    }
+  
+    .trabajo-img {
+      height: 80px;
+    }
+  
+    .btn-subir {
+      width: 100%;
+      padding: 8px;
+      font-size: 0.9rem;
+    }
+  }
+  

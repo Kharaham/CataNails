@@ -1,0 +1,105 @@
+/* Estilos generales para la sección About */
+.about {
+    background-color: #f7f7f9;
+    padding: 60px 0;
+    
+  }
+  
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.0rem;
+    color: #333;
+    text-transform: uppercase;
+    position: relative;
+  }
+  
+  .section-title::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 4px;
+    background-color: #ff79c6;
+    margin: 10px auto;
+    border-radius: 2px;
+  }
+  
+  .about-card {
+    background: #fff;
+    padding: 20px;
+    
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+  }
+  
+  .about-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  }
+  
+  .about-card h4 {
+    font-size: 1.8rem;
+    color: #ff79c6;
+    margin-top: 15px;
+  }
+  
+  .about-card p, .about-card ul {
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.6;
+  }
+  
+  .about-card ul {
+    padding-left: 0;
+    list-style: none;
+  }
+  
+  .about-card ul li {
+    margin-bottom: 10px;
+  }
+  
+  .icon {
+    font-size: 2.5rem;
+    color: #ff79c6;
+    margin-bottom: 15px;
+    transition: color 0.3s ease;
+  }
+  
+  .about-card:hover .icon {
+    color: #d500f9;
+  }
+  
+  @media (max-width: 768px) {
+    .section-title {
+      font-size: 2rem;
+    }
+  
+    .about-card h4 {
+      font-size: 1.6rem;
+    }
+  
+    .about-card p, .about-card ul {
+      font-size: 0.95rem;
+    }
+  }
+  
+
+.btn-contacto-about{
+  background-color: #ff79c6;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1em;
+  font-weight: bold;
+  width: 100%;
+  border-radius: 4px;
+ 
+ 
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  box-shadow: none;
+  border: 1px solid #ff79c6; /* Cambia el color del borde al hacer clic, si lo deseas */
+}

@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { HomeViewModel } from "../../viewmodels/HomeViewModel";
+import ReviewSection from "../../components/common/ReviewSection"; // Asegúrate de ajustar la ruta según tu estructura
 import "../../styles/components/home.css";
 import profesional from "../../assets/images/home/profesional.jpg";
+import homeStudio1 from "../../assets/images/home/home1.jpg";
+import homeStudio2 from "../../assets/images/home/home2.jpg";
+import homeStudio3 from "../../assets/images/home/home3.jpg";
+import homeStudio4 from "../../assets/images/home/home4.jpg";
 
 const Home = () => {
   const [services, setServices] = useState([]);
-  const navigate = useNavigate(); // Hook para la navegación
+  const navigate = useNavigate();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const viewModel = new HomeViewModel();
 
@@ -14,27 +19,22 @@ const Home = () => {
     setServices(viewModel.getServices());
   }, [viewModel]);
 
-  // Función para manejar el clic en el botón "Ver Servicios"
   const handleServiceClick = (servicePath) => {
-    navigate(servicePath); // Navega a la ruta del servicio
+    navigate(servicePath);
   };
 
   return (
     <div className="home-container">
-      {/* Fondo minimalista */}
       <div className="hero-section">
         <h1 className="hero-title">Bienvenido a CataaNails</h1>
-        <p className="hero-subtitle">
-          Belleza en manos y pies con un toque de perfección
-        </p>
+        <p className="hero-subtitle">El arte de cuidar tus uñas.</p>
       </div>
 
-      {/* Servicios */}
       <div className="services-section">
-        <h2 className="section-title">Nuestros Servicios</h2>
-        <div className="services-grid">
+        <h2 className="section-title text-center">Nuestros Servicios</h2>
+        <div className="services-grid text center">
           {services.map((service) => (
-            <div key={service.id} className="service-card">
+            <div key={service.id} className="service-cardHome">
               <img
                 src={service.image}
                 alt={service.name}
@@ -44,7 +44,7 @@ const Home = () => {
               <p className="service-description">{service.description}</p>
               <button
                 className="schedule-button"
-                onClick={() => handleServiceClick(service.path)} // Navega al servicio correspondiente
+                onClick={() => handleServiceClick(service.path)}
               >
                 Ver Servicios
               </button>
@@ -53,9 +53,11 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Información de la Profesional */}
+      {/* Sección de Reseñas de Clientes */}
+      <ReviewSection />
+
       <div className="professional-section text-center mt-5">
-        <h2 className="section-title mb-4">Conoce a Nuestra Profesional</h2>
+        <h2 className="section-title text-center mb-4 ">Profesional</h2>
         <div className="professional-info d-flex flex-column align-items-center">
           <img
             src={profesional}
@@ -63,21 +65,21 @@ const Home = () => {
             className="professional-image rounded-circle shadow-sm mb-3"
           />
           <p className="professional-description">
-            María López, con más de 10 años de experiencia en la estética de
+            Catalina Castro, con más de 3 años de experiencia en la estética de
             manos y pies, ofrece tratamientos personalizados de alta calidad
             para cada cliente.
           </p>
         </div>
       </div>
 
-      {/* Sucursales */}
-      <div className="branches-section mt-5">
+      {/* Ubicacion */}
+      <div className="branches-section">
         <h2 className="section-title text-center">Ubicación</h2>
         <p className="section-subtitle text-center">
           Visítanos en nuestro Home Studio
         </p>
         <div className="row">
-          <div className="col-md-6">
+          <div className="location-container">
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3329.688992307928!2d-70.64826718480083!3d-33.44052418077992!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9662c589ac6952a5%3A0x27b456d7626ae623!2sPallachata 1424, 3811616 Chillán, Ñuble!5e0!3m2!1sen!2scl!4v1637020226490!5m2!1sen!2scl"
               width="100%"
@@ -88,12 +90,28 @@ const Home = () => {
               title="Mapa de sucursales"
             ></iframe>
           </div>
-          <div className="col-md-6">
-            <h3 className="text-center mb-4">Home Studio</h3>
-            <div className="gallery">
+          <div className="branches-section" style={{ marginTop: "5px" }}></div>
+          <div className="home-studio-gallery">
+            <h3 className="section-title text-center">Home Studio</h3>
+            <div className="gallery-home">
               <img
-                src=""
-                alt="Home Studio"
+                src={homeStudio2}
+                alt="Home Studio 1"
+                className="img-fluid gallery-image rounded shadow-sm mb-3"
+              />
+              <img
+                src={homeStudio3}
+                alt="Home Studio 2"
+                className="img-fluid gallery-image rounded shadow-sm"
+              />
+              <img
+                src={homeStudio4}
+                alt="Home Studio 1"
+                className="img-fluid gallery-image rounded shadow-sm mb-3"
+              />
+              <img
+                src={homeStudio1}
+                alt="Home Studio 2"
                 className="img-fluid gallery-image rounded shadow-sm"
               />
             </div>

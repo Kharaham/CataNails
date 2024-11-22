@@ -1,25 +1,27 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, addDoc } from "firebase/firestore"; 
-
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { getStorage } from "firebase/storage"; // Si usas Storage
 
 // Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-   apiKey: "AIzaSyBpuo1fzABUl_6HeDxP-u312JVLZJBVTck",
-    authDomain: "registrologindemo.firebaseapp.com",
-    projectId: "registrologindemo",
-    storageBucket: "registrologindemo.appspot.com",
-    messagingSenderId: "1012979230577",
-    appId: "1:1012979230577:web:e1439915b395ebe7f0f8d0",
-    measurementId: "G-LZFYCC450N"
+  apiKey: "AIzaSyBpuo1fzABUl_6HeDxP-u312JVLZJBVTck",
+  authDomain: "registrologindemo.firebaseapp.com",
+  projectId: "registrologindemo",
+  storageBucket: "registrologindemo.appspot.com",
+  messagingSenderId: "1012979230577",
+  appId: "1:1012979230577:web:e1439915b395ebe7f0f8d0",
+  measurementId: "G-LZFYCC450N",
 };
 
-// Inicializar Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+// Inicializa Firebase solo una vez
+const firebaseApp = initializeApp(firebaseConfig);
+
+// Servicios de Firebase
+const db = getFirestore(firebaseApp);
+const auth = getAuth(firebaseApp);
+const storage = getStorage(firebaseApp);  // Si necesitas usar Firebase Storage
 
 // Función para agregar una cita
 export const addAppointment = async (appointment) => {
@@ -30,4 +32,9 @@ export const addAppointment = async (appointment) => {
     console.error("Error al agendar cita: ", e);
   }
 };
-export { db};
+
+// Exportamos lo que necesitamos en otros archivos
+export { db, auth, storage };
+
+// Exportamos la instancia de la app de Firebase para usarla en otros lugares si es necesario
+export default firebaseApp;

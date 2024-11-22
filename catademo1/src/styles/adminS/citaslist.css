@@ -1,0 +1,325 @@
+/* CitasList.css */
+
+/* Paleta de colores */
+:root {
+  --primary-color: #e91e63; /* Rosa vibrante */
+  --secondary-color: #ffffff; /* Blanco */
+  --name-color: #666666; /* Gris suave para los nombres */
+  --text-color: #333333; /* Color de texto oscuro */
+  --background-color: #f8f9fa; /* Fondo ligeramente gris */
+  --danger-color: #e91e63; /* Reutilizamos el rosa vibrante para el botón de eliminar */
+  --hover-shadow: rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+/* Contenedor principal */
+.citas-list-container {
+  padding: 20px;
+  background-color: var(--background-color);
+  border-radius: 8px;
+  box-shadow: 0 4px 10px var(--hover-shadow);
+  max-width: 100%; /* Limita el ancho máximo */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Encabezado de la página */
+h2 {
+  color: var(--primary-color);
+  font-family: 'Roboto', sans-serif;
+  font-size: 2rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* Estilo para las tarjetas */
+
+
+/* Título de la tarjeta (nombre) */
+.cita-card .card-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--name-color); /* Color para los nombres */
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* Subtítulo de la tarjeta (email) */
+.cita-card .card-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-color); /* Texto oscuro para el email */
+  font-family: 'Open Sans', sans-serif;
+}
+
+/* Texto dentro de la tarjeta */
+.cita-card .card-text {
+  color: var(--text-color);
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.9rem;
+  flex-grow: 1; /* Permite que el texto crezca */
+}
+
+
+
+
+
+
+/* Estilos de las pestañas */
+.nav-tabs .nav-link {
+  border: none;
+  color: var(--primary-color);
+  transition: color 0.3s;
+}
+
+.nav-tabs .nav-link.active {
+  color: var(--secondary-color);
+  background-color: var(--primary-color);
+}
+
+/* Ajustes responsivos */
+@media (max-width: 768px) {
+  .cita-card {
+      width: 100%; /* Tarjeta ocupa el 100% en pantallas pequeñas */
+  }
+}
+.domicilio-card {
+  background-color: #fff3e0; /* Un tono cálido y suave */
+  border: 1px solid #ffb74d; /* Borde ligeramente más oscuro */
+  box-shadow: 0 4px 8px rgba(255, 183, 77, 0.4); /* Sombra sutil para resaltar */
+}
+
+.card-img-top {
+width: 100%;
+height: 200px; /* Ajusta la altura según lo necesario */
+object-fit: cover; /* Hace que la imagen ocupe todo el cuadro */
+border-bottom: 1px solid #ddd;
+}
+
+/* Estilo del formulario */
+.filtro-agenda {
+  margin-top: 1rem;
+  max-width: 300px; /* Ajusta el tamaño del contenedor si es necesario */
+  margin: 1rem auto; /* Centra el formulario en la página */
+}
+
+/* Estilo del control de fecha */
+#filtro-agenda {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s ease;
+}
+
+#filtro-agenda:focus {
+  border-color: #d81b60; /* Cambia el color del borde al hacer foco */
+  outline: none;
+  box-shadow: 0 0 5px rgba(108, 99, 255, 0.5);
+}
+
+/* Estilo del botón */
+.filtro-agenda-boton {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background-color: #d81b60;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.filtro-agenda-boton:hover {
+  background-color: #d81b60;
+  transform: translateY(-2px);
+}
+
+
+
+/* Estilos para las tarjetas */
+.cita-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 300px;
+  margin: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: var(--secondary-color);
+  box-shadow: 0 4px 6px var(--hover-shadow);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.cita-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 12px var(--hover-shadow);
+}
+
+/* Imagen superior */
+/* Estilo para las imágenes dentro de las tarjetas */
+.cita-card .image-container {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* Mantiene una relación de aspecto 16:9 */
+  overflow: hidden;
+  border-radius: 8px 8px 0 0; /* Opcional, bordes redondeados en la parte superior */
+}
+
+.cita-card .image-container img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ajusta la imagen para que ocupe todo el espacio */
+}
+
+
+/* Contenido de la tarjeta */
+.card-title {
+  font-size: 1.2rem;
+  color: var(--text-color);
+  margin-bottom: 5px;
+}
+
+.card-text {
+  font-size: 0.9rem;
+  color: var(--name-color);
+  line-height: 1.5;
+}
+
+/* Contenedor de los botones */
+.cita-card .btn-container {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+/* Botones */
+.cita-card .btn {
+  flex: 1;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 6px;
+  padding: 8px 10px;
+}
+
+.cita-card .btn-eliminar {
+  background-color: var(--danger-color);
+  border: none;
+  color: var(--secondary-color);
+  transition: background-color 0.3s ease-in-out;
+}
+
+.cita-card .btn-eliminar:hover {
+  background-color: #b0003a;
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 768px) {
+  .cita-card {
+    width: 90%;
+  }
+}
+/* Botón base */
+.cita-card .btn {
+  flex: 1;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 6px;
+  padding: 8px 10px;
+  color: white;
+  transition: background-color 0.3s ease-in-out;
+}
+
+/* Botón de Realizada */
+.cita-card .btn-realizada {
+  background-color: #28a745; /* Verde */
+  border: none;
+}
+
+.cita-card .btn-realizada:hover {
+  background-color: #218838;
+}
+
+/* Botón de Cancelar */
+.cita-card .btn-cancelar {
+  background-color: #dc3545; /* Rojo */
+  border: none;
+}
+
+.cita-card .btn-cancelar:hover {
+  background-color: #c82333;
+}
+
+/* Botón de Eliminar */
+.cita-card .btn-eliminar {
+  background-color: #d63384; /* Rosa */
+  border: none;
+}
+
+.cita-card .btn-eliminar:hover {
+  background-color: #c2185b;
+}
+
+/* Contenedor de botones */
+.cita-card .btn-container {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+/* Estilo para tarjetas de Domicilio */
+.card-domicilio {
+  background-color: #ffe0b2; /* Un tono de naranja claro */
+  border-left: 5px solid #ffa726; /* Una línea distintiva en naranja */
+}
+
+.card-domicilio .card-title {
+  color: #bf360c; /* Un color más oscuro para el texto */
+}
+
+.card-domicilio .card-subtitle {
+  color: #e65100; /* Un color ligeramente más oscuro para los subtítulos */
+}
+
+.ingresar-precio {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Espacio entre el label y el input */
+}
+
+.ingresar-precio label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.ingresar-precio input {
+  padding: 8px 12px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.ingresar-precio input:focus {
+  border-color: #007bff; /* Cambio de color al hacer foco */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.ingresar-precio .invalid-feedback {
+  font-size: 0.875rem;
+  color: #dc3545;
+}
+
+.ingresar-precio .valid-feedback {
+  font-size: 0.875rem;
+  color: #28a745;
+}

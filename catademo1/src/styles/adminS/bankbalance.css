@@ -1,0 +1,209 @@
+/* Contenedor principal */
+
+
+/* Nueva clase para ocultar scroll en BankBalance */
+.bankbalance-container {
+    overflow: hidden;  /* Esto oculta el scroll */
+    height: 100vh;    /* Esto asegura que ocupe toda la altura de la ventana */
+    position: relative; /* Asegura un contexto de posicionamiento para los elementos hijos */
+}
+
+/* Tarjetas en una sola fila, expandiéndose a lo ancho */
+.money-cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    width: 100%;
+}
+
+/* Estilos para cada tarjeta */
+.money-card {
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.money-card h5 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.money-card p {
+    font-size: 1.3rem;
+    color: #e91e63;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* Efecto hover en las tarjetas */
+.money-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Otros estilos (inputs, botones, filtros) */
+.money-input-group {
+    display: flex;
+    gap: 10px;
+}
+
+.money-form-control, .money-form-select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.money-btn {
+    background-color: #e91e63;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.money-btn:hover {
+    background-color: #e91e63;
+}
+
+/* Lista de transacciones */
+.money-transaction-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+.money-list-group-item {
+    padding: 10px;
+    background-color: #fafafa;
+    border-bottom: 1px solid #ddd;
+    font-size: 0.9rem;
+}
+
+.money-search-btn {
+    background-color: #e91e63;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 15px;
+}
+/* Diseño responsivo para dispositivos móviles (pantallas pequeñas) */
+@media (max-width: 576px) {
+    /* Contenedor principal */
+    .bankbalance-container {
+        overflow-y: auto;  /* Permite desplazamiento vertical solo en pantallas pequeñas */
+        max-height: 100vh; /* Limita la altura al 100% del viewport */
+        padding-bottom: 20px; /* Espacio al final para evitar que el contenido quede cortado */
+    }
+
+    /* Ajustes de las tarjetas de resumen */
+    .money-cards-container {
+        grid-template-columns: 1fr; /* Tarjetas en una sola columna */
+        gap: 10px; /* Espacio entre tarjetas */
+    }
+
+    /* Ajustes en el grupo de inputs para que no se vean apretados */
+    .money-input-group {
+        flex-direction: column; /* Apila los inputs en una sola columna */
+        gap: 8px; /* Espacio entre los elementos */
+    }
+
+    /* Ajustes en los botones y inputs */
+    .money-btn {
+        width: 100%; /* Botones ocupan el ancho completo */
+        font-size: 0.9rem; /* Reduce el tamaño del texto ligeramente */
+        padding: 10px; /* Ajusta el padding para mejor apariencia */
+    }
+
+    .money-form-control, .money-form-select {
+        width: 100%; /* Inputs ocupan el ancho completo */
+        font-size: 0.9rem; /* Tamaño de fuente más pequeño para mayor legibilidad */
+    }
+
+    /* Lista de transacciones */
+    .money-transaction-list {
+        max-height: 200px; /* Limita la altura para no ocupar toda la pantalla */
+        overflow-y: auto; /* Permite desplazamiento dentro de la lista */
+    }
+
+    /* Ajuste en el texto del pie de página */
+    footer {
+        font-size: 0.8rem; /* Tamaño de fuente más pequeño */
+        text-align: center;
+    }
+}
+/* bankbalance.css */
+
+/* Estilos generales para las tarjetas */
+/* Estilos generales para las tarjetas */
+.money-card {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin: 15px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .money-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  .money-card h5 {
+    font-size: 22px;
+    color: #333333;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  
+  .money-card p {
+    font-size: 26px;
+    color: #ffffff;
+    font-weight: 700;
+    margin-top: 10px;
+  }
+  
+  /* Colores personalizados para cada tarjeta (suavizados) */
+  .money-card.daily {
+    background-color: #ffcc80; /* Naranja suave */
+  }
+  
+  .money-card.monthly {
+    background-color: #81d4fa; /* Azul suave */
+  }
+  
+  .money-card.annual {
+    background-color: #a5d6a7; /* Verde suave */
+  }
+  
+  .money-card.total {
+    background-color: #d1c4e9; /* Lavanda suave */
+  }
+  
+  /* Estilos adicionales para bordes y sombras */
+  .money-card h5,
+  .money-card p {
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .money-card p {
+    font-size: 32px;
+    color: #fff;
+    letter-spacing: 1px;
+  }
+  

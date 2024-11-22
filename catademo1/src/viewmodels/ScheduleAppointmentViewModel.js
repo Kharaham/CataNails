@@ -1,50 +1,29 @@
-import { useState } from 'react';
-import { addAppointment } from '../firebase/firebase'; // Ruta hacia firebase.js
+import { useState } from "react";
 
 const useScheduleAppointmentViewModel = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [date, setDate] = useState('');
-  const [time, setTime] = useState('');
-  const [service, setService] = useState('');
-  const [mode, setMode] = useState('');
-  const [comment, setComment] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
 
-  const handleSubmit = async (e) => {
+  // Método para establecer automáticamente los datos de usuario logueado
+  const setUserData = (userData) => {
+    setName(userData.nombre || "");
+    setEmail(userData.correo || "");
+  };
+
+  // Método para manejar el envío del formulario
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setLoading(true);
-    try {
-      await addAppointment({
-        name, email, date, time, service, mode, comment
-      });
-      setSuccess(true);
-      setName('');
-      setEmail('');
-      setDate('');
-      setTime('');
-      setService('');
-      setMode('');
-      setComment('');
-    } catch (error) {
-      setError('Error al agendar la cita');
-    } finally {
-      setLoading(false);
-    }
+    // Aquí iría el código para procesar el agendamiento de la cita
+    console.log("Cita agendada para:", name, email);
   };
 
   return {
-    name, setName,
-    email, setEmail,
-    date, setDate,
-    time, setTime,
-    service, setService,
-    mode, setMode,
-    comment, setComment,
-    loading, success, error,
-    handleSubmit
+    name,
+    setName,
+    email,
+    setEmail,
+    setUserData, // Retorna la función para establecer datos de usuario
+    handleSubmit,
   };
 };
 
