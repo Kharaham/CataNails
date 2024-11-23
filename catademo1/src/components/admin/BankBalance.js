@@ -34,7 +34,6 @@ const BankBalance = () => {
   const fetchTransactions = () => {
     const ingresosRef = collection(db, "ingresos");
 
-    // Escuchar en tiempo real cambios en la colección ingresos
     onSnapshot(ingresosRef, (snapshot) => {
       const fetchedTransactions = [];
       let total = 0;
