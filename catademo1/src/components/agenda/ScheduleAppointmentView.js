@@ -170,11 +170,6 @@ const ScheduleAppointmentView = () => {
     return !bookedHours.includes(hour) && !isBlockedHour;
   });
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 
