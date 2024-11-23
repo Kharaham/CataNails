@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { getFirestore, collection, getDocs, orderBy, query } from "firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  orderBy,
+  query,
+} from "firebase/firestore";
 import firebaseApp from "../../firebase/firebase";
 import { ToastContainer, toast } from "react-toastify";
 import emailjs from "emailjs-com";
@@ -15,7 +21,10 @@ const AdminContactComments = () => {
   useEffect(() => {
     const fetchContactComments = async () => {
       try {
-        const q = query(collection(db, "contactos"), orderBy("timestamp", "desc"));
+        const q = query(
+          collection(db, "contactos"),
+          orderBy("timestamp", "desc")
+        );
         const querySnapshot = await getDocs(q);
         const commentsData = querySnapshot.docs.map((doc) => ({
           id: doc.id,
@@ -64,7 +73,12 @@ const AdminContactComments = () => {
     };
 
     emailjs
-      .send("service_d7i4cqe", "template_pd2dz5u", templateParams, "S2X9g3S8OrR0K4J_z")
+      .send(
+        "service_d7i4cqe",
+        "template_pd2dz5u",
+        templateParams,
+        "S2X9g3S8OrR0K4J_z"
+      )
       .then(
         () => {
           toast.success("Respuesta enviada con éxito.");
@@ -75,7 +89,9 @@ const AdminContactComments = () => {
         },
         (error) => {
           console.error("Error:", error);
-          toast.error("Hubo un error al enviar la respuesta, por favor intente de nuevo.");
+          toast.error(
+            "Hubo un error al enviar la respuesta, por favor intente de nuevo."
+          );
         }
       );
   };
@@ -104,8 +120,6 @@ const AdminContactComments = () => {
             <p className="contact-comment-timestamp">
               {new Date(comment.timestamp?.seconds * 1000).toLocaleString()}
             </p>
-
-            {/* Responder al comentario */}
             <div className="reply-section">
               <textarea
                 className="form-control"

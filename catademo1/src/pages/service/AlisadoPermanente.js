@@ -1,4 +1,4 @@
-import "../../styles/components/services.css"; // Usamos el CSS unificado
+import "../../styles/components/services.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -56,7 +56,6 @@ const AlisadoPermanente = () => {
             className="mb-4 d-flex justify-content-center"
           >
             <Card className="service-card shadow-sm">
-              {/* Imagen del servicio */}
               {service.ImagenUrl && (
                 <Card.Img
                   variant="top"
@@ -81,7 +80,6 @@ const AlisadoPermanente = () => {
         ))}
       </Row>
 
-      {/* Botón "Agendar" fuera de las tarjetas */}
       <div className="text-center my-4">
         <Button
           variant="custom"

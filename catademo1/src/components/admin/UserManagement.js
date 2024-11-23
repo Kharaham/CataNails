@@ -1,7 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { db } from '../../firebase/firebase';
-import { collection, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useState, useEffect } from "react";
+import { db } from "../../firebase/firebase";
+import {
+  collection,
+  getDocs,
+  deleteDoc,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "../../styles/adminS/usuarios.css";
 import emailjs from "emailjs-com";
 import { ToastContainer, toast } from "react-toastify";
@@ -13,9 +19,12 @@ const UserManagement = () => {
 
   const fetchUsers = async () => {
     try {
-      const usersCollection = collection(db, 'usuarios');
+      const usersCollection = collection(db, "usuarios");
       const usersSnapshot = await getDocs(usersCollection);
-      const usersList = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const usersList = usersSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
       setUsers(usersList);
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -24,23 +33,28 @@ const UserManagement = () => {
 
   const deleteUser = async (userId) => {
     try {
-      await deleteDoc(doc(db, 'usuarios', userId));
-      setUsers(users.filter(user => user.id !== userId));
+      await deleteDoc(doc(db, "usuarios", userId));
+      setUsers(users.filter((user) => user.id !== userId));
     } catch (error) {
       console.error("Error deleting user:", error);
     }
   };
 
-  // Función para enviar un correo de descuento
   const sendDiscountEmail = (userEmail) => {
     const templateParams = {
       from_name: "Administrador",
       to_email: userEmail,
-      mensaje: "¡Felicidades! Has alcanzado 30 puntos de fidelidad y tienes un descuento del 10% en tu próxima compra. Gracias por tu preferencia.",
+      mensaje:
+        "¡Felicidades! Has alcanzado 30 puntos de fidelidad y tienes un descuento del 10% en tu próxima compra. Gracias por tu preferencia.",
     };
 
     emailjs
-      .send("service_d7i4cqe", "template_pd2dz5u", templateParams, "S2X9g3S8OrR0K4J_z")
+      .send(
+        "service_d7i4cqe",
+        "template_pd2dz5u",
+        templateParams,
+        "S2X9g3S8OrR0K4J_z"
+      )
       .then(
         () => {
           toast.success("Correo de descuento enviado con éxito.");
@@ -52,21 +66,23 @@ const UserManagement = () => {
       );
   };
 
-  // Función para incrementar los puntos de fidelidad en 5
   const incrementPoints = async (userId, currentPoints, userEmail) => {
     const newPoints = (currentPoints || 0) + 5;
 
     try {
-      const userRef = doc(db, 'usuarios', userId);
+      const userRef = doc(db, "usuarios", userId);
       await updateDoc(userRef, { puntosFidelidad: newPoints });
-      setUsers(users.map(user =>
-        user.id === userId ? { ...user, puntosFidelidad: newPoints } : user
-      ));
+      setUsers(
+        users.map((user) =>
+          user.id === userId ? { ...user, puntosFidelidad: newPoints } : user
+        )
+      );
 
-      // Verificar si los puntos alcanzan 30 para mostrar mensaje y enviar el correo
       if (newPoints >= 30 && currentPoints < 30) {
-        setDiscountMessage(`¡Felicidades! Has alcanzado 30 puntos y tienes un descuento del 10%!`);
-        sendDiscountEmail(userEmail);  // Llamada para enviar el correo
+        setDiscountMessage(
+          `¡Felicidades! Has alcanzado 30 puntos y tienes un descuento del 10%!`
+        );
+        sendDiscountEmail(userEmail);
       } else {
         setDiscountMessage(null);
       }
@@ -82,12 +98,12 @@ const UserManagement = () => {
   return (
     <div className="user-management-container mt-4">
       <ToastContainer />
-      <h5 className="user-management-title text-center mb-3">Gestión de Usuarios</h5>
+      <h5 className="user-management-title text-center mb-3">
+        Gestión de Usuarios
+      </h5>
 
       {discountMessage && (
-        <div className="alert alert-success text-center">
-          {discountMessage}
-        </div>
+        <div className="alert alert-success text-center">{discountMessage}</div>
       )}
 
       <div className="user-management-table-wrapper">
@@ -112,7 +128,13 @@ const UserManagement = () => {
                 <td>{user.puntosFidelidad || 0}</td>
                 <td>
                   <button
-                    onClick={() => incrementPoints(user.id, user.puntosFidelidad, user.correo)}
+                    onClick={() =>
+                      incrementPoints(
+                        user.id,
+                        user.puntosFidelidad,
+                        user.correo
+                      )
+                    }
                     className="btn-increment"
                   >
                     +5 Puntos

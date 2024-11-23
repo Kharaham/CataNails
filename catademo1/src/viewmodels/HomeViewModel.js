@@ -1,8 +1,8 @@
 import { Service } from "../models/Service";
-import manicureImg from "../assets/images/home/m2.jpg";
-import pedicureImg from "../assets/images/home/p1.jpg";
-import botoxImg from "../assets/images/home/bo1.jpg";
-import alisadoImg from "../assets/images/home/ali1.jpg";
+import manicureImg from "../assets/images/home/m2.WebP";
+import pedicureImg from "../assets/images/home/p1.WebP";
+import botoxImg from "../assets/images/home/bo1.WebP";
+import alisadoImg from "../assets/images/home/ali1.WebP";
 
 export class HomeViewModel {
   constructor() {

@@ -18,7 +18,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import "../../styles/adminS/dashboard.css";
 
-
 const Dashboard = () => {
   const [clientes, setClientes] = useState(0);
   const [citasPendientes, setCitasPendientes] = useState([]);
@@ -58,17 +57,15 @@ const Dashboard = () => {
           };
         });
 
-        // Filtrar citas por rango de hora (10:00 am a 8:00 pm)
         citas = citas.filter((cita) => {
           const hour = parseInt(cita.hour.split(":")[0], 10);
           return hour >= 10 && hour <= 20;
         });
 
-        // Ordenar las citas por fecha y luego por hora de forma ascendente (antigua a reciente)
         citas.sort((a, b) => {
           const dateA = new Date(`${a.date}T${a.hour}`);
           const dateB = new Date(`${b.date}T${b.hour}`);
-          return dateA - dateB; // Cambiado para ordenar de antigua a reciente
+          return dateA - dateB;
         });
 
         setCitasPendientes(citas.filter((cita) => !cita.completed));
@@ -112,11 +109,11 @@ const Dashboard = () => {
     if (option === "all") {
       citasFiltradas = citas;
     } else if (option === "pending") {
-      citasFiltradas = citasPendientes.filter((cita) => !cita.canceled); // Excluir canceladas en "Pendientes"
+      citasFiltradas = citasPendientes.filter((cita) => !cita.canceled);
     } else if (option === "completed") {
       citasFiltradas = citasRealizadas;
     } else if (option === "canceled") {
-      citasFiltradas = citas.filter((cita) => cita.canceled); // Nuevo filtro para canceladas
+      citasFiltradas = citas.filter((cita) => cita.canceled);
     }
 
     if (date) {
@@ -126,10 +123,10 @@ const Dashboard = () => {
     citasFiltradas.sort((a, b) => {
       const dateA = new Date(`${a.date}T${a.hour}`);
       const dateB = new Date(`${b.date}T${b.hour}`);
-      return dateA - dateB; // Ordenar de más reciente a menos reciente
+      return dateA - dateB;
     });
 
-    setFilteredCitas(citasFiltradas.slice(0, 6)); // Limitar a un máximo de 6 citas
+    setFilteredCitas(citasFiltradas.slice(0, 6));
   };
 
   const handleDateChange = (e) => {

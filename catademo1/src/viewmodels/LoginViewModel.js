@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Importar useNavigate
+import { useNavigate } from "react-router-dom";
 import firebaseApp from "../firebase/firebase";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
@@ -10,11 +10,11 @@ const firestore = getFirestore(firebaseApp);
 export const useLoginViewModel = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState(""); // Estado para el nombre
-  const [phone, setPhone] = useState(""); // Estado para el teléfono
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
   const [error, setError] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const navigate = useNavigate(); // Hook para navegación
+  const navigate = useNavigate();
 
   const register = async (rol) => {
     try {
@@ -24,17 +24,16 @@ export const useLoginViewModel = () => {
         password
       );
 
-      // Crear documento en "usuarios" con el UID del usuario
       const docRef = doc(firestore, `usuarios/${userCredential.user.uid}`);
       await setDoc(docRef, {
         correo: email,
         rol,
-        nombre: name, // Asegúrate de guardar el nombre
-        telefono: phone, // Asegúrate de guardar el teléfono
+        nombre: name,
+        telefono: phone,
       });
 
       setIsAuthenticated(true);
-      navigate("/"); // Redirigir al home después del registro
+      navigate("/");
     } catch (error) {
       console.error("Error al registrar usuario:", error);
       setError("Error al registrar el usuario.");
@@ -48,9 +47,9 @@ export const useLoginViewModel = () => {
     password,
     setPassword,
     name,
-    setName, // Exponer la función para manejar el nombre
+    setName,
     phone,
-    setPhone, // Exponer la función para manejar el teléfono
+    setPhone,
     error,
     isAuthenticated,
     register,

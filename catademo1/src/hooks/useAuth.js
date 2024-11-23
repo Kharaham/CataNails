@@ -33,7 +33,7 @@ const useAuth = () => {
     return () => unsubscribe();
   }, [auth]);
 
-  return { user, setUser }; // Devolver setUser
+  return { user, setUser };
 };
 
 export default useAuth;

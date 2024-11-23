@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
-import "../../styles/components/trabajorealizado.css"; // Cambié el nombre del archivo CSS
+import "../../styles/components/trabajorealizado.css";
 
 const TrabajosRealizados = () => {
-  const [trabajosRealizados, setTrabajosRealizados] = useState([]); // Cambié el nombre de la variable
+  const [trabajosRealizados, setTrabajosRealizados] = useState([]);
 
   useEffect(() => {
-    const fetchTrabajosRealizados = async () => { // Cambié el nombre de la función
+    const fetchTrabajosRealizados = async () => {
       const querySnapshot = await getDocs(collection(db, "trabajos"));
       const trabajosArray = querySnapshot.docs.map((doc) => ({
         id: doc.id,
@@ -20,22 +20,22 @@ const TrabajosRealizados = () => {
   }, []);
 
   return (
-    <div className="container trabajos-realizados-container"> {/* Cambié el nombre de la clase */}
+    <div className="container trabajos-realizados-container">
       <h1 className="text-center mb-4 section-title">Trabajos Realizados</h1>
       <p className="text-center mb-5 section-subtitle">
         Algunos de nuestros trabajos más destacados
       </p>
 
-      <div className="trabajos-realizados-grid"> {/* Cambié el nombre de la clase */}
+      <div className="trabajos-realizados-grid">
         {trabajosRealizados.map((trabajo) => (
-          <div key={trabajo.id} className="trabajo-realizado-item"> {/* Cambié el nombre de la clase */}
+          <div key={trabajo.id} className="trabajo-realizado-item">
             <img
               src={trabajo.imgSrc}
               alt={trabajo.title}
-              className="trabajo-realizado-img" 
+              className="trabajo-realizado-img"
             />
-            <div className="trabajo-realizado-overlay"> {/* Cambié el nombre de la clase */}
-              <h5 className="trabajo-realizado-title">{trabajo.title}</h5> {/* Cambié el nombre de la clase */}
+            <div className="trabajo-realizado-overlay">
+              <h5 className="trabajo-realizado-title">{trabajo.title}</h5>
             </div>
           </div>
         ))}

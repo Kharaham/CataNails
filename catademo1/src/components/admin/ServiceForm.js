@@ -2,14 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Card, Form, Button } from "react-bootstrap";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-
 const ServiceForm = ({ service, onSave, onCancel }) => {
   const [nombre, setNombre] = useState("");
   const [precio, setPrecio] = useState("");
   const [tipo, setTipo] = useState("");
   const [categoria, setCategoria] = useState("");
-  const [imagen, setImagen] = useState(null); // Nuevo estado para la imagen
-  const [imagenUrl, setImagenUrl] = useState(""); // URL de la imagen subida
+  const [imagen, setImagen] = useState(null);
+  const [imagenUrl, setImagenUrl] = useState("");
 
   useEffect(() => {
     if (service) {
@@ -17,7 +16,7 @@ const ServiceForm = ({ service, onSave, onCancel }) => {
       setPrecio(service.Precio);
       setTipo(service.Tipo);
       setCategoria(service.categoria);
-      setImagenUrl(service.ImagenUrl || ""); // Obtener la URL de la imagen existente, si hay
+      setImagenUrl(service.ImagenUrl || "");
     } else {
       setNombre("");
       setPrecio("");
@@ -28,14 +27,13 @@ const ServiceForm = ({ service, onSave, onCancel }) => {
   }, [service]);
 
   const handleImageChange = (e) => {
-    setImagen(e.target.files[0]); // Obtener la imagen seleccionada
+    setImagen(e.target.files[0]);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Subir la imagen a Firebase Storage y obtener la URL
-    let imageUrl = imagenUrl; // Usar la URL existente si no se sube una nueva imagen
+    let imageUrl = imagenUrl;
 
     if (imagen) {
       const storage = getStorage();
@@ -46,14 +44,13 @@ const ServiceForm = ({ service, onSave, onCancel }) => {
       imageUrl = await getDownloadURL(imageRef);
     }
 
-    // Pasar los campos con nombres en mayúscula para Firestore, incluyendo la URL de la imagen
     onSave({
       id: service ? service.id : null,
       Nombre: nombre,
       Precio: precio,
       Tipo: tipo,
       categoria,
-      ImagenUrl: imageUrl, // Guardar la URL de la imagen
+      ImagenUrl: imageUrl,
     });
   };
 
@@ -118,7 +115,6 @@ const ServiceForm = ({ service, onSave, onCancel }) => {
             </Form.Select>
           </Form.Group>
 
-          {/* Campo de subida de imagen */}
           <Form.Group className="mb-3">
             <Form.Label>Imagen del Servicio</Form.Label>
             <Form.Control type="file" onChange={handleImageChange} />

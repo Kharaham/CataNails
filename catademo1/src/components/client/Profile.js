@@ -1,5 +1,3 @@
-// Profile.js
-
 import React, { useEffect, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -136,8 +134,12 @@ const Profile = () => {
     );
   };
 
-  const citasEnProgreso = citas.filter((cita) => !cita.completed && !cita.canceled);
-  const historialCitas = citas.filter((cita) => cita.completed || cita.canceled);
+  const citasEnProgreso = citas.filter(
+    (cita) => !cita.completed && !cita.canceled
+  );
+  const historialCitas = citas.filter(
+    (cita) => cita.completed || cita.canceled
+  );
 
   return (
     <div className="profile-container">

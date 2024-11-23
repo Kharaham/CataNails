@@ -1,21 +1,21 @@
-/* Ajustes generales */
+
 .dashboard-container {
   padding: 20px;
 }
 
-/* Estilo para citas pendientes */
+
 .appointment-item.pending {
-  background-color: #FFF9C4; /* Amarillo claro */
+  background-color: #FFF9C4; 
   border-left: 5px solid #FFEB3B;
 }
 
-/* Estilo para citas realizadas */
+
 .appointment-item.completed {
-  background-color: #C8E6C9; /* Verde claro */
+  background-color: #C8E6C9; 
   border-left: 5px solid #4CAF50;
 }
 
-/* Estilos para citas */
+
 .appointment-item {
   display: flex;
   align-items: center;
@@ -32,7 +32,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* Estilos para tarjetas */
+
 .custom-card {
   text-align: center;
   padding: 20px;
@@ -49,7 +49,7 @@
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-/* Colores específicos por tipo de tarjeta */
+
 .custom-card.clientes-card {
   background: linear-gradient(135deg, #e3f2fd, #bbdefb);
 }
@@ -66,9 +66,7 @@
   background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
 }
 
-/* Responsive Design */
 
-/* Dispositivos pequeños (smartphones) */
 @media (max-width: 576px) {
   .custom-card {
     padding: 15px;
@@ -88,7 +86,7 @@
   }
 
   .appointment-item {
-    flex-direction: column;  /* Hace que las citas se apilen verticalmente */
+    flex-direction: column; 
     align-items: flex-start;
   }
 
@@ -97,7 +95,6 @@
   }
 }
 
-/* Tablets y pantallas medianas */
 @media (min-width: 577px) and (max-width: 768px) {
   .custom-card {
     padding: 18px;
@@ -105,11 +102,11 @@
   }
 
   .appointment-item {
-    flex-direction: row; /* Mantiene la disposición en fila */
+    flex-direction: row; /
   }
 }
 
-/* Pantallas grandes */
+
 @media (min-width: 769px) and (max-width: 1199px) {
   .custom-card {
     padding: 20px;
@@ -117,11 +114,11 @@
   }
 
   .appointment-item {
-    flex-direction: row; /* Mantiene la disposición en fila */
+    flex-direction: row; 
   }
 }
 
-/* Pantallas extra grandes */
+
 @media (min-width: 1200px) {
   .appointment-item {
     padding: 20px;
@@ -142,59 +139,59 @@
 }
 
 .appointment-item.canceled {
-  background-color: #f8d7da; /* Fondo rojo claro */
-  color: #721c24; /* Texto rojo oscuro */
-  border-left: 5px solid #f5c6cb; /* Borde rojo */
+  background-color: #f8d7da; 
+  color: #721c24; 
+  border-left: 5px solid #f5c6cb; 
 }
 
-/* Ajustes adicionales para pantallas muy pequeñas */
+
 @media (max-width: 767px) {
   .appointment-card {
-    margin-bottom: 10px; /* Asegura espacio entre tarjetas */
-    padding: 15px; /* Aumenta el padding para dispositivos pequeños */
+    margin-bottom: 10px; 
+    padding: 15px; 
   }
 
   .appointment-item {
-    margin-bottom: 20px; /* Aumenta el margen entre citas */
+    margin-bottom: 20px; 
   }
 
-  /* Ajustes para citas realizadas */
+
   .appointment-item.completed {
     padding: 12px;
     font-size: 14px;
   }
 }
 
-/* Encabezado del popover */
+
 .popover-header-custom {
-  background-color: #563d7c; /* Color elegante, púrpura oscuro */
-  color: #fff; /* Texto blanco */
+  background-color: #563d7c; 
+  color: #fff; 
   font-weight: 600;
   text-align: center;
-  border-bottom: 2px solid #6c5ab8; /* Línea decorativa */
+  border-bottom: 2px solid #6c5ab8; 
   padding: 0.75rem;
-  border-radius: 0.5rem 0.5rem 0 0; /* Bordes redondeados en la parte superior */
+  border-radius: 0.5rem 0.5rem 0 0; 
 }
 
-/* Cuerpo del popover */
+
 .popover-body-custom {
-  background-color: #f9f9fb; /* Fondo claro y limpio */
-  color: #333; /* Texto oscuro */
+  background-color: #f9f9fb; 
+  color: #333; 
   padding: 1.25rem;
-  border-radius: 0 0 0.5rem 0.5rem; /* Bordes redondeados en la parte inferior */
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+  border-radius: 0 0 0.5rem 0.5rem; 
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); 
 }
 
-/* Lista de citas */
+
 .citas-list {
-  list-style: none; /* Sin viñetas */
+  list-style: none; 
   padding: 0;
   margin: 0;
 }
 
-/* Ítems individuales de la lista */
+
 .cita-item {
-  border-bottom: 1px solid #ddd; /* Línea divisoria */
+  border-bottom: 1px solid #ddd; 
   padding: 0.5rem 0;
   display: flex;
   flex-direction: column;
@@ -203,33 +200,33 @@
 }
 
 .cita-item:last-child {
-  border-bottom: none; /* Sin borde en el último elemento */
+  border-bottom: none; 
 }
 
-/* Detalles de cada cita */
+
 .cita-detail {
   font-size: 0.9rem;
-  color: #555; /* Texto en gris intermedio */
+  color: #555; 
 }
 
 .cita-item:hover {
-  background-color: #f1f1f5; /* Fondo claro al pasar el mouse */
+  background-color: #f1f1f5; 
   border-radius: 0.25rem;
 }
 
-/* Texto cuando no hay citas */
+
 .no-citas-text {
   font-size: 0.95rem;
-  color: #999; /* Texto gris claro */
+  color: #999; 
   text-align: center;
-  font-style: italic; /* Añade estilo cursivo */
+  font-style: italic; 
   padding: 0.5rem 0;
 }
 
-/* Efectos adicionales */
+
 .popover {
-  border: none; /* Sin borde estándar */
-  border-radius: 0.5rem; /* Bordes redondeados generales */
+  border: none; 
+  border-radius: 0.5rem; 
   overflow: hidden;
 }
 
@@ -241,7 +238,7 @@
   transform: translateX(-50%);
   width: 12px;
   height: 12px;
-  background-color: #563d7c; /* Color del encabezado */
-  transform: rotate(45deg); /* Flecha */
+  background-color: #563d7c; 
+  transform: rotate(45deg); 
   z-index: -1;
 }

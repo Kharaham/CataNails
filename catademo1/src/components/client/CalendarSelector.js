@@ -2,18 +2,29 @@ import React, { useEffect, useState } from "react";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 
-const CalendarSelector = ({ selectedDate, setSelectedDate, selectedHour, setSelectedHour }) => {
+const CalendarSelector = ({
+  selectedDate,
+  setSelectedDate,
+  selectedHour,
+  setSelectedHour,
+}) => {
   const [blockedDays, setBlockedDays] = useState([]);
   const [blockedHours, setBlockedHours] = useState([]);
-  const [availableHours] = useState(["10:00", "12:00", "14:00", "16:00", "18:00", "20:00"]);
+  const [availableHours] = useState([
+    "10:00",
+    "12:00",
+    "14:00",
+    "16:00",
+    "18:00",
+    "20:00",
+  ]);
   const [bookedHours, setBookedHours] = useState([]);
 
   const getTodayDate = () => {
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Asegura que sea la fecha actual sin tiempo
+    today.setHours(0, 0, 0, 0);
     return today.toISOString().split("T")[0];
   };
-  
 
   const loadBlockedDays = async () => {
     const blockedDaysRef = collection(db, "blockedDays");
@@ -76,12 +87,12 @@ const CalendarSelector = ({ selectedDate, setSelectedDate, selectedHour, setSele
       {selectedDate && blockedDays.includes(selectedDate) && (
         <p style={{ color: "red" }}>CataNails fuera de servicio</p>
       )}
-      
+
       <label htmlFor="hour">Hora:</label>
       {filteredHours.length > 0 ? (
         <select
           id="hour"
-          onChange={(e) => setSelectedHour(e.target.value)} // Asegúrate de que selectedHour es una función
+          onChange={(e) => setSelectedHour(e.target.value)}
           required
           disabled={blockedDays.includes(selectedDate)}
         >

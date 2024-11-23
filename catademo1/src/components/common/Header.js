@@ -7,7 +7,7 @@ import { getAuth } from "firebase/auth";
 const Header = ({ user }) => {
   const auth = getAuth();
   const navigate = useNavigate();
-  const [isNavbarCollapsed, setIsNavbarCollapsed] = useState(true); // Estado para controlar el colapso del navbar
+  const [isNavbarCollapsed, setIsNavbarCollapsed] = useState(true);
 
   const handleLogout = () => {
     auth.signOut();
@@ -19,17 +19,15 @@ const Header = ({ user }) => {
     } else {
       navigate("/perfil");
     }
-    setIsNavbarCollapsed(true); // Cerrar el navbar en modo responsivo
+    setIsNavbarCollapsed(true);
   };
 
-  // Función para manejar el colapso del navbar cuando se hace clic en un enlace
   const handleNavLinkClick = () => {
     if (window.innerWidth <= 768) {
       setIsNavbarCollapsed(true);
     }
   };
 
-  // Función para alternar el estado del navbar al hacer clic en el botón hamburguesa
   const toggleNavbar = () => {
     setIsNavbarCollapsed(!isNavbarCollapsed);
   };
@@ -127,7 +125,11 @@ const Header = ({ user }) => {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/about" onClick={handleNavLinkClick}>
+                <Link
+                  className="nav-link"
+                  to="/about"
+                  onClick={handleNavLinkClick}
+                >
                   Sobre Nosotros
                 </Link>
               </li>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaBullseye, FaEye, FaHandsHelping, FaHeart } from "react-icons/fa";
-import { db, auth } from "../../firebase/firebase"; // Asegúrate de importar la configuración de Firebase
+import { db, auth } from "../../firebase/firebase";
 import { addDoc, collection, query, where, getDocs } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import "../../styles/components/about.css";
@@ -14,7 +14,6 @@ const About = () => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
-  // Función para cargar datos del usuario si está autenticado
   const loadUserData = async (email) => {
     const userRef = collection(db, "usuarios");
     const q = query(userRef, where("correo", "==", email));
@@ -30,10 +29,8 @@ const About = () => {
   };
 
   useEffect(() => {
-    // Observar el estado de autenticación del usuario
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        // Si el usuario está autenticado, cargar sus datos
         loadUserData(user.email);
       }
     });
@@ -42,7 +39,6 @@ const About = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Guarda el mensaje en la colección "mensajes" en Firestore
       await addDoc(collection(db, "contactos"), {
         name: formData.name,
         email: formData.email,
@@ -134,7 +130,6 @@ const About = () => {
           </div>
         </div>
 
-        {/* Formulario de Contacto */}
         <div className="contact-form">
           <h3>Contacto</h3>
           {success && (

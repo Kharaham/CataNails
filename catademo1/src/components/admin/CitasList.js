@@ -92,7 +92,6 @@ const CitasList = () => {
         })
       );
 
-      // Ordenar las citas por fecha (de más reciente a menos reciente)
       citasList.sort((a, b) => new Date(b.date) - new Date(a.date));
 
       setCitas(citasList.filter((cita) => !cita.completed && !cita.canceled));

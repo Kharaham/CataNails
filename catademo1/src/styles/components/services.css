@@ -1,122 +1,113 @@
-/* Estilos generales para todos los servicios */
 .service-card {
-    border: none;
-    border-radius: 10px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    width: 350px;
-    height: 300px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+  border: none;
+  border-radius: 10px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 350px;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .service-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
 .service-card .card-title {
-    font-weight: bold;
-    font-size: 1rem;
-    color: #333;
-    margin-bottom: 2px;
+  font-weight: bold;
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 2px;
 }
 
 .service-card .card-subtitle {
-    font-size: 0.8rem;
-    color: #6c757d;
-    margin-bottom: 5px;
+  font-size: 0.8rem;
+  color: #6c757d;
+  margin-bottom: 5px;
 }
 
 .service-card .card-text {
-    color: #666;
-    font-size: 0.85rem;
-    margin-bottom: 8px;
+  color: #666;
+  font-size: 0.85rem;
+  margin-bottom: 8px;
 }
 
 .service-card-image {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    transition: transform 0.3s ease;
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  transition: transform 0.3s ease;
 }
 
 .service-card-image:hover {
-    transform: scale(1.05);
+  transform: scale(1.05);
 }
 
-/* Ajustes responsivos */
 @media (max-width: 768px) {
-    .service-card {
-        width: 90%;
-        min-height: 300px;
-    }
+  .service-card {
+    width: 90%;
+    min-height: 300px;
+  }
 }
 
-/* Estilos del botón "Agendar" */
-/* Estilos del botón "Agendar" */
-/* Estilos del botón "Agendar" */
 .agendar-btn {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #e91e63; /* Color de fondo */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-    margin: 0 auto 20px auto; /* Centrado horizontal y separación del footer */
-    text-align: center;
-    cursor: pointer;
-    max-width: 400px; /* Ancho máximo del botón para pantallas grandes */
-    width: 100%; /* Hace que el botón ocupe todo el ancho disponible */
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #e91e63;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  margin: 0 auto 20px auto;
+  text-align: center;
+  cursor: pointer;
+  max-width: 400px;
+  width: 100%;
 }
 
 .agendar-btn:hover {
-    background-color: #d81b60; /* Color al pasar el cursor */
-    transform: translateY(-3px); /* Efecto de elevación */
-    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3); /* Sombra más intensa */
+  background-color: #d81b60;
+  transform: translateY(-3px);
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* Ajustes responsivos para el botón de agendar */
 @media (max-width: 768px) {
-    .agendar-btn {
-        max-width: 95%; /* Asegura que el botón ocupe el 95% del contenedor */
-        min-width: 250px; /* Asegura que el botón tenga un tamaño suficiente */
-        padding: 14px 20px; /* Aumenta el padding para hacerlo más fácil de tocar */
-        font-size: 18px; /* Tamaño de fuente mayor para mejorar la legibilidad */
-    }
+  .agendar-btn {
+    max-width: 95%;
+    min-width: 250px;
+    padding: 14px 20px;
+    font-size: 18px;
+  }
 }
 
-/* Ajustes para pantallas aún más pequeñas */
 @media (max-width: 480px) {
-    .agendar-btn {
-        max-width: 95%; /* Hacerlo ocupar el 95% en pantallas muy pequeñas */
-        min-width: 250px; /* Asegura un buen tamaño mínimo */
-        padding: 16px 20px; /* Aumenta el padding para mejorar la accesibilidad */
-        font-size: 18px; /* Tamaño de fuente mayor */
-    }
+  .agendar-btn {
+    max-width: 95%;
+    min-width: 250px;
+    padding: 16px 20px;
+    font-size: 18px;
+  }
 }
 
-
-/* Título principal */
 .display-4 {
-    font-family: 'Playfair Display', serif;
-    font-size: 2.5rem;
-    color: #333;
-    position: relative;
-    text-transform: uppercase;
+  font-family: "Playfair Display", serif;
+  font-size: 2.5rem;
+  color: #333;
+  position: relative;
+  text-transform: uppercase;
 }
 
 .display-4::after {
-    content: '';
-    display: block;
-    width: 60px;
-    height: 4px;
-    background-color: #ff79c6;
-    margin: 10px auto;
-    border-radius: 2px;
+  content: "";
+  display: block;
+  width: 60px;
+  height: 4px;
+  background-color: #ff79c6;
+  margin: 10px auto;
+  border-radius: 2px;
 }

@@ -1,4 +1,4 @@
-import "../../styles/components/services.css"; // Usamos el CSS unificado
+import "../../styles/components/services.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -56,7 +56,6 @@ const BotoxCapilar = () => {
             className="mb-4 d-flex justify-content-center"
           >
             <Card className="service-card shadow-sm">
-              {/* Imagen del servicio */}
               {service.ImagenUrl && (
                 <Card.Img
                   variant="top"
@@ -66,7 +65,9 @@ const BotoxCapilar = () => {
                 />
               )}
               <Card.Body className="d-flex flex-column justify-content-between">
-                <Card.Title className="text-center">{service.Nombre}</Card.Title>
+                <Card.Title className="text-center">
+                  {service.Nombre}
+                </Card.Title>
                 <Card.Subtitle className="mb-2 text-muted text-center">
                   {service.Tipo || "No especificado"}
                 </Card.Subtitle>
@@ -79,7 +80,6 @@ const BotoxCapilar = () => {
         ))}
       </Row>
 
-      {/* Botón "Agendar" fuera de las tarjetas */}
       <div className="text-center my-4">
         <Button
           variant="custom"

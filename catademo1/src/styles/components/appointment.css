@@ -1,15 +1,15 @@
 .appointment-form {
   max-width: 500px;
-  margin: 50px auto; /* Añade un margen superior para separarlo del footer */
+  margin: 50px auto;
   padding: 30px;
-  background-color: #ffffff; /* Fondo blanco para un aspecto limpio */
+  background-color: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); /* Sombra más suave */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
 }
 
 .appointment-form h2 {
   text-align: center;
-  color: #e91e63; /* Color primario */
+  color: #e91e63;
   margin-bottom: 25px;
   font-size: 24px;
   font-weight: bold;
@@ -31,7 +31,7 @@
   display: block;
   font-weight: 600;
   margin-bottom: 8px;
-  color: #333; /* Color de texto más oscuro */
+  color: #333;
 }
 
 .form-group input,
@@ -42,23 +42,25 @@
   border: 1px solid #ddd;
   border-radius: 8px;
   font-size: 14px;
-  background-color: #f5f5f5; /* Color de fondo de los inputs */
+  background-color: #f5f5f5;
   transition: border-color 0.3s ease;
 }
 
 .form-group input:focus,
 .form-group select:focus,
-input:focus, textarea:focus {
+input:focus,
+textarea:focus {
   outline: none;
   box-shadow: none;
-  border: 1px solid #ff79c6; /* Cambia el color del borde al hacer clic */
+  border: 1px solid #ff79c6;
 }
 
 .form-group textarea:focus,
-input:focus, textarea:focus {
+input:focus,
+textarea:focus {
   outline: none;
   box-shadow: none;
-  border: 1px solid #ff79c6; /* Cambia el color del borde al hacer clic */
+  border: 1px solid #ff79c6;
 }
 
 .submit-button {
@@ -95,82 +97,80 @@ input:focus, textarea:focus {
 }
 
 .appointment-background {
-  background-image: url('../../assets/images/home/fondo5.jpg'); /* Cambia esta ruta a la ubicación de tu imagen */
+  background-image: url("../../assets/images/home/fondo5.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Ocupa toda la altura de la pantalla */
-  width: 100vw; /* Ocupa todo el ancho de la pantalla */
+  height: 100vh;
+  width: 100vw;
   position: fixed;
   top: 0;
   left: 0;
   z-index: -1;
 }
 
-/* Ajusta el formulario para que se centre dentro del fondo */
 .appointment-background .appointment-form {
   max-width: 500px;
   width: 100%;
   padding: 20px;
-  background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco semi-transparente */
+  background-color: rgba(255, 255, 255, 0.9);
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  z-index: 1; /* Asegura que el formulario esté encima del fondo */
-  position: relative; /* Para que respete el z-index */
-} 
+  z-index: 1;
+  position: relative;
+}
 
 .btn-agenda {
-  background-color: #e91e63; /* Color principal del botón */
+  background-color: #e91e63;
   color: #fff;
-  padding: 10px 30px; /* Ajusta el padding para controlar el tamaño */
+  padding: 10px 30px;
   font-size: 1rem;
   font-weight: bold;
-  border-radius: 20px; /* Bordes redondeados */
+  border-radius: 20px;
   border: none;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para darle profundidad */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
-  margin: 0 auto 20px auto; /* Centrado horizontal y separación del footer */
+  margin: 0 auto 20px auto;
   text-align: center;
   cursor: pointer;
   max-width: 200px;
 }
 
 .btn-agenda:hover {
-  background-color: #d81b60; /* Color al pasar el cursor */
-  transform: translateY(-3px); /* Efecto de elevación */
-  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3); /* Sombra más intensa */
+  background-color: #d81b60;
+  transform: translateY(-3px);
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* Media query para pantallas pequeñas */
 @media (max-width: 768px) {
   .appointment-form {
     padding: 20px;
     margin: 20px auto;
-    max-width: 90%; /* Reduce el ancho máximo del formulario */
+    max-width: 90%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
 
   .appointment-form h2 {
-    font-size: 20px; /* Reducir tamaño de fuente del título */
+    font-size: 20px;
     margin-bottom: 20px;
   }
 
   .form-row {
-    display: block; /* Apilamos los campos para pantallas pequeñas */
+    display: block;
     gap: 10px;
   }
 
   .form-group {
-    width: 100%; /* Aseguramos que cada campo ocupe el 100% del ancho */
+    width: 100%;
   }
 
   .form-group input,
   .form-group select,
   .form-group textarea {
-    font-size: 16px; /* Aumentamos el tamaño de la fuente en dispositivos pequeños */
+    font-size: 16px;
   }
 
   .submit-button {
@@ -181,11 +181,10 @@ input:focus, textarea:focus {
   .btn-agenda {
     padding: 10px 20px;
     font-size: 0.9rem;
-    max-width: 150px; /* Reduce el tamaño del botón en pantallas pequeñas */
+    max-width: 150px;
   }
 }
 
-/* Media query para pantallas muy pequeñas (por ejemplo, móviles en retrato) */
 @media (max-width: 480px) {
   .appointment-form {
     padding: 15px;
@@ -193,32 +192,31 @@ input:focus, textarea:focus {
   }
 
   .appointment-form h2 {
-    font-size: 18px; /* Acomoda el tamaño del título */
+    font-size: 18px;
   }
 
   .form-group input,
   .form-group select,
   .form-group textarea {
-    font-size: 14px; /* Acomoda el tamaño de texto */
+    font-size: 14px;
   }
 
   .submit-button {
     padding: 8px;
-    font-size: 12px; /* Ajusta el tamaño del texto y padding del botón */
+    font-size: 12px;
   }
 
   .btn-agenda {
     padding: 8px 15px;
-    font-size: 0.8rem; /* Ajusta el tamaño del botón en pantallas pequeñas */
+    font-size: 0.8rem;
   }
 }
 
-
-.text-primary-google{
-  color: black ;
+.text-primary-google {
+  color: black;
 }
 
-.text-info-maps{
+.text-info-maps {
   color: #d81b60;
   font-size: 0.8rem;
 }

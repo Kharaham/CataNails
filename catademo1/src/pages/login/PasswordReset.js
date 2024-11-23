@@ -27,7 +27,9 @@ function PasswordReset({ onBack }) {
         const userData = userDoc.data();
         if (userData.phone === phone) {
           await sendPasswordResetEmail(auth, email);
-          setResetSuccess("Se ha enviado un correo para restablecer la contraseña.");
+          setResetSuccess(
+            "Se ha enviado un correo para restablecer la contraseña."
+          );
         } else {
           setResetError("El número de teléfono no coincide con el registrado.");
         }
@@ -36,7 +38,9 @@ function PasswordReset({ onBack }) {
       }
     } catch (error) {
       console.error("Error al enviar el correo de recuperación:", error);
-      setResetError("Error al enviar el correo de recuperación. Por favor, intenta de nuevo.");
+      setResetError(
+        "Error al enviar el correo de recuperación. Por favor, intenta de nuevo."
+      );
     }
   };
 
@@ -44,7 +48,10 @@ function PasswordReset({ onBack }) {
     <div className="password-reset-wrapper">
       <h1 className="login-title">Recupera tu contraseña</h1>
       <Form onSubmit={handlePasswordReset}>
-        <Form.Group controlId="formResetEmail" className="mb-3 login-input-group">
+        <Form.Group
+          controlId="formResetEmail"
+          className="mb-3 login-input-group"
+        >
           <div className="login-input-icon">
             <FaEnvelope />
           </div>
@@ -56,7 +63,10 @@ function PasswordReset({ onBack }) {
             placeholder="Introduce tu correo"
           />
         </Form.Group>
-        <Form.Group controlId="formResetPhone" className="mb-4 login-input-group">
+        <Form.Group
+          controlId="formResetPhone"
+          className="mb-4 login-input-group"
+        >
           <div className="login-input-icon">
             <FaPhone />
           </div>
@@ -71,7 +81,11 @@ function PasswordReset({ onBack }) {
         <Button variant="primary" type="submit" className="login-button">
           Recuperar contraseña
         </Button>
-        <Button variant="link" onClick={onBack} className="login-toggle-register">
+        <Button
+          variant="link"
+          onClick={onBack}
+          className="login-toggle-register"
+        >
           Volver al inicio de sesión
         </Button>
       </Form>

@@ -1,10 +1,8 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, addDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-import { getStorage } from "firebase/storage"; // Si usas Storage
+import { getStorage } from "firebase/storage";
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBpuo1fzABUl_6HeDxP-u312JVLZJBVTck",
   authDomain: "registrologindemo.firebaseapp.com",
@@ -15,15 +13,12 @@ const firebaseConfig = {
   measurementId: "G-LZFYCC450N",
 };
 
-// Inicializa Firebase solo una vez
 const firebaseApp = initializeApp(firebaseConfig);
 
-// Servicios de Firebase
 const db = getFirestore(firebaseApp);
 const auth = getAuth(firebaseApp);
-const storage = getStorage(firebaseApp);  // Si necesitas usar Firebase Storage
+const storage = getStorage(firebaseApp);
 
-// Función para agregar una cita
 export const addAppointment = async (appointment) => {
   try {
     const docRef = await addDoc(collection(db, "appointments"), appointment);
@@ -33,8 +28,6 @@ export const addAppointment = async (appointment) => {
   }
 };
 
-// Exportamos lo que necesitamos en otros archivos
 export { db, auth, storage };
 
-// Exportamos la instancia de la app de Firebase para usarla en otros lugares si es necesario
 export default firebaseApp;

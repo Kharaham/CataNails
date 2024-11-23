@@ -1,139 +1,134 @@
-/* Contenedor general para el calendario */
 .calendar-container {
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-    background-color: #ffffff;
-    border-radius: 15px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
 }
 
-/* Título del calendario */
 .calendar-title {
-    font-family: 'Poppins', sans-serif;
-    font-size: 2rem;
-    color: #333;
-    text-align: center;
-    margin-bottom: 20px;
+  font-family: "Poppins", sans-serif;
+  font-size: 2rem;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-/* Ajustes para el componente del calendario */
 .rbc-calendar {
-    background-color: #fafafa;
-    border-radius: 12px;
-    padding: 10px;
+  background-color: #fafafa;
+  border-radius: 12px;
+  padding: 10px;
 }
 
 .rbc-toolbar {
-    background-color: #f0f0f0;
-    padding: 15px;
-    border-radius: 10px;
+  background-color: #f0f0f0;
+  padding: 15px;
+  border-radius: 10px;
 }
 
 .rbc-toolbar button {
-    background-color: #e91e63;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    font-size: 0.9rem;
+  background-color: #e91e63;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 0.9rem;
 }
 
 .rbc-toolbar button:hover {
-    background-color: #e91e63;
+  background-color: #e91e63;
 }
 
 .rbc-event {
-    background-color: #e91e63 !important;
-    border: none;
-    color: white !important;
-    font-weight: 500;
-    border-radius: 8px;
-    padding: 4px;
+  background-color: #e91e63 !important;
+  border: none;
+  color: white !important;
+  font-weight: 500;
+  border-radius: 8px;
+  padding: 4px;
 }
 
 .rbc-event:hover {
-    background-color: #c2185b !important;
+  background-color: #c2185b !important;
 }
 
 .rbc-day-bg {
-    background-color: #f5f5f5;
+  background-color: #f5f5f5;
 }
 
 .rbc-header {
-    background-color: #fff;
-    font-weight: bold;
-    color: #333;
+  background-color: #fff;
+  font-weight: bold;
+  color: #333;
 }
 
-/* Estilos para el modal */
 .modal-container {
-    background-color: #fff;
-    padding: 30px;
-    max-width: 400px;
-    border-radius: 12px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-    text-align: center;
+  background-color: #fff;
+  padding: 30px;
+  max-width: 400px;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
 .modal-title {
-    font-family: 'Poppins', sans-serif;
-    font-size: 1.5rem;
-    color: #333;
-    margin-bottom: 20px;
+  font-family: "Poppins", sans-serif;
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 20px;
 }
 
 .modal-button {
-    background-color: #ff6b6b;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  background-color: #ff6b6b;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .modal-button:hover {
-    background-color: #ee5253;
+  background-color: #ee5253;
 }
 
-/* Ajustes responsivos */
 @media (max-width: 768px) {
-    .calendar-container {
-        padding: 15px;
-        max-width: 90%;
-    }
+  .calendar-container {
+    padding: 15px;
+    max-width: 90%;
+  }
 
-    .calendar-title {
-        font-size: 1.5rem;
-    }
+  .calendar-title {
+    font-size: 1.5rem;
+  }
 
-    .rbc-calendar {
-        font-size: 0.8rem;
-    }
+  .rbc-calendar {
+    font-size: 0.8rem;
+  }
 
-    .rbc-event {
-        font-size: 0.7rem;
-    }
+  .rbc-event {
+    font-size: 0.7rem;
+  }
 
-    .rbc-toolbar {
-        padding: 10px;
-        font-size: 0.85rem;
-    }
+  .rbc-toolbar {
+    padding: 10px;
+    font-size: 0.85rem;
+  }
 
-    .modal-container {
-        padding: 20px;
-        max-width: 80%;
-    }
+  .modal-container {
+    padding: 20px;
+    max-width: 80%;
+  }
 
-    .modal-title {
-        font-size: 1.2rem;
-    }
+  .modal-title {
+    font-size: 1.2rem;
+  }
 
-    .modal-button {
-        padding: 8px 16px;
-        font-size: 0.85rem;
-    }
+  .modal-button {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+  }
 }

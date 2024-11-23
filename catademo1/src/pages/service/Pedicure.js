@@ -1,4 +1,4 @@
-import "../../styles/components/services.css"; // Usamos el CSS unificado
+import "../../styles/components/services.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -46,7 +46,14 @@ const Pedicure = () => {
 
       <Row className="justify-content-center mt-4">
         {services.map((service) => (
-          <Col key={service.id} xs={12} sm={6} md={4} lg={3} className="mb-4 d-flex justify-content-center">
+          <Col
+            key={service.id}
+            xs={12}
+            sm={6}
+            md={4}
+            lg={3}
+            className="mb-4 d-flex justify-content-center"
+          >
             <Card className="service-card shadow-sm">
               {service.ImagenUrl && (
                 <Card.Img
@@ -57,7 +64,9 @@ const Pedicure = () => {
                 />
               )}
               <Card.Body className="d-flex flex-column justify-content-between">
-                <Card.Title className="text-center">{service.Nombre}</Card.Title>
+                <Card.Title className="text-center">
+                  {service.Nombre}
+                </Card.Title>
                 <Card.Subtitle className="mb-2 text-muted text-center">
                   {service.Tipo || "No especificado"}
                 </Card.Subtitle>

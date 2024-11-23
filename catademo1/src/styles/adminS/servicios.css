@@ -1,16 +1,14 @@
-/* Contenedor de las tarjetas */
 .card-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Cambia el tamaño mínimo */
-  gap: 12px; /* Reduce el espacio entre tarjetas */
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 12px;
 }
 
-/* Tarjeta de servicio (actualizada a servicios-card-admin) */
 .servicios-card-admin {
   border-radius: 8px;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  padding: 12px; /* Reduce el relleno */
+  padding: 12px;
   background-color: white;
   display: flex;
   flex-direction: column;
@@ -19,22 +17,21 @@
 
 .servicios-card-admin .image-container {
   text-align: center;
-  margin-bottom: 8px; /* Reduce el margen */
+  margin-bottom: 8px;
 }
 
 .servicios-card-admin .service-img {
   width: 100%;
-  max-width: 100px; /* Ajusta el tamaño máximo de la imagen */
+  max-width: 100px;
   height: auto;
   object-fit: cover;
   border-radius: 4px;
-  margin-bottom: 8px; /* Reduce el margen inferior */
+  margin-bottom: 8px;
 }
 
-/* Botones */
 button {
-  padding: 8px 12px; /* Reduce el padding */
-  font-size: 0.9rem; /* Ajusta el tamaño de fuente */
+  padding: 8px 12px;
+  font-size: 0.9rem;
 }
 
 .btn-add-service {

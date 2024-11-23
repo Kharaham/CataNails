@@ -1,18 +1,14 @@
-// src/components/UserList.js
 import React, { useEffect, useState } from "react";
 import { db } from "../../firebase/firebase";
 import { collection, getDocs } from "firebase/firestore";
-// Importa el archivo CSS
 
 const UserList = () => {
   const [users, setUsers] = useState([]);
 
-  // Cargar los usuarios de Firestore al montar el componente
   useEffect(() => {
     fetchUsers();
   }, []);
 
-  // Función para obtener los usuarios de Firestore
   const fetchUsers = async () => {
     try {
       const usersCollection = collection(db, "usuarios");

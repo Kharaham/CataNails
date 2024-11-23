@@ -1,7 +1,7 @@
 import React from "react";
-import "@fortawesome/fontawesome-free/css/all.min.css"; // Asegúrate de incluir esta línea
+import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../../styles/components/footer.css";
-import { Link } from "react-router-dom"; // Importa Link para navegación
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -11,8 +11,9 @@ const Footer = () => {
           <div className="col-lg-3 col-md-6 mb-4">
             <h5 className="mb-3">CataaNails</h5>
             <p>
-              Servicios profesionales de manicura, pedicura, alisados permanentes y botox capilar.
-              Resaltamos tu Belleza, nos apasiona lo que hacemos.
+              Servicios profesionales de manicura, pedicura, alisados
+              permanentes y botox capilar. Resaltamos tu Belleza, nos apasiona
+              lo que hacemos.
             </p>
           </div>
           <div className="col-lg-3 col-md-6 mb-4">

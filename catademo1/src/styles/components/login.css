@@ -1,4 +1,4 @@
-/* Fondo con imagen */
+
 .login-background {
   background-image: url("../../assets/images/home/fondo5.jpg"); 
   background-size: cover;
@@ -7,13 +7,13 @@
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* Centra el contenedor verticalmente desde arriba */
-  padding: 20px 20px; /* Reduce el padding superior */
+  align-items: flex-start; 
+  padding: 20px 20px; 
   position: relative;
 }
 
 
-/* Superposición de color en el fondo */
+
 .login-background::before {
   content: "";
   position: absolute;
@@ -25,17 +25,17 @@
   z-index: 1;
 }
 
-/* Contenedor del formulario */
+
 .login-container {
   position: relative;
   z-index: 2;
   width: 100%;
   max-width: 900px;
-  padding: 0px; /* Elimina el padding adicional */
-  margin-top: 40px; /* Controla la distancia desde el header */
+  padding: 0px; 
+  margin-top: 40px;
 }
 
-/* Wrapper del formulario */
+
 .login-form-wrapper {
   background-color: #fff;
   padding: 60px 50px;
@@ -46,7 +46,7 @@
   margin: auto;
 }
 
-/* Título */
+
 .login-title {
   font-size: 36px;
   color: #d63384;
@@ -54,21 +54,21 @@
   margin-bottom: 30px;
 }
 
-/* Grupo de input */
+
 .login-input-group {
   display: flex;
   align-items: center;
   margin-bottom: 25px;
 }
 
-/* Estilo de iconos */
+
 .login-input-icon {
   margin-right: 10px;
   color: #d63384;
   font-size: 20px;
 }
 
-/* Estilo de inputs */
+
 .login-input-group .form-control {
   padding: 15px;
   font-size: 16px;
@@ -76,7 +76,6 @@
   border-radius: 8px;
 }
 
-/* Botón de inicio de sesión */
 .login-button {
   width: 100%;
   padding: 18px;

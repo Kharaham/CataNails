@@ -1,4 +1,3 @@
-// UserModel.js
 import firebaseApp from "../firebase/firebase";
 import {
   getAuth,
@@ -12,12 +11,16 @@ const firestore = getFirestore(firebaseApp);
 
 export async function registrarUsuario(email, password, rol) {
   try {
-    const infoUsuario = await createUserWithEmailAndPassword(auth, email, password);
+    const infoUsuario = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
     const docuRef = doc(firestore, `usuarios/${infoUsuario.user.uid}`);
     await setDoc(docuRef, { correo: email, rol: rol });
-    return infoUsuario.user.uid; // Retornamos el UID del usuario registrado
+    return infoUsuario.user.uid;
   } catch (error) {
-    throw new Error(error.message); // Lanzamos un error si ocurre algún problema
+    throw new Error(error.message);
   }
 }
 
@@ -31,12 +34,11 @@ export async function iniciarSesion(email, password) {
 }
 
 export async function getRol(uid) {
-    const docRef = doc(firestore, `usuarios/${uid}`);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      return docSnap.data().rol; // Devuelve el rol del usuario
-    } else {
-      throw new Error("No se encontró el documento del usuario.");
-    }
+  const docRef = doc(firestore, `usuarios/${uid}`);
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    return docSnap.data().rol;
+  } else {
+    throw new Error("No se encontró el documento del usuario.");
   }
-  
+}

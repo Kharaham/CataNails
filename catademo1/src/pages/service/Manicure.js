@@ -1,4 +1,4 @@
-import "../../styles/components/services.css"; // Usamos el CSS unificado
+import "../../styles/components/services.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -64,7 +64,9 @@ const Manicure = () => {
                 />
               )}
               <Card.Body className="d-flex flex-column justify-content-between">
-                <Card.Title className="text-center">{service.Nombre}</Card.Title>
+                <Card.Title className="text-center">
+                  {service.Nombre}
+                </Card.Title>
                 <Card.Subtitle className="mb-2 text-muted text-center">
                   {service.Tipo || "No especificado"}
                 </Card.Subtitle>

@@ -36,7 +36,7 @@ const ScheduleAppointmentView = () => {
 
   const getTodayDate = () => {
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Asegura que sea la fecha actual sin tiempo
+    today.setHours(0, 0, 0, 0);
     return today.toISOString().split("T")[0];
   };
 
@@ -89,14 +89,13 @@ const ScheduleAppointmentView = () => {
   };
 
   const sendConfirmationEmail = (appointmentData) => {
-    // Reformatear la fecha al formato "día - mes - año"
     const [year, month, day] = appointmentData.date.split("-");
     const formattedDate = `${day}-${month}-${year}`;
 
     const templateParams = {
       from_name: "CataNails",
       to_email: appointmentData.email,
-      user_name: appointmentData.name, // Nombre del cliente
+      user_name: appointmentData.name,
       mensaje: `Hola ${appointmentData.name}, 
   
   Tu cita ha sido agendada para el día ${formattedDate} a las ${appointmentData.hour}. 
@@ -158,21 +157,19 @@ const ScheduleAppointmentView = () => {
     );
 
     if (selectedDate === getTodayDate()) {
-      // Si la fecha es hoy, verifica si la hora ya pasó
       const now = new Date();
       const [hourPart, minutePart] = hour.split(":").map(Number);
       const blockTime = new Date();
       blockTime.setHours(hourPart, minutePart, 0, 0);
 
       if (blockTime <= now) {
-        return false; // La hora ya pasó
+        return false;
       }
     }
 
     return !bookedHours.includes(hour) && !isBlockedHour;
   });
 
-  // Función para validar el formato de correo electrónico
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -181,7 +178,6 @@ const ScheduleAppointmentView = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Validación de correo electrónico
     if (
       !formData.name ||
       !formData.email ||
@@ -209,22 +205,20 @@ const ScheduleAppointmentView = () => {
         } catch (error) {
           console.error("Error al subir la foto: ", error);
           toast.error("Hubo un problema al subir la foto.");
-          return; // Detener el proceso si falla la carga
+          return;
         }
       }
 
-      // Guardar la cita con la URL de la foto en Firestore
       await addDoc(collection(db, "appointments"), {
         ...formData,
         mode,
         address: mode === "Domicilio" ? address : "",
-        photoURL: photoURL || null, // Agrega la URL de la foto si existe
+        photoURL: photoURL || null,
       });
 
       toast.success("¡Cita agendada con éxito!");
       sendConfirmationEmail({ ...formData, mode, address });
 
-      // Reset del formulario
       setFormData({
         name: "",
         email: "",
@@ -409,7 +403,7 @@ const ScheduleAppointmentView = () => {
                 dirección:
               </p>
               <a
-                href="https://www.google.com/maps/place/Pallachata+1424,+3811616+Chill%C3%A1n,+%C3%91uble" // Ajusta esta URL según tu dirección en Google Maps
+                href="https://www.google.com/maps/place/Pallachata+1424,+3811616+Chill%C3%A1n,+%C3%91uble"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary-google"

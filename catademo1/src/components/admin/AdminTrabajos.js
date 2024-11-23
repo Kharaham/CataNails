@@ -30,7 +30,7 @@ const AdminTrabajos = () => {
 
   // Paginación
   const [currentPage, setCurrentPage] = useState(1);
-  const trabajosPorPagina = 12; // Cambia este valor según lo que necesites
+  const trabajosPorPagina = 12;
   const indexOfLastTrabajo = currentPage * trabajosPorPagina;
   const indexOfFirstTrabajo = indexOfLastTrabajo - trabajosPorPagina;
   const currentTrabajos = trabajos.slice(
@@ -160,7 +160,6 @@ const AdminTrabajos = () => {
     fetchTrabajos();
   }, []);
 
-  // Manejo de páginas
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -222,7 +221,6 @@ const AdminTrabajos = () => {
         </div>
       </div>
 
-      {/* Paginación */}
       <div className="pagination mt-4">
         {Array.from({ length: totalPages }, (_, index) => (
           <Button
@@ -236,7 +234,6 @@ const AdminTrabajos = () => {
         ))}
       </div>
 
-      {/* Modal de confirmación para eliminar */}
       <Modal show={showModalDelete} onHide={() => setShowModalDelete(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Confirmar Eliminación</Modal.Title>
@@ -254,7 +251,6 @@ const AdminTrabajos = () => {
         </Modal.Footer>
       </Modal>
 
-      {/* Modal de actualización */}
       <Modal show={showModalUpdate} onHide={() => setShowModalUpdate(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Actualizar Trabajo</Modal.Title>
@@ -282,7 +278,6 @@ const AdminTrabajos = () => {
         </Modal.Footer>
       </Modal>
 
-      {/* Toast de notificaciones */}
       <Toast
         onClose={() => setShowToast(false)}
         show={showToast}

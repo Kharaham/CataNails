@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Calendar as BigCalendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
-import "moment/locale/es"; // Importa Moment.js en español
+import "moment/locale/es";
 import {
   collection,
   getDocs,
@@ -16,7 +16,6 @@ import LockIcon from "@mui/icons-material/Lock";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import "../../styles/adminS/calendario.css";
 
-// Configura Moment en español
 moment.locale("es");
 const localizer = momentLocalizer(moment);
 
@@ -29,7 +28,6 @@ const CalendarAppointments = () => {
   const [snackbar, setSnackbar] = useState({ open: false, message: "" });
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Función para cargar citas
   const loadAppointments = useCallback(async () => {
     setLoading(true);
     try {
@@ -56,7 +54,6 @@ const CalendarAppointments = () => {
     }
   }, []);
 
-  // Función para cargar días bloqueados
   const loadBlockedDays = useCallback(async () => {
     const querySnapshot = await getDocs(collection(db, "blockedDays"));
     const loadedBlockedDays = querySnapshot.docs.map((doc) => ({
@@ -66,7 +63,6 @@ const CalendarAppointments = () => {
     setBlockedDays(loadedBlockedDays);
   }, []);
 
-  // Cargar citas y días bloqueados al montar el componente
   useEffect(() => {
     loadAppointments();
     loadBlockedDays();
@@ -82,7 +78,6 @@ const CalendarAppointments = () => {
     setSelectedDay(null);
   };
 
-  // Bloquear o desbloquear un día
   const handleBlockDay = async () => {
     if (!selectedDay) return;
     const formattedDate = moment(selectedDay).format("YYYY-MM-DD");
@@ -133,7 +128,7 @@ const CalendarAppointments = () => {
     if (isBlocked) {
       return {
         style: {
-          backgroundColor: "rgba(255, 0, 0, 0.3)", // Fondo rojo claro para días bloqueados
+          backgroundColor: "rgba(255, 0, 0, 0.3)",
           color: "white",
           borderRadius: "5px",
         },
@@ -195,7 +190,6 @@ const CalendarAppointments = () => {
             dayPropGetter={dayPropGetter}
           />
 
-          {/* Modal para bloquear/desbloquear días */}
           <Modal open={isModalOpen} onClose={handleCloseDayModal}>
             <Box
               sx={{
@@ -243,8 +237,10 @@ const CalendarAppointments = () => {
             </Box>
           </Modal>
 
-          {/* Modal para ver detalles de la cita */}
-          <Modal open={!!selectedAppointment} onClose={handleCloseAppointmentModal}>
+          <Modal
+            open={!!selectedAppointment}
+            onClose={handleCloseAppointmentModal}
+          >
             <Box
               sx={{
                 position: "absolute",
@@ -293,7 +289,6 @@ const CalendarAppointments = () => {
             </Box>
           </Modal>
 
-          {/* Snackbar para mostrar mensajes */}
           <Snackbar
             open={snackbar.open}
             autoHideDuration={3000}

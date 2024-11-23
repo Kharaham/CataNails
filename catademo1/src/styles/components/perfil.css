@@ -1,7 +1,6 @@
-/* General styles */
 body {
   background-color: #f2f4f7;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: #333;
 }
 
@@ -102,7 +101,6 @@ body {
   align-items: center;
 }
 
-/* Modal styles */
 .calendar-modal {
   position: fixed;
   top: 0;
@@ -117,27 +115,26 @@ body {
 }
 
 .btn-perfil {
-  background-color: #e91e63; /* Color de fondo */
-  color: #FFF; /* Color del texto */
-  border: none; /* Quitar borde predeterminado */
-  border-radius: 8px; /* Esquinas redondeadas */
-  padding: 10px 20px; /* Aumenta el padding */
-  margin-right: 10px; /* Espacio entre los botones */
-  font-weight: bold; /* Negrita para mejor visibilidad */
-  cursor: pointer; /* Cambiar el cursor al pasar sobre el botón */
-  transition: background-color 0.3s ease; /* Transición suave */
+  background-color: #e91e63;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  margin-right: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .btn-perfil:hover {
-  background-color: #d81b60; /* Color al hacer hover */
+  background-color: #d81b60;
 }
 
 .btn-perfil:disabled {
-  background-color: black; /* Color para cuando el botón está deshabilitado */
-  cursor: not-allowed; /* Cursor para indicar que está deshabilitado */
+  background-color: black;
+  cursor: not-allowed;
 }
 
-/* Botones */
 .modal-buttons {
   display: flex;
   justify-content: space-between;
@@ -156,22 +153,20 @@ body {
 }
 
 .modal-button:hover {
-  transform: scale(1.05); /* Efecto de agrandamiento */
+  transform: scale(1.05);
 }
 
-/* Animación de entrada */
 @keyframes fadeIn {
   from {
-      opacity: 0;
-      transform: translateY(-10px);
+    opacity: 0;
+    transform: translateY(-10px);
   }
   to {
-      opacity: 1;
-      transform: translateY(0);
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-/* Estilo del fondo para centrar el modal */
 .calendar-modal-overlay {
   position: fixed;
   top: 0;
@@ -180,26 +175,24 @@ body {
   height: 100vh;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
-  justify-content: center; /* Centrado horizontal */
-  align-items: center;     /* Centrado vertical */
+  justify-content: center;
+  align-items: center;
   z-index: 1000;
 }
 
-/* Estilo del modal */
 .calendar-modal {
   background-color: white;
   padding: 20px;
   border-radius: 12px;
   width: 100%;
-  max-width: 400px; /* Ancho máximo del modal para que no ocupe toda la pantalla */
+  max-width: 400px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  text-align: center; /* Centra el contenido dentro del modal */
+  text-align: center;
   display: flex;
   flex-direction: column;
-  gap: 15px; /* Espaciado entre los elementos internos */
+  gap: 15px;
 }
 
-/* Título del modal */
 .modal-title {
   font-size: 1.5rem;
   font-weight: bold;
@@ -207,7 +200,6 @@ body {
   margin: 0;
 }
 
-/* Estilos generales de los botones */
 .modal-button {
   flex: 1;
   padding: 10px;
@@ -216,10 +208,9 @@ body {
   border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.3s;
-  margin: 0 5px; /* Espacio entre los botones */
+  margin: 0 5px;
 }
 
-/* Botón de confirmación */
 .confirm-button {
   background-color: #e91e63;
   color: white;
@@ -229,7 +220,6 @@ body {
   background-color: #d81b60;
 }
 
-/* Botón de cancelar */
 .cancel-button {
   background-color: #cccccc;
   color: #333;
@@ -239,10 +229,9 @@ body {
   background-color: #b3b3b3;
 }
 
-/* Ajuste de inputs dentro del modal */
 .calendar-modal input[type="date"],
 .calendar-modal select {
-  width: 100%; /* Ocupa el ancho completo del modal */
+  width: 100%;
   padding: 10px;
   margin-top: 10px;
   margin-bottom: 10px;
@@ -252,125 +241,118 @@ body {
   color: #555;
 }
 
-/* Media Queries para Responsividad */
 @media (max-width: 768px) {
   .profile-content {
-      flex-direction: column; /* Cambia a columna en pantallas pequeñas */
-      gap: 20px; /* Ajusta el espacio entre secciones */
+    flex-direction: column;
+    gap: 20px;
   }
 
   .profile-info-section {
-      max-width: 100%; /* Ocupa todo el ancho disponible */
+    max-width: 100%;
   }
 
   .profile-image {
-      width: 100px; /* Tamaño más pequeño para pantallas pequeñas */
-      height: 100px;
+    width: 100px;
+    height: 100px;
   }
 
   .profile-citas-section h2 {
-      font-size: 1.2em; /* Tamaño de fuente más pequeño para encabezados */
+    font-size: 1.2em;
   }
 
   .profile-button {
-      width: 100%; /* Botón ocupa todo el ancho disponible */
-      font-size: 0.9em; /* Tamaño de fuente más pequeño */
+    width: 100%;
+    font-size: 0.9em;
   }
 
   .profile-input {
-      font-size: 0.9em; /* Tamaño de fuente más pequeño para inputs */
+    font-size: 0.9em;
   }
 }
 
 @media (max-width: 480px) {
   .profile-button {
-      padding: 10px; /* Ajusta el padding para botones en pantallas pequeñas */
-      font-size: 0.8em; /* Tamaño de fuente más pequeño */
+    padding: 10px;
+    font-size: 0.8em;
   }
 
   .profile-input {
-      padding: 8px; /* Ajusta el padding de los inputs */
+    padding: 8px;
   }
 
   .profile-image {
-      width: 80px; /* Logo más pequeño en pantallas muy pequeñas */
-      height: 80px;
+    width: 80px;
+    height: 80px;
   }
 
   .modal-title {
-      font-size: 1.2rem; /* Tamaño de título del modal más pequeño */
+    font-size: 1.2rem;
   }
 }
 
-.cita-details-modal{
+.cita-details-modal {
   .cita-details-modal {
-    position: fixed; /* Fija el modal en la pantalla */
-    top: 50%; /* Centro vertical */
-    left: 50%; /* Centro horizontal */
-    transform: translate(-50%, -50%); /* Centra el modal */
-    background-color: #ffffff; /* Color de fondo blanco */
-    border-radius: 10px; /* Bordes redondeados */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Sombra */
-    padding: 20px; /* Espaciado interno */
-    z-index: 1000; /* Asegura que el modal esté por encima de otros elementos */
-    width: 90%; /* Ancho del modal */
-    max-width: 500px; /* Ancho máximo */
-    animation: fadeIn 0.3s ease; /* Animación de entrada */
-}
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    z-index: 1000;
+    width: 90%;
+    max-width: 500px;
+    animation: fadeIn 0.3s ease;
+  }
 
-/* Fondo de pantalla oscurecido para el modal */
-.cita-details-modal::before {
+  .cita-details-modal::before {
     content: "";
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
-    z-index: -1; /* Detrás del modal */
-}
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+  }
 
-/* Estilos para el texto dentro del modal */
-.cita-details-modal h3 {
-    margin: 0 0 15px; /* Margen en la parte inferior */
-    font-family: 'Playfair Display', serif; /* Fuente para el título */
-    font-size: 1.8rem; /* Tamaño del título */
-    color: #333; /* Color del texto */
-}
+  .cita-details-modal h3 {
+    margin: 0 0 15px;
+    font-family: "Playfair Display", serif;
+    font-size: 1.8rem;
+    color: #333;
+  }
 
-.cita-details-modal p {
-    margin: 10px 0; /* Margen en la parte superior e inferior */
-    font-family: 'Roboto', sans-serif; /* Fuente para el texto */
-    font-size: 1.1rem; /* Tamaño del texto */
-    color: #555; /* Color del texto */
-}
+  .cita-details-modal p {
+    margin: 10px 0;
+    font-family: "Roboto", sans-serif;
+    font-size: 1.1rem;
+    color: #555;
+  }
 
-/* Estilo del botón de cerrar */
-.btn-cerrar {
-    background-color: #ff6f61; /* Color de fondo */
-    color: #ffffff; /* Color del texto */
-    border: none; /* Sin borde */
-    border-radius: 5px; /* Bordes redondeados */
-    padding: 10px 20px; /* Espaciado interno */
-    cursor: pointer; /* Cambia el cursor al pasar el mouse */
-    transition: background-color 0.3s; /* Transición de color */
-}
+  .btn-cerrar {
+    background-color: #ff6f61;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
 
-/* Efecto al pasar el mouse sobre el botón */
-.btn-cerrar:hover {
-    background-color: #ff4c3b; /* Color de fondo al pasar el mouse */
-}
+  .btn-cerrar:hover {
+    background-color: #ff4c3b;
+  }
 
-/* Animación de entrada */
-@keyframes fadeIn {
+  @keyframes fadeIn {
     from {
-        opacity: 0; /* Comienza invisible */
-        transform: translate(-50%, -40%); /* Comienza más arriba */
+      opacity: 0;
+      transform: translate(-50%, -40%);
     }
     to {
-        opacity: 1; /* Termina completamente visible */
-        transform: translate(-50%, -50%); /* Centra el modal */
+      opacity: 1;
+      transform: translate(-50%, -50%);
     }
-}
-
+  }
 }

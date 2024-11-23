@@ -10,9 +10,9 @@ import AlisadoPermanente from "./pages/service/AlisadoPermanente";
 import BotoxCapilar from "./pages/service/BotoxCapilar";
 import ScheduleAppointmentView from "./components/agenda/ScheduleAppointmentView";
 import Profile from "./components/client/Profile";
-import About from './pages/home/about';
+import About from "./pages/home/about";
 import "./App.css";
-import 'font-awesome/css/font-awesome.min.css';
+import "font-awesome/css/font-awesome.min.css";
 
 import {
   BrowserRouter as Router,
@@ -35,10 +35,7 @@ import AdminWorkDays from "./components/admin/AdminWorkDays";
 import ReviewManagement from "./components/admin/ReviewManagement";
 import AdminTrabajos from "./components/admin/AdminTrabajos";
 import BankBalance from "./components/admin/BankBalance";
-import AdminContactComments from "./components/admin/AdminContactComments"; 
-
-
-
+import AdminContactComments from "./components/admin/AdminContactComments";
 
 const auth = getAuth(firebaseApp);
 const firestore = getFirestore(firebaseApp);
@@ -97,7 +94,6 @@ function App() {
         <Header user={user} />
 
         <Routes>
-          {/* Rutas Públicas (disponibles para todos) */}
           <Route path="/" element={<Home />} />
           <Route path="/trabajos-realizados" element={<TrabajosRealizados />} />
           <Route path="/about" element={<About />} />
@@ -108,9 +104,18 @@ function App() {
           <Route path="/agendar-cita" element={<ScheduleAppointmentView />} />
           <Route path="/perfil" element={<Profile user={user} />} />
 
-          {/* Rutas protegidas para el admin */}
           {user?.rol === "admin" && (
-            <Route path="/admin" element={<div className="d-flex"><AdminSidebar /><div className="p-4 w-100"><Outlet /></div></div>}>
+            <Route
+              path="/admin"
+              element={
+                <div className="d-flex">
+                  <AdminSidebar />
+                  <div className="p-4 w-100">
+                    <Outlet />
+                  </div>
+                </div>
+              }
+            >
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="users" element={<UserManagement />} />
               <Route path="appointments" element={<CitaList />} />
@@ -119,19 +124,25 @@ function App() {
               <Route path="reviews" element={<ReviewManagement />} />
               <Route path="trabajos-realizados" element={<AdminTrabajos />} />
               <Route path="bank-balance" element={<BankBalance />} />
-              <Route path="contact-comments" element={<AdminContactComments />} />
-
-              
-            
-
+              <Route
+                path="contact-comments"
+                element={<AdminContactComments />}
+              />
             </Route>
           )}
 
-          {/* Ruta de Login */}
           <Route path="/login" element={<Login />} />
 
-          {/* Redirección automática para el administrador */}
-          <Route path="*" element={user?.rol === "admin" ? <Navigate to="/admin/dashboard" /> : <Navigate to="/" />} />
+          <Route
+            path="*"
+            element={
+              user?.rol === "admin" ? (
+                <Navigate to="/admin/dashboard" />
+              ) : (
+                <Navigate to="/" />
+              )
+            }
+          />
         </Routes>
 
         <Footer />

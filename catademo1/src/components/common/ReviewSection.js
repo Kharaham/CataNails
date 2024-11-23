@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../../firebase/firebaseServicios";
 import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
-import { getAuth, onAuthStateChanged } from "firebase/auth"; 
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import "../../styles/components/Review.css";
 
 const ReviewSection = () => {
@@ -10,12 +10,10 @@ const ReviewSection = () => {
   const [rating, setRating] = useState(0);
   const [author, setAuthor] = useState("");
   const [position, setPosition] = useState("");
-  const [photoURL, setPhotoURL] = useState(""); // Estado para la foto de perfil
+  const [photoURL, setPhotoURL] = useState("");
 
-  // Estado para verificar si el usuario está logueado
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Estado para la paginación
   const [currentPage, setCurrentPage] = useState(1);
   const reviewsPerPage = 6;
 
@@ -31,16 +29,19 @@ const ReviewSection = () => {
       fetchReviews();
     });
 
-    return () => unsubscribe(); // Limpiar el listener al desmontar el componente
+    return () => unsubscribe();
   }, []);
 
   const fetchUserDetails = async (user) => {
-    const userQuery = query(collection(db, "usuarios"), where("correo", "==", user.email));
+    const userQuery = query(
+      collection(db, "usuarios"),
+      where("correo", "==", user.email)
+    );
     const userSnapshot = await getDocs(userQuery);
     if (!userSnapshot.empty) {
       const userData = userSnapshot.docs[0].data();
       setAuthor(userData.nombre);
-      setPhotoURL(userData.profilePic || ""); // Obtiene la foto de perfil desde el campo `profilePic`
+      setPhotoURL(userData.profilePic || "");
     }
   };
 
@@ -51,8 +52,8 @@ const ReviewSection = () => {
         id: doc.id,
         ...doc.data(),
       }))
-      .filter(review => review.isVisible !== false) // Solo muestra reseñas visibles
-      .sort((a, b) => b.createdAt - a.createdAt); // Ordenar de más reciente a más antiguo
+      .filter((review) => review.isVisible !== false)
+      .sort((a, b) => b.createdAt - a.createdAt);
     setReviews(fetchedReviews);
   };
 
@@ -66,12 +67,12 @@ const ReviewSection = () => {
         position,
         photoURL,
         isVisible: true,
-        createdAt: new Date() // Agrega la fecha de creación
+        createdAt: new Date(),
       });
       setNewReview("");
       setRating(0);
       setPosition("");
-      fetchReviews(); // Recargar lista de reseñas
+      fetchReviews();
     }
   };
 
@@ -93,7 +94,7 @@ const ReviewSection = () => {
             onChange={(e) => setAuthor(e.target.value)}
             placeholder="Tu nombre"
             required
-            disabled // Desactiva el campo para que no pueda editarse
+            disabled
           />
           <textarea
             value={newReview}
@@ -124,8 +125,8 @@ const ReviewSection = () => {
         {currentReviews.map((review) => (
           <div key={review.id} className="review-card">
             <div className="review-info">
-              <img 
-                src={review.photoURL || "ruta/imagen/por/defecto.jpg"} 
+              <img
+                src={review.photoURL || "ruta/imagen/por/defecto.jpg"}
                 alt="Foto de perfil"
                 className="review-profile-pic"
               />
@@ -149,7 +150,13 @@ const ReviewSection = () => {
       </div>
       <div className="pagination">
         {[...Array(totalPages)].map((_, index) => (
-          <button key={index} onClick={() => paginate(index + 1)} className={`page-button ${currentPage === index + 1 ? 'active' : ''}`}>
+          <button
+            key={index}
+            onClick={() => paginate(index + 1)}
+            className={`page-button ${
+              currentPage === index + 1 ? "active" : ""
+            }`}
+          >
             {index + 1}
           </button>
         ))}

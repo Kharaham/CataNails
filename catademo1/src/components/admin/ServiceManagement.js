@@ -10,12 +10,10 @@ import {
 } from "firebase/firestore";
 import ServiceForm from "./ServiceForm";
 
-
 const ServiceManagement = () => {
   const [services, setServices] = useState([]);
   const [selectedService, setSelectedService] = useState(null);
 
-  // Función para obtener los servicios desde Firestore
   const fetchServices = async () => {
     try {
       const servicesCollection = collection(db, "services");
@@ -30,7 +28,6 @@ const ServiceManagement = () => {
     }
   };
 
-  // UseEffect para obtener servicios al cargar el componente
   useEffect(() => {
     fetchServices();
   }, []);
@@ -38,7 +35,6 @@ const ServiceManagement = () => {
   const handleSave = async (service) => {
     try {
       if (service.id) {
-        // Actualizar servicio existente
         const serviceDoc = doc(db, "services", service.id);
         await updateDoc(serviceDoc, {
           name: service.name,
@@ -46,7 +42,6 @@ const ServiceManagement = () => {
           price: service.price,
         });
       } else {
-        // Agregar nuevo servicio
         await addDoc(collection(db, "services"), {
           name: service.name,
           category: service.category,
@@ -54,7 +49,7 @@ const ServiceManagement = () => {
         });
       }
       setSelectedService(null);
-      fetchServices(); // Refrescar la lista después de agregar/actualizar
+      fetchServices();
     } catch (error) {
       console.error("Error al guardar servicio:", error);
     }
@@ -68,7 +63,7 @@ const ServiceManagement = () => {
     try {
       const serviceDoc = doc(db, "services", id);
       await deleteDoc(serviceDoc);
-      fetchServices(); // Refrescar la lista después de eliminar
+      fetchServices();
     } catch (error) {
       console.error("Error al eliminar servicio:", error);
     }

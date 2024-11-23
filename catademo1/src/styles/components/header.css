@@ -1,6 +1,5 @@
-/* src/styles/components/header.css */
 .logo {
-  width: 80px; /* Ajustar el tamaño del logo */
+  width: 80px;
   height: auto;
 }
 
@@ -8,13 +7,13 @@
   padding: 10px 0;
   background-color: #fff;
   display: flex;
-  justify-content: space-between; /* Asegura que los elementos estén bien distribuidos */
-  align-items: center; /* Centra verticalmente los elementos */
+  justify-content: space-between;
+  align-items: center;
 }
 
 .nav-links {
-  display: flex; /* Flexbox para las opciones del menú */
-  flex-wrap: wrap; /* Permite que las opciones del menú se ajusten */
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .nav-link {
@@ -52,40 +51,39 @@
   color: #e91e63;
 }
 
-/* Media Queries para Responsividad */
 @media (max-width: 768px) {
   .navbar {
-      flex-direction: column; /* Cambia a columna en pantallas pequeñas */
-      align-items: flex-start; /* Alinea a la izquierda */
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .nav-links {
-      width: 100%; /* Ocupar todo el ancho */
-      justify-content: space-between; /* Espaciado entre los elementos */
+    width: 100%;
+    justify-content: space-between;
   }
 
   .nav-link {
-      margin: 10px 0; /* Espaciado vertical entre links */
-      width: 100%; /* Ocupar el 100% del ancho disponible */
-      text-align: center; /* Centra el texto */
+    margin: 10px 0;
+    width: 100%;
+    text-align: center;
   }
 
   .search-icon {
-      font-size: 16px; /* Tamaño de ícono más pequeño */
-      margin-top: 10px; /* Espaciado superior */
+    font-size: 16px;
+    margin-top: 10px;
   }
 }
 
 @media (max-width: 480px) {
   .nav-link {
-      font-size: 12px; /* Tamaño de fuente más pequeño */
+    font-size: 12px;
   }
 
   .search-icon {
-      font-size: 14px; /* Tamaño de ícono más pequeño */
+    font-size: 14px;
   }
 
   .logo {
-      width: 60px; /* Logo más pequeño en pantallas muy pequeñas */
+    width: 60px;
   }
 }

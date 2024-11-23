@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDollarSign, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { format, toZonedTime } from "date-fns-tz";
 import "../../styles/adminS/bankbalance.css";
-import { onSnapshot } from "firebase/firestore"; 
+import { onSnapshot } from "firebase/firestore";
 
 const BankBalance = () => {
   const [amount, setAmount] = useState("");
@@ -33,22 +33,28 @@ const BankBalance = () => {
 
   const fetchTransactions = () => {
     const ingresosRef = collection(db, "ingresos");
-  
+
     // Escuchar en tiempo real cambios en la colección ingresos
     onSnapshot(ingresosRef, (snapshot) => {
       const fetchedTransactions = [];
       let total = 0;
-  
+
       snapshot.forEach((doc) => {
         const data = doc.data();
-        const transactionDate = data.date instanceof Timestamp ? data.date.toDate() : new Date(data.date);
-        fetchedTransactions.push({ id: doc.id, ...data, date: transactionDate });
+        const transactionDate =
+          data.date instanceof Timestamp
+            ? data.date.toDate()
+            : new Date(data.date);
+        fetchedTransactions.push({
+          id: doc.id,
+          ...data,
+          date: transactionDate,
+        });
         total += data.amount;
       });
-  
+
       fetchedTransactions.sort((a, b) => b.date - a.date);
-  
-      // Actualizar los estados con las nuevas transacciones y el total
+
       setTransactions(fetchedTransactions);
       setTotalIncome(total);
       calculateTotals(fetchedTransactions);

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { HomeViewModel } from "../../viewmodels/HomeViewModel";
-import ReviewSection from "../../components/common/ReviewSection"; // Asegúrate de ajustar la ruta según tu estructura
+import ReviewSection from "../../components/common/ReviewSection";
 import "../../styles/components/home.css";
 import profesional from "../../assets/images/home/profesional.jpg";
-import homeStudio1 from "../../assets/images/home/home1.jpg";
-import homeStudio2 from "../../assets/images/home/home2.jpg";
-import homeStudio3 from "../../assets/images/home/home3.jpg";
-import homeStudio4 from "../../assets/images/home/home4.jpg";
+import homeStudio1 from "../../assets/images/home/home1.WebP";
+import homeStudio2 from "../../assets/images/home/home2.WebP";
+import homeStudio3 from "../../assets/images/home/home3.WebP";
+import homeStudio4 from "../../assets/images/home/home4.WebP";
 
 const Home = () => {
   const [services, setServices] = useState([]);
@@ -53,7 +53,6 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Sección de Reseñas de Clientes */}
       <ReviewSection />
 
       <div className="professional-section text-center mt-5">

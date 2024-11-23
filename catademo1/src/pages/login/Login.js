@@ -28,11 +28,11 @@ const auth = getAuth(firebaseApp);
 const firestore = getFirestore(firebaseApp);
 
 function Login() {
-  const [correo, setCorreo] = useState(""); // Cambiado a 'correo'
+  const [correo, setCorreo] = useState("");
   const [password, setPassword] = useState("");
-  const [nombre, setNombre] = useState(""); // Cambiado a 'nombre'
-  const [telefono, setTelefono] = useState(""); // Cambiado a 'telefono'
-  const [formMode, setFormMode] = useState("login"); // 'login', 'register', 'reset'
+  const [nombre, setNombre] = useState("");
+  const [telefono, setTelefono] = useState("");
+  const [formMode, setFormMode] = useState("login");
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
@@ -50,7 +50,7 @@ function Login() {
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
-        correo, // Cambiado a 'correo'
+        correo,
         password
       );
       const rol = await getRol(userCredential.user.uid);
@@ -61,27 +61,6 @@ function Login() {
       );
     }
   };
-
-  // const handleLogin = async (e) => {
-  //e.preventDefault();
-  //setErrorMessage("");
-
-  // try {
-  //const userCredential = await signInWithEmailAndPassword(auth, correo, password);
-
-  //if (!userCredential.user.emailVerified) {
-  //setErrorMessage(
-  //  "Tu correo electrónico no ha sido verificado. Por favor, revisa tu correo y verifica tu cuenta."
-  // );
-  //return;
-  //}
-
-  //const rol = await getRol(userCredential.user.uid);
-  //navigate(rol === "admin" ? "/admin/dashboard" : "/");
-  //} catch (error) {
-  //setErrorMessage("Error al iniciar sesión. Por favor, verifica tus datos.");
-  //}
-  //};
 
   const validarPassword = (password) => {
     const regex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z]).{8,}$/;
@@ -130,7 +109,7 @@ function Login() {
   const handlePasswordReset = async (e) => {
     e.preventDefault();
     setErrorMessage("");
-    setSuccessMessage(""); // Resetea el mensaje de éxito al comenzar
+    setSuccessMessage("");
     try {
       const usersRef = collection(firestore, "usuarios");
       const q = query(
@@ -144,8 +123,8 @@ function Login() {
         await sendPasswordResetEmail(auth, correo.trim());
         setSuccessMessage(
           "Hemos enviado un correo para cambiar tu contraseña."
-        ); // Mensaje de éxito
-        setFormMode("login"); // Cambia al modo de login después de enviar el correo
+        );
+        setFormMode("login");
       } else {
         setErrorMessage("Correo o teléfono no coinciden con los registrados.");
       }
@@ -162,7 +141,6 @@ function Login() {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      // Almacena el usuario en Firestore si no existe
       const userRef = doc(firestore, "usuarios", user.uid);
       const userDoc = await getDoc(userRef);
 
@@ -170,7 +148,7 @@ function Login() {
         await setDoc(userRef, {
           nombre: user.displayName,
           correo: user.email,
-          telefono: "", // O deja vacío si no es necesario
+          telefono: "",
           rol: "user",
         });
       }
@@ -186,7 +164,7 @@ function Login() {
     const docRef = doc(firestore, `usuarios/${uid}`);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      return docSnap.data().rol; // Asegúrate de que el campo "rol" existe en Firestore
+      return docSnap.data().rol;
     } else {
       console.error("No se encontró el documento del usuario.");
       return null;
@@ -219,8 +197,8 @@ function Login() {
                       </div>
                       <Form.Control
                         type="email"
-                        value={correo} // Cambiado a 'correo'
-                        onChange={(e) => setCorreo(e.target.value)} // Cambiado a 'correo'
+                        value={correo}
+                        onChange={(e) => setCorreo(e.target.value)}
                         required
                         placeholder="Introduce tu correo"
                       />
@@ -281,8 +259,8 @@ function Login() {
                       </div>
                       <Form.Control
                         type="text"
-                        value={nombre} // Cambiado a 'nombre'
-                        onChange={(e) => setNombre(e.target.value)} // Cambiado a 'nombre'
+                        value={nombre}
+                        onChange={(e) => setNombre(e.target.value)}
                         required
                         placeholder="Introduce tu nombre"
                       />
@@ -296,8 +274,8 @@ function Login() {
                       </div>
                       <Form.Control
                         type="text"
-                        value={telefono} // Cambiado a 'telefono'
-                        onChange={(e) => setTelefono(e.target.value)} // Cambiado a 'telefono'
+                        value={telefono}
+                        onChange={(e) => setTelefono(e.target.value)}
                         required
                         placeholder="Introduce tu teléfono"
                       />
@@ -311,8 +289,8 @@ function Login() {
                       </div>
                       <Form.Control
                         type="email"
-                        value={correo} // Cambiado a 'correo'
-                        onChange={(e) => setCorreo(e.target.value)} // Cambiado a 'correo'
+                        value={correo}
+                        onChange={(e) => setCorreo(e.target.value)}
                         required
                         placeholder="Introduce tu correo"
                       />
@@ -406,7 +384,7 @@ function Login() {
                     <p className="login-error-message">{errorMessage}</p>
                   )}
                   {successMessage && (
-                    <p className="login-success-message">{successMessage}</p> // Mensaje de éxito
+                    <p className="login-success-message">{successMessage}</p>
                   )}
                 </>
               )}

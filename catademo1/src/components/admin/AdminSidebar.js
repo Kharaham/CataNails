@@ -13,7 +13,6 @@ import {
   faDollarSign,
   faComments,
   faBars,
-
 } from "@fortawesome/free-solid-svg-icons";
 
 const AdminSidebar = () => {
@@ -23,14 +22,12 @@ const AdminSidebar = () => {
     setIsSidebarVisible(!isSidebarVisible);
   };
 
-  // Ocultar el sidebar al hacer clic en una opción (solo para pantallas pequeñas)
   const handleNavLinkClick = () => {
     if (window.innerWidth <= 768) {
       setIsSidebarVisible(false);
     }
   };
 
-  // Añadir/Eliminar clase para el body para evitar scroll del contenido principal
   useEffect(() => {
     if (isSidebarVisible && window.innerWidth <= 768) {
       document.body.classList.add("no-scroll");
@@ -53,7 +50,6 @@ const AdminSidebar = () => {
           isSidebarVisible ? "" : "hidden"
         }`}
       >
-        {/* Imagen de perfil del administrador */}
         <div className="admin-profile mb-4 text-center">
           <img
             src="https://img.freepik.com/vector-premium/ilustracion-manicurista-dibujos-animados-lindo_131817-16.jpg"
@@ -151,7 +147,6 @@ const AdminSidebar = () => {
               <FontAwesomeIcon icon={faComments} className="me-2" /> Comentarios
             </NavLink>
           </li>
-          
         </ul>
       </div>
     </div>
