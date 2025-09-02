@@ -1,113 +1,50 @@
-.service-card {
-  border: none;
-  border-radius: 10px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  width: 350px;
-  height: 300px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+.serviciosCN_container { max-width: 1100px; }
+
+/* grid */
+.serviciosCN_grid {
+  /* si no usas las columnas de Bootstrap, puedes usar: display: grid; grid-template-columns: repeat(auto-fill, minmax(250px,1fr)); gap: 16px; */
 }
 
-.service-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+/* card */
+.serviciosCN_card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
 }
-
-.service-card .card-title {
-  font-weight: bold;
-  font-size: 1rem;
-  color: #333;
-  margin-bottom: 2px;
-}
-
-.service-card .card-subtitle {
-  font-size: 0.8rem;
-  color: #6c757d;
-  margin-bottom: 5px;
-}
-
-.service-card .card-text {
-  color: #666;
-  font-size: 0.85rem;
-  margin-bottom: 8px;
-}
-
-.service-card-image {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  transition: transform 0.3s ease;
-}
-
-.service-card-image:hover {
-  transform: scale(1.05);
-}
-
-@media (max-width: 768px) {
-  .service-card {
-    width: 90%;
-    min-height: 300px;
-  }
-}
-
-.agendar-btn {
-  margin-top: 20px;
-  padding: 10px 20px;
-  background-color: #e91e63;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-  margin: 0 auto 20px auto;
-  text-align: center;
-  cursor: pointer;
-  max-width: 400px;
-  width: 100%;
-}
-
-.agendar-btn:hover {
-  background-color: #d81b60;
+.serviciosCN_card:hover {
   transform: translateY(-3px);
-  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 24px rgba(0,0,0,.08);
+  border-color: #f3accd;
+}
+.serviciosCN_cardSelected {
+  outline: 2px solid #f3accd;
+  box-shadow: 0 12px 26px rgba(233,30,99,.12);
 }
 
-@media (max-width: 768px) {
-  .agendar-btn {
-    max-width: 95%;
-    min-width: 250px;
-    padding: 14px 20px;
-    font-size: 18px;
-  }
+.serviciosCN_cardImage {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
 }
 
-@media (max-width: 480px) {
-  .agendar-btn {
-    max-width: 95%;
-    min-width: 250px;
-    padding: 16px 20px;
-    font-size: 18px;
-  }
+.serviciosCN_cardBody { padding: 12px; }
+.serviciosCN_cardTitle { font-size: 1.1rem; }
+.serviciosCN_cardSubtitle { font-size: .95rem; }
+.serviciosCN_cardPrice { font-weight: 500; }
+
+.serviciosCN_btnPrimary {
+  background: linear-gradient(90deg, #e91e63, #ff79c6);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.serviciosCN_btnPrimary:hover {
+  filter: brightness(1.05);
 }
 
-.display-4 {
-  font-family: "Playfair Display", serif;
-  font-size: 2.5rem;
-  color: #333;
-  position: relative;
-  text-transform: uppercase;
-}
-
-.display-4::after {
-  content: "";
-  display: block;
-  width: 60px;
-  height: 4px;
-  background-color: #ff79c6;
-  margin: 10px auto;
-  border-radius: 2px;
-}
+.serviciosCN_title { color: #222; }

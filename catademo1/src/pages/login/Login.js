@@ -3,171 +3,205 @@ import { useNavigate } from "react-router-dom";
 import firebaseApp from "../../firebase/firebase";
 import {
   getAuth,
+  setPersistence,
+  browserLocalPersistence,
+  browserSessionPersistence,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
+  sendEmailVerification,
   signInWithPopup,
   GoogleAuthProvider,
+  fetchSignInMethodsForEmail,
 } from "firebase/auth";
 import {
   getFirestore,
   doc,
   setDoc,
   getDoc,
-  collection,
-  query,
-  where,
-  getDocs,
 } from "firebase/firestore";
-import { Button, Form, Container, Row, Col } from "react-bootstrap";
-import { FaEnvelope, FaLock, FaUser, FaPhone, FaGoogle } from "react-icons/fa";
+import {
+  Button,
+  Form,
+  Container,
+  Row,
+  Col,
+  Tabs,
+  Tab,
+  Spinner,
+  InputGroup,
+} from "react-bootstrap";
+import {
+  FaEnvelope, FaLock, FaUser, FaPhone, FaGoogle, FaEye, FaEyeSlash
+} from "react-icons/fa";
 import "../../styles/components/login.css";
-import { sendEmailVerification } from "firebase/auth";
 
 const auth = getAuth(firebaseApp);
 const firestore = getFirestore(firebaseApp);
+const googleProvider = new GoogleAuthProvider();
 
-function Login() {
+const getStrength = (pwd) => {
+  let s = 0;
+  if (pwd.length >= 8) s++;
+  if (/[A-Z]/.test(pwd)) s++;
+  if (/[a-z]/.test(pwd)) s++;
+  if (/[0-9]/.test(pwd)) s++;
+  if (/[^A-Za-z0-9]/.test(pwd)) s++;
+  return s;
+};
+
+export default function Login() {
+  const navigate = useNavigate();
+
+  const [tab, setTab] = useState("login");
+  const [loading, setLoading] = useState(false);
+  const [persist, setPersist] = useState(true);
+  const [showPwd, setShowPwd] = useState(false);
+  const [messages, setMessages] = useState({ error: "", success: "" });
+
   const [correo, setCorreo] = useState("");
   const [password, setPassword] = useState("");
   const [nombre, setNombre] = useState("");
   const [telefono, setTelefono] = useState("");
-  const [formMode, setFormMode] = useState("login");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-  const navigate = useNavigate();
 
   useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "";
+    // correo de Firebase en español
+    auth.useDeviceLanguage?.();
+    // foco inicial
+    const first = document.querySelector("input[type='email']");
+    first && first.focus();
+  }, [tab]);
+
+  const mapFirebaseError = (code) => {
+    const d = {
+      "auth/invalid-email": "El correo no es válido.",
+      "auth/user-disabled": "La cuenta está deshabilitada.",
+      "auth/user-not-found": "No existe una cuenta con ese correo.",
+      "auth/wrong-password": "Contraseña incorrecta.",
+      "auth/too-many-requests": "Demasiados intentos. Intenta más tarde.",
+      "auth/email-already-in-use": "Ese correo ya está registrado.",
+      "auth/weak-password": "La contraseña es débil.",
+      "auth/popup-closed-by-user": "Se cerró la ventana de Google.",
+      "auth/invalid-continue-uri": "URL de retorno no autorizada en Firebase Auth.",
     };
-  }, []);
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setErrorMessage("");
-    try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        correo,
-        password
-      );
-      const rol = await getRol(userCredential.user.uid);
-      navigate(rol === "admin" ? "/admin/dashboard" : "/");
-    } catch (error) {
-      setErrorMessage(
-        "Error al iniciar sesión. Por favor, verifica tus datos."
-      );
-    }
-  };
-
-  const validarPassword = (password) => {
-    const regex = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z]).{8,}$/;
-    return regex.test(password);
-  };
-
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    setErrorMessage("");
-    setSuccessMessage("");
-
-    if (!validarPassword(password)) {
-      setErrorMessage(
-        "La contraseña debe tener al menos 8 caracteres, una letra mayúscula, un número y un carácter especial."
-      );
-      return;
-    }
-
-    try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        correo,
-        password
-      );
-
-      await sendEmailVerification(userCredential.user);
-      await setDoc(doc(firestore, "usuarios", userCredential.user.uid), {
-        nombre,
-        correo,
-        telefono,
-
-        rol: "user",
-      });
-
-      setSuccessMessage(
-        "Cuenta creada exitosamente. Revisa tu correo para verificar tu cuenta."
-      );
-      setTimeout(() => {
-        navigate("/");
-      }, 1000);
-    } catch (error) {
-      setErrorMessage("Error al registrarse. Por favor, intenta de nuevo.");
-    }
-  };
-
-  const handlePasswordReset = async (e) => {
-    e.preventDefault();
-    setErrorMessage("");
-    setSuccessMessage("");
-    try {
-      const usersRef = collection(firestore, "usuarios");
-      const q = query(
-        usersRef,
-        where("correo", "==", correo.trim()),
-        where("telefono", "==", telefono.trim())
-      );
-      const querySnapshot = await getDocs(q);
-
-      if (!querySnapshot.empty) {
-        await sendPasswordResetEmail(auth, correo.trim());
-        setSuccessMessage(
-          "Hemos enviado un correo para cambiar tu contraseña."
-        );
-        setFormMode("login");
-      } else {
-        setErrorMessage("Correo o teléfono no coinciden con los registrados.");
-      }
-    } catch (error) {
-      setErrorMessage(
-        `Error al enviar el correo de recuperación: ${error.message}`
-      );
-    }
-  };
-
-  const handleGoogleSignIn = async () => {
-    const provider = new GoogleAuthProvider();
-    try {
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-
-      const userRef = doc(firestore, "usuarios", user.uid);
-      const userDoc = await getDoc(userRef);
-
-      if (!userDoc.exists()) {
-        await setDoc(userRef, {
-          nombre: user.displayName,
-          correo: user.email,
-          telefono: "",
-          rol: "user",
-        });
-      }
-
-      const rol = await getRol(user.uid);
-      navigate(rol === "admin" ? "/dashboard" : "/");
-    } catch (error) {
-      setErrorMessage("Error al iniciar sesión con Google: " + error.message);
-    }
+    return d[code] || "Ocurrió un error. Intenta nuevamente.";
   };
 
   const getRol = async (uid) => {
-    const docRef = doc(firestore, `usuarios/${uid}`);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      return docSnap.data().rol;
-    } else {
-      console.error("No se encontró el documento del usuario.");
-      return null;
+    const snap = await getDoc(doc(firestore, "usuarios", uid));
+    return snap.exists() ? snap.data().rol : null;
+  };
+
+  const setAuthPersistence = async (remember) => {
+    await setPersistence(auth, remember ? browserLocalPersistence : browserSessionPersistence);
+  };
+
+  // ---- LOGIN ----
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setMessages({ error: "", success: "" });
+    setLoading(true);
+    try {
+      await setAuthPersistence(persist);
+      const { user } = await signInWithEmailAndPassword(auth, correo.trim(), password);
+      if (!user.emailVerified) {
+        await sendEmailVerification(user);
+        setMessages({ error: "Tu correo no está verificado. Te reenviamos el email.", success: "" });
+        setLoading(false);
+        return;
+      }
+      const rol = await getRol(user.uid);
+      navigate(rol === "admin" ? "/admin/dashboard" : "/");
+    } catch (err) {
+      console.error("LOGIN ERROR:", err);
+      setMessages({ error: mapFirebaseError(err.code), success: "" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ---- REGISTER ----
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setMessages({ error: "", success: "" });
+    if (getStrength(password) < 4) {
+      setMessages({ error: "La contraseña debe incluir 8+ caracteres, mayúsculas, minúsculas y números.", success: "" });
+      return;
+    }
+    setLoading(true);
+    try {
+      const { user } = await createUserWithEmailAndPassword(auth, correo.trim(), password);
+      await sendEmailVerification(user);
+      await setDoc(doc(firestore, "usuarios", user.uid), {
+        nombre: nombre.trim(),
+        correo: correo.trim(),
+        telefono: telefono.trim(),
+        rol: "user",
+        createdAt: new Date().toISOString(),
+      });
+      setMessages({ error: "", success: "Cuenta creada. Revisa tu correo para verificarla." });
+      setTab("login");
+    } catch (err) {
+      console.error("REGISTER ERROR:", err);
+      setMessages({ error: mapFirebaseError(err.code), success: "" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ---- RESET (SOLO CORREO) ----
+  const handlePasswordReset = async (e) => {
+    e.preventDefault();
+    setMessages({ error: "", success: "" });
+    setLoading(true);
+    try {
+      // (opcional) validamos que el correo tenga un método registrado para feedback más claro
+      const methods = await fetchSignInMethodsForEmail(auth, correo.trim());
+      if (!methods.length) {
+        // Si prefieres no revelar existencia del correo, comenta la siguiente línea
+        throw { code: "auth/user-not-found" };
+      }
+
+      // Asegúrate de tener este dominio en Auth > Dominios autorizados
+      const continueUrl = `${window.location.origin}/login`;
+      const actionCodeSettings = { url: continueUrl, handleCodeInApp: false };
+
+      await sendPasswordResetEmail(auth, correo.trim(), actionCodeSettings);
+      setMessages({ error: "", success: "Te enviamos un correo para restablecer la contraseña." });
+      setTab("login");
+    } catch (err) {
+      console.error("RESET ERROR:", err);
+      setMessages({ error: mapFirebaseError(err.code), success: "" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ---- GOOGLE ----
+  const handleGoogleSignIn = async () => {
+    setMessages({ error: "", success: "" });
+    setLoading(true);
+    try {
+      const { user } = await signInWithPopup(auth, googleProvider);
+      const ref = doc(firestore, "usuarios", user.uid);
+      const exists = await getDoc(ref);
+      if (!exists.exists()) {
+        await setDoc(ref, {
+          nombre: user.displayName || "",
+          correo: user.email || "",
+          telefono: "",
+          rol: "user",
+          createdAt: new Date().toISOString(),
+          provider: "google",
+        });
+      }
+      const rol = await getRol(user.uid);
+      navigate(rol === "admin" ? "/admin/dashboard" : "/");
+    } catch (err) {
+      console.error("GOOGLE ERROR:", err);
+      setMessages({ error: mapFirebaseError(err.code), success: "" });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -175,219 +209,226 @@ function Login() {
     <div className="login-background">
       <Container className="login-container">
         <Row className="justify-content-center">
-          <Col xs={12} md={8} lg={6}>
-            <div className="login-form-wrapper">
-              {formMode === "login" && (
-                <>
-                  <h1 className="login-title">Iniciar Sesión</h1>
-                  <Button
-                    variant="link"
-                    onClick={() => setFormMode("reset")}
-                    className="login-toggle mb-3"
-                  >
-                    ¿Olvidaste tu contraseña?
-                  </Button>
-                  <Form onSubmit={handleLogin}>
-                    <Form.Group
-                      controlId="formBasicEmail"
-                      className="mb-3 login-input-group"
-                    >
-                      <div className="login-input-icon">
-                        <FaEnvelope />
-                      </div>
-                      <Form.Control
-                        type="email"
-                        value={correo}
-                        onChange={(e) => setCorreo(e.target.value)}
-                        required
-                        placeholder="Introduce tu correo"
-                      />
-                    </Form.Group>
-                    <Form.Group
-                      controlId="formBasicPassword"
-                      className="mb-4 login-input-group"
-                    >
-                      <div className="login-input-icon">
-                        <FaLock />
-                      </div>
-                      <Form.Control
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        placeholder="Introduce tu contraseña"
-                      />
-                    </Form.Group>
-                    <Button
-                      variant="custom"
-                      type="submit"
-                      className="login-button mb-2"
-                    >
-                      Iniciar sesión
-                    </Button>
-                  </Form>
-                  <Button
-                    variant="custom"
-                    onClick={handleGoogleSignIn}
-                    className="login-button mb-3"
-                  >
-                    <FaGoogle /> Iniciar sesión con Google
-                  </Button>
-                  <Button
-                    variant="link"
-                    onClick={() => setFormMode("register")}
-                    className="login-toggle"
-                  >
-                    ¿No tienes cuenta? Regístrate
-                  </Button>
-                  {errorMessage && (
-                    <p className="login-error-message">{errorMessage}</p>
-                  )}
-                </>
-              )}
+          <Col xs={12} lg={10}>
+            <div className="login-card glass">
+              <Row className="g-0">
+                {/* Branding */}
+                <Col md={5} className="login-side d-none d-md-flex">
+                  <div className="brand">
+                    <div className="brand-dot" />
+                    <h2>CataaNails</h2>
+                    <p>Agenda inteligente y segura para tus servicios.</p>
+                  </div>
+                </Col>
 
-              {formMode === "register" && (
-                <>
-                  <h1 className="login-title">Regístrate</h1>
-                  <Form onSubmit={handleRegister}>
-                    <Form.Group
-                      controlId="formName"
-                      className="mb-3 login-input-group"
-                    >
-                      <div className="login-input-icon">
-                        <FaUser />
-                      </div>
-                      <Form.Control
-                        type="text"
-                        value={nombre}
-                        onChange={(e) => setNombre(e.target.value)}
-                        required
-                        placeholder="Introduce tu nombre"
-                      />
-                    </Form.Group>
-                    <Form.Group
-                      controlId="formPhone"
-                      className="mb-3 login-input-group"
-                    >
-                      <div className="login-input-icon">
-                        <FaPhone />
-                      </div>
-                      <Form.Control
-                        type="text"
-                        value={telefono}
-                        onChange={(e) => setTelefono(e.target.value)}
-                        required
-                        placeholder="Introduce tu teléfono"
-                      />
-                    </Form.Group>
-                    <Form.Group
-                      controlId="formEmail"
-                      className="mb-3 login-input-group"
-                    >
-                      <div className="login-input-icon">
-                        <FaEnvelope />
-                      </div>
-                      <Form.Control
-                        type="email"
-                        value={correo}
-                        onChange={(e) => setCorreo(e.target.value)}
-                        required
-                        placeholder="Introduce tu correo"
-                      />
-                    </Form.Group>
-                    <Form.Group
-                      controlId="formPassword"
-                      className="mb-4 login-input-group"
-                    >
-                      <div className="login-input-icon">
-                        <FaLock />
-                      </div>
-                      <Form.Control
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        placeholder="Introduce tu contraseña"
-                      />
-                    </Form.Group>
-                    <Button
-                      variant="custmon"
-                      type="submit"
-                      className="login-button mb-3"
-                    >
-                      Registrarse
-                    </Button>
-                  </Form>
-                  <Button
-                    variant="link"
-                    onClick={() => setFormMode("login")}
-                    className="login-toggle"
+                {/* Formulario */}
+                <Col md={7} xs={12} className="login-form-col">
+                  <Tabs
+                    id="auth-tabs"
+                    activeKey={tab}
+                    onSelect={(k) => setTab(k || "login")}
+                    className="login-tabs"
+                    justify
                   >
-                    ¿Ya tienes cuenta? Inicia sesión
-                  </Button>
-                  {errorMessage && (
-                    <p className="login-error-message">{errorMessage}</p>
-                  )}
-                </>
-              )}
+                    {/* -------- LOGIN -------- */}
+                    <Tab eventKey="login" title="Iniciar sesión">
+                      <Form onSubmit={handleLogin} className="form-stretch pt-3">
+                        <Form.Group className="mb-3">
+                          <Form.Label>Correo</Form.Label>
+                          <InputGroup>
+                            <InputGroup.Text><FaEnvelope /></InputGroup.Text>
+                            <Form.Control
+                              type="email"
+                              value={correo}
+                              onChange={(e) => setCorreo(e.target.value)}
+                              placeholder="tucorreo@dominio.com"
+                              required
+                            />
+                          </InputGroup>
+                        </Form.Group>
 
-              {formMode === "reset" && (
-                <>
-                  <h1 className="login-title">Recuperar Contraseña</h1>
-                  <Form onSubmit={handlePasswordReset}>
-                    <Form.Group
-                      controlId="formBasicEmail"
-                      className="mb-3 login-input-group"
-                    >
-                      <div className="login-input-icon">
-                        <FaEnvelope />
-                      </div>
-                      <Form.Control
-                        type="email"
-                        value={correo}
-                        onChange={(e) => setCorreo(e.target.value)}
-                        required
-                        placeholder="Introduce tu correo"
-                      />
-                    </Form.Group>
-                    <Form.Group
-                      controlId="formBasicPhone"
-                      className="mb-4 login-input-group"
-                    >
-                      <div className="login-input-icon">
-                        <FaPhone />
-                      </div>
-                      <Form.Control
-                        type="text"
-                        value={telefono}
-                        onChange={(e) => setTelefono(e.target.value)}
-                        required
-                        placeholder="Introduce tu teléfono"
-                      />
-                    </Form.Group>
-                    <Button
-                      variant="primary"
-                      type="submit"
-                      className="login-button mb-3"
-                    >
-                      Enviar correo de recuperación
-                    </Button>
-                    <Button
-                      variant="link"
-                      onClick={() => setFormMode("login")}
-                      className="login-toggle"
-                    >
-                      Regresar a inicio de sesión
-                    </Button>
-                  </Form>
-                  {errorMessage && (
-                    <p className="login-error-message">{errorMessage}</p>
-                  )}
-                  {successMessage && (
-                    <p className="login-success-message">{successMessage}</p>
-                  )}
-                </>
-              )}
+                        <Form.Group className="mb-2">
+                          <Form.Label>Contraseña</Form.Label>
+                          <InputGroup>
+                            <InputGroup.Text><FaLock /></InputGroup.Text>
+                            <Form.Control
+                              type={showPwd ? "text" : "password"}
+                              value={password}
+                              onChange={(e) => setPassword(e.target.value)}
+                              placeholder="Tu contraseña"
+                              required
+                            />
+                            <Button
+                              variant="outline-secondary"
+                              onClick={() => setShowPwd((v) => !v)}
+                              aria-label={showPwd ? "Ocultar contraseña" : "Mostrar contraseña"}
+                            >
+                              {showPwd ? <FaEyeSlash /> : <FaEye />}
+                            </Button>
+                          </InputGroup>
+                        </Form.Group>
+
+                        <div className="d-flex justify-content-between align-items-center mb-3">
+                          <Form.Check
+                            type="checkbox"
+                            id="remember"
+                            label="Recordarme"
+                            checked={persist}
+                            onChange={(e) => setPersist(e.target.checked)}
+                          />
+                          <Button variant="link" className="p-0" onClick={() => setTab("reset")}>
+                            ¿Olvidaste tu contraseña?
+                          </Button>
+                        </div>
+
+                        {/* Acciones al fondo */}
+                        <div className="form-actions">
+                          <Button className="login-button w-100" type="submit" disabled={loading}>
+                            {loading ? <Spinner size="sm" animation="border" /> : "Ingresar"}
+                          </Button>
+
+                          <Button
+                            className="login-button login-button--google w-100"
+                            type="button"
+                            onClick={handleGoogleSignIn}
+                            disabled={loading}
+                          >
+                            <FaGoogle /> <span>Continuar con Google</span>
+                          </Button>
+
+                          <div className="text-center">
+                            <Button variant="link" onClick={() => setTab("register")}>
+                              ¿No tienes cuenta? Regístrate
+                            </Button>
+                          </div>
+                        </div>
+                      </Form>
+                    </Tab>
+
+                    {/* -------- REGISTRO -------- */}
+                    <Tab eventKey="register" title="Crear cuenta">
+                      <Form onSubmit={handleRegister} className="form-stretch pt-3">
+                        <Form.Group className="mb-3">
+                          <Form.Label>Nombre</Form.Label>
+                          <InputGroup>
+                            <InputGroup.Text><FaUser /></InputGroup.Text>
+                            <Form.Control
+                              type="text"
+                              value={nombre}
+                              onChange={(e) => setNombre(e.target.value)}
+                              placeholder="Tu nombre completo"
+                              required
+                            />
+                          </InputGroup>
+                        </Form.Group>
+
+                        <Form.Group className="mb-3">
+                          <Form.Label>Teléfono</Form.Label>
+                          <InputGroup>
+                            <InputGroup.Text><FaPhone /></InputGroup.Text>
+                            <Form.Control
+                              type="tel"
+                              value={telefono}
+                              onChange={(e) => setTelefono(e.target.value)}
+                              placeholder="+56 9 xxxx xxxx"
+                              required
+                            />
+                          </InputGroup>
+                        </Form.Group>
+
+                        <Form.Group className="mb-3">
+                          <Form.Label>Correo</Form.Label>
+                          <InputGroup>
+                            <InputGroup.Text><FaEnvelope /></InputGroup.Text>
+                            <Form.Control
+                              type="email"
+                              value={correo}
+                              onChange={(e) => setCorreo(e.target.value)}
+                              placeholder="tucorreo@dominio.com"
+                              required
+                            />
+                          </InputGroup>
+                        </Form.Group>
+
+                        <Form.Group className="mb-1">
+                          <Form.Label>Contraseña</Form.Label>
+                          <InputGroup>
+                            <InputGroup.Text><FaLock /></InputGroup.Text>
+                            <Form.Control
+                              type={showPwd ? "text" : "password"}
+                              value={password}
+                              onChange={(e) => setPassword(e.target.value)}
+                              placeholder="Mínimo 8 caracteres"
+                              required
+                            />
+                            <Button
+                              variant="outline-secondary"
+                              onClick={() => setShowPwd((v) => !v)}
+                            >
+                              {showPwd ? <FaEyeSlash /> : <FaEye />}
+                            </Button>
+                          </InputGroup>
+                        </Form.Group>
+
+                        <div className="pwd-strength mb-3">
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <span key={i} className={i < getStrength(password) ? "on" : ""} />
+                          ))}
+                          <small className="ms-2">
+                            {["Muy débil","Débil","Media","Buena","Fuerte"][Math.max(0, getStrength(password)-1)] || ""}
+                          </small>
+                        </div>
+
+                        <div className="form-actions">
+                          <Button className="login-button w-100" type="submit" disabled={loading}>
+                            {loading ? <Spinner size="sm" animation="border" /> : "Crear cuenta"}
+                          </Button>
+
+                          <div className="text-center">
+                            <Button variant="link" onClick={() => setTab("login")}>
+                              ¿Ya tienes cuenta? Inicia sesión
+                            </Button>
+                          </div>
+                        </div>
+                      </Form>
+                    </Tab>
+
+                    {/* -------- RECUPERAR (solo correo) -------- */}
+                    <Tab eventKey="reset" title="Recuperar">
+                      <Form onSubmit={handlePasswordReset} className="form-stretch pt-3">
+                        <Form.Group className="mb-4">
+                          <Form.Label>Correo</Form.Label>
+                          <InputGroup>
+                            <InputGroup.Text><FaEnvelope /></InputGroup.Text>
+                            <Form.Control
+                              type="email"
+                              value={correo}
+                              onChange={(e) => setCorreo(e.target.value)}
+                              placeholder="tucorreo@dominio.com"
+                              required
+                            />
+                          </InputGroup>
+                        </Form.Group>
+
+                        <div className="form-actions">
+                          <Button className="login-button w-100" type="submit" disabled={loading}>
+                            {loading ? <Spinner size="sm" animation="border" /> : "Enviar correo de recuperación"}
+                          </Button>
+
+                          <div className="text-center">
+                            <Button variant="link" onClick={() => setTab("login")}>
+                              Volver a iniciar sesión
+                            </Button>
+                          </div>
+                        </div>
+                      </Form>
+                    </Tab>
+                  </Tabs>
+
+                  {messages.error && <p className="login-error-message">{messages.error}</p>}
+                  {messages.success && <p className="login-success-message">{messages.success}</p>}
+                </Col>
+              </Row>
             </div>
           </Col>
         </Row>
@@ -395,5 +436,3 @@ function Login() {
     </div>
   );
 }
-
-export default Login;

@@ -14,6 +14,7 @@ import About from "./pages/home/about";
 import "./App.css";
 import "font-awesome/css/font-awesome.min.css";
 
+
 import {
   BrowserRouter as Router,
   Route,
@@ -36,6 +37,7 @@ import ReviewManagement from "./components/admin/ReviewManagement";
 import AdminTrabajos from "./components/admin/AdminTrabajos";
 import BankBalance from "./components/admin/BankBalance";
 import AdminContactComments from "./components/admin/AdminContactComments";
+import ReportsView from "./components/admin/ReportsView";
 
 const auth = getAuth(firebaseApp);
 const firestore = getFirestore(firebaseApp);
@@ -124,6 +126,7 @@ function App() {
               <Route path="reviews" element={<ReviewManagement />} />
               <Route path="trabajos-realizados" element={<AdminTrabajos />} />
               <Route path="bank-balance" element={<BankBalance />} />
+              <Route path="/admin/reports" element={<ReportsView />} />
               <Route
                 path="contact-comments"
                 element={<AdminContactComments />}

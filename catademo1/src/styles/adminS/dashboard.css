@@ -224,3 +224,112 @@
   transform: rotate(45deg);
   z-index: -1;
 }
+
+/* ======== DASH EXTRA ======== */
+.dash_chart-card {
+  background: #ffffff;
+}
+
+.dash_chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  margin-bottom: .5rem;
+}
+
+.dash_card-kpi {
+  background: linear-gradient(135deg, #eef7ff, #ddeeff);
+}
+
+.dash_card-market {
+  background: linear-gradient(135deg, #fff7ed, #fff1e6);
+}
+
+.dash_market-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: .75rem;
+}
+
+.dash_market-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: .5rem;
+}
+
+.dash_market-item {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: .5rem .75rem;
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+  text-align: center;
+}
+
+.dash_market-item span {
+  font-size: .8rem;
+  color: #666;
+}
+
+.dash_market-item strong {
+  font-size: 1rem;
+}
+
+.dash_market-link {
+  text-decoration: none;
+  font-size: .9rem;
+}
+
+.dash_market-error {
+  margin-top: .5rem;
+  font-size: .85rem;
+  color: #b91c1c;
+}
+
+.dash_filters-wrap {
+  gap: .5rem;
+}
+
+.dash_link {
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.dash_btn {
+  border-radius: 999px;
+}
+
+/* Tabla del modal */
+.dash_table thead th {
+  border-bottom: 2px solid #ececec;
+}
+
+.dash_row-canceled {
+  background: #fef2f2;
+}
+
+.dash_row-completed {
+  background: #f0fdf4;
+}
+
+.dash_pagination button {
+  margin-left: .5rem;
+}
+
+/* Responsivo mercado */
+@media (max-width: 992px) {
+  .dash_market-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 576px) {
+  .dash_market-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mantener tu estilo existente de tarjetas/appointments sin romper nada */

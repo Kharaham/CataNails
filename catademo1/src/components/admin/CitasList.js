@@ -28,6 +28,13 @@ const CitasList = () => {
   const [cancelMessage, setCancelMessage] = useState("");
   const [filterDate, setFilterDate] = useState("");
 
+  const fmtCLP = (v) => {
+    if (v === null || v === undefined || v === "") return "";
+    const n = Number(v);
+    if (Number.isNaN(n)) return "";
+    return new Intl.NumberFormat("es-CL").format(n);
+  };
+
   const handleCancelMessageChange = (e) => {
     setCancelMessage(e.target.value);
   };
@@ -59,11 +66,11 @@ const CitasList = () => {
         "S2X9g3S8OrR0K4J_z"
       );
 
-      setCitas((prevCitas) => prevCitas.filter((cita) => cita.id !== citaId));
+      setCitas((prevCitas) => prevCitas.filter((c) => c.id !== citaId));
       setCanceledCitas((prevCanceled) => [
         ...prevCanceled,
         {
-          ...citas.find((cita) => cita.id === citaId),
+          ...citas.find((c) => c.id === citaId),
           canceled: true,
           status: "cancelada",
         },
@@ -82,21 +89,49 @@ const CitasList = () => {
       const citasSnapshot = await getDocs(citasCollection);
 
       const citasList = await Promise.all(
-        citasSnapshot.docs.map(async (doc) => {
-          const data = doc.data();
-          if (data.photoPath) {
-            const photoUrl = await getDownloadURL(ref(storage, data.photoPath));
-            return { id: doc.id, ...data, photoUrl };
+        citasSnapshot.docs.map(async (d) => {
+          const data = d.data();
+
+          // Foto (si la guardaste por path):
+          let photoURL = data.photoURL || null;
+          if (!photoURL && data.photoPath) {
+            try {
+              photoURL = await getDownloadURL(ref(storage, data.photoPath));
+            } catch {
+              // ignorar si falla
+            }
           }
-          return { id: doc.id, ...data };
+
+          // Precio del servicio guardado en la cita (si lo añadiste al crearla)
+          const servicePrice = data.servicePrice ?? null;
+
+          return { id: d.id, ...data, photoURL, servicePrice };
         })
       );
 
+      // Orden por fecha desc
       citasList.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-      setCitas(citasList.filter((cita) => !cita.completed && !cita.canceled));
-      setCompletedCitas(citasList.filter((cita) => cita.completed));
-      setCanceledCitas(citasList.filter((cita) => cita.canceled));
+      const pendientes = citasList.filter((c) => !c.completed && !c.canceled);
+      const realizadas = citasList.filter((c) => c.completed);
+      const canceladas = citasList.filter((c) => c.canceled);
+
+      setCitas(pendientes);
+      setCompletedCitas(realizadas);
+      setCanceledCitas(canceladas);
+
+      // Prefill amounts: si la cita ya trae servicePrice, úsalo como valor por defecto
+      setAmounts((prev) => {
+        const next = { ...prev };
+        pendientes.forEach((c) => {
+          if (next[c.id] === undefined || next[c.id] === "") {
+            if (c.servicePrice !== null && c.servicePrice !== undefined) {
+              next[c.id] = c.servicePrice;
+            }
+          }
+        });
+        return next;
+      });
     } catch (error) {
       console.error("Error al obtener citas:", error);
       setFeedbackMessage("Error al obtener las citas.");
@@ -105,8 +140,18 @@ const CitasList = () => {
 
   const markAsCompleted = async (citaId) => {
     try {
-      const amount = amounts[citaId];
-      if (!amount) {
+      // Usa el valor tipeado; si no hay, intenta con el servicePrice de la cita
+      const cita = citas.find((c) => c.id === citaId);
+      const typedAmount = amounts[citaId];
+      const fallbackAmount = cita?.servicePrice;
+      const finalAmount =
+        typedAmount !== undefined && typedAmount !== ""
+          ? Number(typedAmount)
+          : fallbackAmount !== undefined && fallbackAmount !== null
+          ? Number(fallbackAmount)
+          : null;
+
+      if (finalAmount === null || Number.isNaN(finalAmount)) {
         setFeedbackMessage(
           "Por favor, introduce el precio antes de marcar como completada."
         );
@@ -114,21 +159,27 @@ const CitasList = () => {
       }
 
       const citaRef = doc(db, "appointments", citaId);
-      await updateDoc(citaRef, { completed: true, amount: Number(amount) });
-
-      await addDoc(collection(db, "ingresos"), {
-        amount: Number(amount),
-        date: new Date(),
+      await updateDoc(citaRef, {
+        completed: true,
+        amount: finalAmount, // monto final registrado en la cita
+        // opcional: guarda también un timestamp de completado
+        completedAt: new Date(),
       });
 
-      setCitas((prevCitas) => prevCitas.filter((cita) => cita.id !== citaId));
-      setCompletedCitas((prevCompleted) => [
-        ...prevCompleted,
-        {
-          ...citas.find((cita) => cita.id === citaId),
-          completed: true,
-          amount: Number(amount),
-        },
+      // Registrar ingreso
+      await addDoc(collection(db, "ingresos"), {
+        amount: finalAmount,
+        date: new Date(),
+        // metadatos útiles
+        appointmentId: citaId,
+        service: cita?.service || null,
+        serviceId: cita?.serviceId || null,
+      });
+
+      setCitas((prev) => prev.filter((c) => c.id !== citaId));
+      setCompletedCitas((prev) => [
+        ...prev,
+        { ...cita, completed: true, amount: finalAmount },
       ]);
       setFeedbackMessage(
         "La cita se ha marcado como realizada y el ingreso se ha registrado."
@@ -166,6 +217,7 @@ const CitasList = () => {
       await handleCancelCita(citaToDelete.id, citaToDelete.email);
       setShowConfirmModal(false);
       setCitaToDelete(null);
+      setCancelMessage("");
     }
   };
 
@@ -177,11 +229,12 @@ const CitasList = () => {
 
   const handleAmountChange = (e, citaId) => {
     const { value } = e.target;
-    setAmounts((prevAmounts) => ({ ...prevAmounts, [citaId]: value }));
+    setAmounts((prev) => ({ ...prev, [citaId]: value }));
   };
 
   useEffect(() => {
     fetchCitas();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const renderCitasCards = (
@@ -191,90 +244,104 @@ const CitasList = () => {
   ) => {
     const filteredCitas = filterDate
       ? citasArray.filter(
-          (cita) =>
-            new Date(cita.date).toISOString().split("T")[0] === filterDate
+          (c) => new Date(c.date).toISOString().split("T")[0] === filterDate
         )
       : citasArray;
 
     return (
       <div className="d-flex flex-wrap justify-content-center">
-        {filteredCitas.map((cita) => (
-          <Card
-            key={cita.id}
-            className={`cita-card mb-4 shadow-sm ${
-              cita.photoURL ? "" : "no-image"
-            } ${cita.mode === "Domicilio" ? "card-domicilio" : ""}`}
-          >
-            {cita.photoURL && (
-              <div className="image-container">
-                <Card.Img
-                  variant="top"
-                  src={cita.photoURL}
-                  alt={`Foto de ${cita.name}`}
-                  className="card-img-top"
-                />
-              </div>
-            )}
-            <Card.Body>
-              <Card.Title className="card-title">{cita.name}</Card.Title>
-              <Card.Subtitle className="mb-2 text-muted">
-                {cita.email}
-              </Card.Subtitle>
-              <Card.Text>
-                <strong>Servicio:</strong> {cita.service} <br />
-                <strong>Fecha:</strong> {cita.date} <br />
-                <strong>Hora:</strong> {cita.hour} <br />
-                <strong>Modo:</strong> {cita.mode} <br />
-                {cita.mode === "Domicilio" && (
+        {filteredCitas.map((cita) => {
+          const visiblePrice =
+            amounts[cita.id] !== undefined && amounts[cita.id] !== ""
+              ? amounts[cita.id]
+              : cita.servicePrice ?? "";
+
+          return (
+            <Card
+              key={cita.id}
+              className={`cita-card mb-4 shadow-sm ${
+                cita.photoURL ? "" : "no-image"
+              } ${cita.mode === "Domicilio" ? "card-domicilio" : ""}`}
+            >
+              {cita.photoURL && (
+                <div className="image-container">
+                  <Card.Img
+                    variant="top"
+                    src={cita.photoURL}
+                    alt={`Foto de ${cita.name}`}
+                    className="card-img-top"
+                  />
+                </div>
+              )}
+              <Card.Body>
+                <Card.Title className="card-title">{cita.name}</Card.Title>
+                <Card.Subtitle className="mb-2 text-muted">
+                  {cita.email}
+                </Card.Subtitle>
+
+                <Card.Text>
+                  <strong>Servicio:</strong> {cita.service} <br />
+                  <strong>Fecha:</strong> {cita.date} <br />
+                  <strong>Hora:</strong> {cita.hour} <br />
+                  <strong>Modo:</strong> {cita.mode} <br />
+                  {cita.mode === "Domicilio" && (
+                    <>
+                      <strong>Dirección:</strong>{" "}
+                      {cita.address || "No proporcionada"} <br />
+                    </>
+                  )}
+                  <strong>Comentario:</strong>{" "}
+                  {cita.comment || "Sin comentario"} <br />
+                  {/* Mostrar precio visible en la tarjeta (si existe) */}
+                  {visiblePrice !== "" && (
+                    <>
+                      <strong>Precio:</strong> ${fmtCLP(visiblePrice)}
+                      <br />
+                    </>
+                  )}
+                </Card.Text>
+
+                {isPending && (
                   <>
-                    <strong>Dirección:</strong>{" "}
-                    {cita.address || "No proporcionada"} <br />
+                    <Form.Group controlId={`amount-${cita.id}`}>
+                      <Form.Label>Precio:</Form.Label>
+                      <Form.Control
+                        type="number"
+                        className="ingresar-precio"
+                        placeholder="Introduce el precio"
+                        value={amounts[cita.id] ?? cita.servicePrice ?? ""}
+                        onChange={(e) => handleAmountChange(e, cita.id)}
+                      />
+                    </Form.Group>
+
+                    <Button
+                      variant="outline-success"
+                      onClick={() => markAsCompleted(cita.id)}
+                      className="btn btn-realizada"
+                    >
+                      Realizada
+                    </Button>
+                    <Button
+                      variant="outline-danger"
+                      onClick={() => markAsCanceled(cita.id, cita.email)}
+                      className="btn btn-cancelar"
+                    >
+                      Cancelar
+                    </Button>
                   </>
                 )}
-                <strong>Comentario:</strong> {cita.comment || "Sin comentario"}{" "}
-                <br />
-              </Card.Text>
 
-              {isPending && (
-                <>
-                  <Form.Group controlId={`amount-${cita.id}`}>
-                    <Form.Label>Precio:</Form.Label>
-                    <Form.Control
-                      type="number"
-                      className="ingresar-precio"
-                      placeholder="Introduce el precio"
-                      value={amounts[cita.id] || ""}
-                      onChange={(e) => handleAmountChange(e, cita.id)}
-                    />
-                  </Form.Group>
-
-                  <Button
-                    variant="outline-success"
-                    onClick={() => markAsCompleted(cita.id)}
-                    className="btn btn-realizada"
-                  >
-                    Realizada
-                  </Button>
-                  <Button
-                    variant="outline-danger"
-                    onClick={() => markAsCanceled(cita.id, cita.email)}
-                    className="btn btn-cancelar"
-                  >
-                    Cancelar
-                  </Button>
-                </>
-              )}
-
-              <Button
-                variant="danger"
-                onClick={() => deleteCita(cita.id)}
-                className="btn btn-eliminar"
-              >
-                Eliminar
-              </Button>
-            </Card.Body>
-          </Card>
-        ))}
+                <Button
+                  variant="danger"
+                  onClick={() => deleteCita(cita.id)}
+                  className="btn btn-eliminar"
+                >
+                  Eliminar
+                </Button>
+              </Card.Body>
+            </Card>
+          );
+        })}
       </div>
     );
   };

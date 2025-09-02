@@ -1,107 +1,118 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../../styles/components/footer.css";
-import { Link } from "react-router-dom";
 
 const Footer = () => {
+  const year = new Date().getFullYear();
+
+  const quickLinks = [
+    { to: "/", label: "Inicio" },
+    { to: "/trabajos-realizados", label: "Trabajos Realizados" },
+    { to: "/about", label: "Sobre nosotros" },
+    // { to: "/servicios", label: "Servicios" },
+    // { to: "/contacto", label: "Contacto" },
+  ];
+
+  const social = [
+    { href: "https://facebook.com", icon: "facebook-f", label: "Facebook" },
+    { href: "https://instagram.com", icon: "instagram", label: "Instagram" },
+    { href: "https://wa.me/56912345678?text=Hola%20CataaNails,%20quisiera%20reservar%20una%20hora", icon: "whatsapp", label: "WhatsApp" },
+    { href: "https://tiktok.com", icon: "tiktok", label: "TikTok" },
+  ];
+
   return (
-    <footer className="footer bg-dark text-white">
-      <div className="container">
-        <div className="row">
-          <div className="col-lg-3 col-md-6 mb-4">
-            <h5 className="mb-3">CataaNails</h5>
-            <p>
-              Servicios profesionales de manicura, pedicura, alisados
-              permanentes y botox capilar. Resaltamos tu Belleza, nos apasiona
-              lo que hacemos.
-            </p>
-          </div>
-          <div className="col-lg-3 col-md-6 mb-4">
-            <h5 className="mb-3">Enlaces Rápidos</h5>
-            <ul className="list-unstyled">
-              <li>
-                <Link to="/" className="footer-link">
-                  Inicio
-                </Link>
-              </li>
-              <li>
-                <Link to="/trabajos-realizados" className="footer-link">
-                  Trabajos Realizados
-                </Link>
-              </li>
-              <li>
-                <Link to="/about" className="footer-link">
-                  About
-                </Link>
-              </li>
-            </ul>
-          </div>
-          <div className="col-lg-3 col-md-6 mb-4">
-            <h5 className="mb-3 text-center">Síguenos</h5>
-            <div className="social-icons d-flex justify-content-center">
-              <a
-                href="https://facebook.com"
-                className="text-white me-3"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <i className="fab fa-facebook-f"></i>
-              </a>
-              <a
-                href="https://instagram.com"
-                className="text-white me-3"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <i className="fab fa-instagram"></i>
-              </a>
-              <a
-                href="https://wa.me/tu_numero"
-                className="text-white me-3"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <i className="fab fa-whatsapp"></i>
-              </a>
-              <a
-                href="https://tiktok.com"
-                className="text-white"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <i className="fab fa-tiktok"></i>
-              </a>
+    <footer className="footer" role="contentinfo">
+      <div className="footer-top container">
+        <div className="row gy-4">
+          {/* Brand / About */}
+          <div className="col-xl-4 col-lg-4 col-md-6">
+            <div className="footer-brand">
+              <Link to="/" className="footer-logo" aria-label="CataaNails - Ir al inicio">
+                <span className="logo-dot" aria-hidden="true" />
+                <span className="logo-text">CataaNails</span>
+              </Link>
+              <p className="footer-desc">
+                Servicios profesionales de manicura, pedicura, alisados permanentes y bótox capilar.
+                Resaltamos tu belleza con técnicas seguras y resultados consistentes.
+              </p>
             </div>
           </div>
-          <div className="col-lg-3 col-md-6 mb-4">
-            <h5 className="mb-3">Contacto</h5>
-            <p>
-              Teléfono:{" "}
-              <a href="tel:+56912345678" className="text-white">
-                +56 9 1234 5678
-              </a>
-            </p>
-            <p>
-              Correo:{" "}
+
+          {/* Quick Links */}
+          <nav className="col-xl-2 col-lg-2 col-md-6" aria-labelledby="footer-quicklinks-title">
+            <h5 id="footer-quicklinks-title" className="footer-title">Enlaces</h5>
+            <ul className="footer-list">
+              {quickLinks.map((item) => (
+                <li key={item.to}>
+                  <Link className="footer-link" to={item.to}>
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {/* Contact */}
+          <div className="col-xl-3 col-lg-3 col-md-6">
+            <h5 className="footer-title">Contacto</h5>
+            <address className="footer-address">
+              <span className="d-block">Ñuble, Chile</span>
+              <a className="footer-link" href="tel:+56912345678">+56 9 1234 5678</a>
               <a
-                href="https://mail.google.com/mail/?view=cm&fs=1&to=danielariassm@gmail.com"
-                className="text-white"
-                target="_blank"
-                rel="noopener noreferrer"
+                className="footer-link"
+                href="mailto:danielariassm@gmail.com"
               >
                 danielariassm@gmail.com
               </a>
-            </p>
+            </address>
+            <div className="footer-hours">
+              <span className="d-block">Horarios</span>
+              <small>Lun–Sáb: 10:00–19:00</small>
+            </div>
+          </div>
+
+          {/* Social */}
+          <div className="col-xl-3 col-lg-3 col-md-6">
+            <h5 className="footer-title text-md-start text-center">Síguenos</h5>
+            <div className="social-icons">
+              {social.map((s) => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  className="social-btn"
+                  aria-label={s.label}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <i className={`fab fa-${s.icon}`} aria-hidden="true" />
+                  <span className="visually-hidden">{s.label}</span>
+                </a>
+              ))}
+            </div>
           </div>
         </div>
-        <div className="row mt-4">
-          <div className="col text-center">
-            <p className="small">
-              &copy; 2024 CataaNails. Todos los derechos reservados.
+
+        <hr className="footer-separator" />
+
+        <div className="footer-bottom row align-items-center">
+          <div className="col-12 col-md text-center text-md-start">
+            <p className="footer-copy mb-0">
+              &copy; {year} CataaNails. Todos los derechos reservados.
             </p>
+          </div>
+          <div className="col-12 col-md-auto text-center text-md-end">
+            <ul className="footer-legal">
+              <li><Link to="/terminos" className="footer-link">Términos</Link></li>
+              <li><Link to="/privacidad" className="footer-link">Privacidad</Link></li>
+              <li><Link to="/cookies" className="footer-link">Cookies</Link></li>
+            </ul>
           </div>
         </div>
       </div>
+
+      {/* Decorative gradient glow */}
+      <div className="footer-glow" aria-hidden="true" />
     </footer>
   );
 };

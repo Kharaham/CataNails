@@ -9,66 +9,55 @@ const Header = ({ user }) => {
   const navigate = useNavigate();
   const [isNavbarCollapsed, setIsNavbarCollapsed] = useState(true);
 
-  const handleLogout = () => {
-    auth.signOut();
-  };
+  const handleLogout = () => auth.signOut();
 
   const handleProfileClick = () => {
-    if (user?.rol === "admin") {
-      navigate("/admin/dashboard");
-    } else {
-      navigate("/perfil");
-    }
+    if (user?.rol === "admin") navigate("/admin/dashboard");
+    else navigate("/perfil");
     setIsNavbarCollapsed(true);
   };
 
   const handleNavLinkClick = () => {
-    if (window.innerWidth <= 768) {
-      setIsNavbarCollapsed(true);
-    }
+    if (window.innerWidth <= 768) setIsNavbarCollapsed(true);
   };
 
-  const toggleNavbar = () => {
-    setIsNavbarCollapsed(!isNavbarCollapsed);
-  };
+  const toggleNavbar = () => setIsNavbarCollapsed(!isNavbarCollapsed);
 
   return (
-    <header>
-      <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <header className="site-header" role="banner">
+      <nav className="navbar navbar-expand-lg header-nav" role="navigation" aria-label="Principal">
         <div className="container">
-          {/* Logo */}
-          <Link
-            className="navbar-brand d-flex flex-column align-items-center"
-            to="/"
-          >
-            <img src={logo} alt="Logo" className="logo mb-1" />
+
+          {/* Brand */}
+          <Link className="navbar-brand brand" to="/" onClick={handleNavLinkClick}>
+            <img src={logo} alt="CataaNails" className="brand-logo" />
+            <span className="brand-text">CataaNails</span>
           </Link>
+
+          {/* Toggler */}
           <button
-            className="navbar-toggler"
+            className="navbar-toggler header-toggle"
             type="button"
             onClick={toggleNavbar}
             aria-controls="navbarNav"
             aria-expanded={!isNavbarCollapsed}
-            aria-label="Toggle navigation"
+            aria-label="Abrir menú"
           >
             <span className="navbar-toggler-icon"></span>
           </button>
 
-          <div
-            className={`collapse navbar-collapse ${
-              isNavbarCollapsed ? "" : "show"
-            }`}
-            id="navbarNav"
-          >
-            <ul className="navbar-nav mx-auto">
+          {/* Menu */}
+          <div className={`collapse navbar-collapse ${isNavbarCollapsed ? "" : "show"}`} id="navbarNav">
+            <ul className="navbar-nav mx-auto header-links">
               <li className="nav-item">
-                <Link className="nav-link" to="/" onClick={handleNavLinkClick}>
+                <Link className="nav-link uline" to="/" onClick={handleNavLinkClick}>
                   Inicio
                 </Link>
               </li>
+
               <li className="nav-item dropdown">
                 <button
-                  className="nav-link dropdown-toggle btn"
+                  className="nav-link dropdown-toggle btn uline"
                   type="button"
                   id="navbarDropdown"
                   data-bs-toggle="dropdown"
@@ -76,97 +65,64 @@ const Header = ({ user }) => {
                 >
                   Servicios
                 </button>
-                <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
+                <ul className="dropdown-menu menu-card" aria-labelledby="navbarDropdown">
                   <li>
-                    <Link
-                      className="dropdown-item"
-                      to="/manicure"
-                      onClick={handleNavLinkClick}
-                    >
+                    <Link className="dropdown-item" to="/manicure" onClick={handleNavLinkClick}>
                       Manicure
                     </Link>
                   </li>
                   <li>
-                    <Link
-                      className="dropdown-item"
-                      to="/pedicure"
-                      onClick={handleNavLinkClick}
-                    >
+                    <Link className="dropdown-item" to="/pedicure" onClick={handleNavLinkClick}>
                       Pedicure
                     </Link>
                   </li>
                   <li>
-                    <Link
-                      className="dropdown-item"
-                      to="/alisado-permanente"
-                      onClick={handleNavLinkClick}
-                    >
+                    <Link className="dropdown-item" to="/alisado-permanente" onClick={handleNavLinkClick}>
                       Alisado Permanente
                     </Link>
                   </li>
                   <li>
-                    <Link
-                      className="dropdown-item"
-                      to="/botox-capilar"
-                      onClick={handleNavLinkClick}
-                    >
+                    <Link className="dropdown-item" to="/botox-capilar" onClick={handleNavLinkClick}>
                       Botox Capilar
                     </Link>
                   </li>
                 </ul>
               </li>
+
               <li className="nav-item">
-                <Link
-                  className="nav-link"
-                  to="/trabajos-realizados"
-                  onClick={handleNavLinkClick}
-                >
-                  Trabajos Realizados
+                <Link className="nav-link uline" to="/trabajos-realizados" onClick={handleNavLinkClick}>
+                  Portafolio
                 </Link>
               </li>
+
               <li className="nav-item">
-                <Link
-                  className="nav-link"
-                  to="/about"
-                  onClick={handleNavLinkClick}
-                >
-                  Sobre Nosotros
+                <Link className="nav-link uline" to="/about" onClick={handleNavLinkClick}>
+                  Sobre mí
                 </Link>
               </li>
             </ul>
 
-            <ul className="navbar-nav ms-auto">
+            {/* CTA + Auth */}
+            <div className="d-flex align-items-center gap-2 header-cta">
+              <Link to="/reservas" className="btn btn-reserve" onClick={handleNavLinkClick}>
+                Reservar
+              </Link>
+
               {user ? (
                 <>
-                  <li className="nav-item">
-                    <button
-                      className="btn nav-link"
-                      onClick={handleProfileClick}
-                    >
-                      Hola, {user.nombre || "Usuario"}
-                    </button>
-                  </li>
-                  <li className="nav-item">
-                    <button
-                      className="btn btn-link nav-link"
-                      onClick={handleLogout}
-                    >
-                      Cerrar sesión
-                    </button>
-                  </li>
+                  <button className="btn btn-ghost" onClick={handleProfileClick}>
+                    Hola, {user.nombre || "Usuario"}
+                  </button>
+                  <button className="btn btn-link link-logout" onClick={handleLogout}>
+                    Cerrar sesión
+                  </button>
                 </>
               ) : (
-                <li className="nav-item">
-                  <Link
-                    className="nav-link"
-                    to="/login"
-                    onClick={handleNavLinkClick}
-                  >
-                    Iniciar Sesión
-                  </Link>
-                </li>
+                <Link className="btn btn-ghost" to="/login" onClick={handleNavLinkClick}>
+                  Iniciar sesión
+                </Link>
               )}
-            </ul>
+            </div>
           </div>
         </div>
       </nav>

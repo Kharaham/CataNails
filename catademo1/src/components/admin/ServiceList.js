@@ -134,45 +134,44 @@ const ServiceList = () => {
       </Form.Select>
 
       <div className="card-container">
-  {services.map((service) => (
-    <Card className="servicios-card-admin mb-3" key={service.id}>
-      <Card.Body>
-        <Card.Title>{service.Nombre}</Card.Title>
-        <Card.Subtitle className="mb-2 text-muted">
-          Precio: ${parseFloat(service.Precio).toFixed(2)}
-        </Card.Subtitle>
-        <Card.Text>Tipo: {service.Tipo}</Card.Text>
-        <div className="image-container">
-          {service.ImagenUrl ? (
-            <img
-              src={service.ImagenUrl}
-              alt="Imagen del servicio"
-              className="service-img"
-            />
-          ) : (
-            <span>No disponible</span>
-          )}
-        </div>
-        <div className="button-group">
-          <Button
-            variant="warning"
-            className="me-2"
-            onClick={() => handleEditClick(service)}
-          >
-            Editar
-          </Button>
-          <Button
-            variant="danger"
-            onClick={() => handleDelete(service.id)}
-          >
-            Eliminar
-          </Button>
-        </div>
-      </Card.Body>
-    </Card>
-  ))}
-</div>
-
+        {services.map((service) => (
+          <Card className="servicios-card-admin mb-3" key={service.id}>
+            <Card.Body>
+              <Card.Title>{service.Nombre}</Card.Title>
+              <Card.Subtitle className="mb-2 text-muted">
+                Precio: ${parseFloat(service.Precio).toFixed(2)}
+              </Card.Subtitle>
+              <Card.Text>Tipo: {service.Tipo}</Card.Text>
+              <div className="image-container">
+                {service.ImagenUrl ? (
+                  <img
+                    src={service.ImagenUrl}
+                    alt="Imagen del servicio"
+                    className="service-img"
+                  />
+                ) : (
+                  <span>No disponible</span>
+                )}
+              </div>
+              <div className="button-group">
+                <Button
+                  variant="warning"
+                  className="me-2"
+                  onClick={() => handleEditClick(service)}
+                >
+                  Editar
+                </Button>
+                <Button
+                  variant="danger"
+                  onClick={() => handleDelete(service.id)}
+                >
+                  Eliminar
+                </Button>
+              </div>
+            </Card.Body>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 };

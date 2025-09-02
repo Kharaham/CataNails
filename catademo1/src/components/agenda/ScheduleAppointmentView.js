@@ -1,7 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  addDoc,
+  doc,
+  getDoc,
+} from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import { getAuth } from "firebase/auth";
+import { useLocation, useSearchParams } from "react-router-dom";
 import "../../styles/components/appointment.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -10,6 +19,9 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../../firebase/firebase";
 
 const ScheduleAppointmentView = () => {
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
+
   const [availableHours] = useState([
     "10:00",
     "12:00",
@@ -25,6 +37,10 @@ const ScheduleAppointmentView = () => {
   const [blockedDays, setBlockedDays] = useState([]);
   const [blockedHours, setBlockedHours] = useState([]);
   const [imageFile, setImageFile] = useState(null);
+
+  // Guardamos el servicio que viene desde la tarjeta (incluye precio)
+  const [prefilledService, setPrefilledService] = useState(null);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -40,9 +56,7 @@ const ScheduleAppointmentView = () => {
     return today.toISOString().split("T")[0];
   };
 
-  const handleFileChange = (e) => {
-    setImageFile(e.target.files[0]);
-  };
+  const handleFileChange = (e) => setImageFile(e.target.files[0]);
 
   const loadBlockedDays = async () => {
     const blockedDaysRef = collection(db, "blockedDays");
@@ -116,9 +130,7 @@ const ScheduleAppointmentView = () => {
         "S2X9g3S8OrR0K4J_z"
       )
       .then(
-        () => {
-          toast.success("Correo de confirmación enviado con éxito.");
-        },
+        () => toast.success("Correo de confirmación enviado con éxito."),
         (error) => {
           console.error("Error al enviar el correo:", error);
           toast.error("No se pudo enviar el correo de confirmación.");
@@ -126,15 +138,76 @@ const ScheduleAppointmentView = () => {
       );
   };
 
+  // Carga inicial: días bloqueados + datos del usuario + servicio preseleccionado (state o query)
   useEffect(() => {
     const auth = getAuth();
     const userEmail = auth.currentUser ? auth.currentUser.email : null;
 
     loadBlockedDays();
-    if (userEmail) {
-      loadUserData(userEmail);
+    if (userEmail) loadUserData(userEmail);
+
+    // 1) Del estado de navegación (lo más directo)
+    const serviceFromState = location.state?.service;
+    if (serviceFromState) {
+      const serviceName =
+        serviceFromState.Nombre ||
+        serviceFromState.name ||
+        serviceFromState.service ||
+        "";
+      const servicePrice =
+        serviceFromState.Precio ?? serviceFromState.price ?? null;
+
+      if (serviceName) {
+        setPrefilledService({
+          id: serviceFromState.id,
+          name: serviceName,
+          price: servicePrice,
+          raw: serviceFromState,
+        });
+        setFormData((prev) => ({ ...prev, service: serviceName }));
+      }
+    } else {
+      // 2) Respaldo por querystring: ?serviceId=...&serviceName=...&servicePrice=...
+      const serviceId = searchParams.get("serviceId");
+      const serviceNameQS = searchParams.get("serviceName");
+      const servicePriceQS = searchParams.get("servicePrice");
+
+      if (serviceNameQS) {
+        setPrefilledService({
+          id: serviceId || null,
+          name: serviceNameQS,
+          price: servicePriceQS ? Number(servicePriceQS) : null,
+          raw: null,
+        });
+        setFormData((prev) => ({ ...prev, service: serviceNameQS }));
+      } else if (serviceId) {
+        // Si solo tenemos el id, intenta buscarlo (ajusta la colección si corresponde)
+        // Ejemplo: viene desde "alisadopermanente"
+        (async () => {
+          try {
+            const snap = await getDoc(doc(db, "alisadopermanente", serviceId));
+            if (snap.exists()) {
+              const data = snap.data();
+              const name = data.Nombre || data.name || data.service || "";
+              const price = data.Precio ?? data.price ?? null;
+
+              if (name) {
+                setPrefilledService({
+                  id: snap.id,
+                  name,
+                  price,
+                  raw: { id: snap.id, ...data },
+                });
+                setFormData((prev) => ({ ...prev, service: name }));
+              }
+            }
+          } catch (e) {
+            console.error("No se pudo cargar el servicio por ID:", e);
+          }
+        })();
+      }
     }
-  }, []);
+  }, [location.state, searchParams]);
 
   useEffect(() => {
     if (selectedDate && !blockedDays.includes(selectedDate)) {
@@ -144,11 +217,11 @@ const ScheduleAppointmentView = () => {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
-
-    if (name === "date") {
-      setSelectedDate(value);
-    }
+    setFormData((prev) => {
+      const next = { ...prev, [name]: value };
+      return next;
+    });
+    if (name === "date") setSelectedDate(value);
   };
 
   const filteredHours = availableHours.filter((hour) => {
@@ -161,12 +234,8 @@ const ScheduleAppointmentView = () => {
       const [hourPart, minutePart] = hour.split(":").map(Number);
       const blockTime = new Date();
       blockTime.setHours(hourPart, minutePart, 0, 0);
-
-      if (blockTime <= now) {
-        return false;
-      }
+      if (blockTime <= now) return false;
     }
-
     return !bookedHours.includes(hour) && !isBlockedHour;
   });
 
@@ -209,6 +278,9 @@ const ScheduleAppointmentView = () => {
         mode,
         address: mode === "Domicilio" ? address : "",
         photoURL: photoURL || null,
+        // Guardamos también el id y el precio del servicio (no rompe nada existente)
+        serviceId: prefilledService?.id || null,
+        servicePrice: prefilledService?.price ?? null,
       });
 
       toast.success("¡Cita agendada con éxito!");
@@ -227,10 +299,19 @@ const ScheduleAppointmentView = () => {
       setAddress("");
       setSelectedDate("");
       setBookedHours([]);
+      setPrefilledService(null);
     } catch (error) {
       console.error("Error al agendar la cita: ", error);
       toast.error("Hubo un error al agendar la cita.");
     }
+  };
+
+  // Utilidad para mostrar precio con formato local
+  const fmtCLP = (v) => {
+    if (v === null || typeof v === "undefined" || v === "") return null;
+    const n = Number(v);
+    if (Number.isNaN(n)) return null;
+    return new Intl.NumberFormat("es-CL").format(n);
   };
 
   return (
@@ -311,19 +392,42 @@ const ScheduleAppointmentView = () => {
         <div className="form-row">
           <div className="form-group">
             <label htmlFor="service">Servicio:</label>
-            <select
-              id="service"
-              name="service"
-              value={formData.service}
-              onChange={handleInputChange}
-              required
-            >
-              <option value="">Selecciona un servicio</option>
-              <option value="Manicure">Manicure</option>
-              <option value="Pedicure">Pedicure</option>
-              <option value="Alisado">Alisado</option>
-              <option value="Botox Capilar">Botox Capilar</option>
-            </select>
+
+            {/* Si viene preseleccionado desde la tarjeta */}
+            {prefilledService ? (
+              <>
+                <div className="pill-selected-service">
+                  {prefilledService.name}
+                  {fmtCLP(prefilledService.price) && (
+                    <span style={{ marginLeft: 8, fontWeight: 700 }}>
+                      — ${fmtCLP(prefilledService.price)}
+                    </span>
+                  )}
+                </div>
+                {/* Mantén inputs ocultos para enviar los valores */}
+                <input type="hidden" name="service" value={formData.service} />
+                <input
+                  type="hidden"
+                  name="servicePrice"
+                  value={prefilledService.price ?? ""}
+                />
+              </>
+            ) : (
+              <select
+                id="service"
+                name="service"
+                value={formData.service}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="">Selecciona un servicio</option>
+                <option value="Manicure">Manicure</option>
+                <option value="Pedicure">Pedicure</option>
+                <option value="Alisado">Alisado</option>
+                <option value="Botox Capilar">Botox Capilar</option>
+              </select>
+            )}
+
             {formData.service && (
               <p
                 style={{
@@ -352,6 +456,7 @@ const ScheduleAppointmentView = () => {
             </select>
           </div>
         </div>
+
         <div className="form-row">
           <div className="form-group">
             <label htmlFor="photo">Foto de Referencia:</label>

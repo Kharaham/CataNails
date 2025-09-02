@@ -159,3 +159,134 @@
     text-align: center;
   }
 }
+/* ====== Grid de filtros compacto */
+.money-filters-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+  gap: 12px;
+  align-items: end;
+  margin-bottom: 12px;
+}
+
+.money-filter-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* ====== Cards KPI: ya tienes estilos; solo afinamos */
+.money-card {
+  position: relative;
+  overflow: hidden;
+}
+.money-card h5 { letter-spacing: .2px; }
+.money-card p { font-size: 30px; }
+
+/* ====== Analytics */
+.analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(260px, 1fr));
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.chart-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 26px rgba(0,0,0,.08);
+  padding: 14px 14px 6px;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.chart-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 32px rgba(0,0,0,.12);
+}
+
+.chart-title {
+  font-weight: 700;
+  color: #1f2937;
+  margin: 4px 8px 10px;
+}
+
+/* Tooltip de Recharts (reseteo mínimo) */
+.recharts-default-tooltip {
+  border-radius: 8px !important;
+  box-shadow: 0 8px 22px rgba(0,0,0,.1) !important;
+  border: 1px solid rgba(0,0,0,.06) !important;
+}
+
+/* ====== Responsive */
+@media (max-width: 1200px) {
+  .analytics-grid {
+    grid-template-columns: repeat(2, minmax(260px, 1fr));
+  }
+}
+@media (max-width: 768px) {
+  .money-filters-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .analytics-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.money-reset-btn {
+  background-color: #e91e63;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 15px;
+  transition: background .2s ease, transform .15s ease, box-shadow .2s ease;
+}
+.money-reset-btn:hover {
+   background-color: #e91e63;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(0,0,0,.06);
+}
+
+/* Header con acción de personalizar */
+.money-header-row{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+}
+.money-customize-btn{
+  background:#f3f4f6; color:#111827; border:1px solid #e5e7eb;
+  padding:10px 14px; border-radius:8px; cursor:pointer; font-weight:600;
+  transition:transform .15s ease, box-shadow .2s ease, background .2s ease;
+}
+.money-customize-btn:hover{ background:#e5e7eb; transform:translateY(-1px); box-shadow:0 6px 14px rgba(0,0,0,.06); }
+
+/* Panel de personalización */
+.ui-customizer{
+  background:#fff; border:1px solid rgba(0,0,0,.06); border-radius:12px;
+  padding:14px; margin:10px 0 6px; box-shadow:0 8px 22px rgba(0,0,0,.06);
+}
+.ui-grid{
+  display:grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap:12px;
+}
+.ui-grid label{ display:block; font-size:.9rem; color:#374151; margin-bottom:6px; }
+.ui-grid input[type="color"]{ width:100%; height:40px; border:1px solid #e5e7eb; border-radius:8px; background:#fff; cursor:pointer; }
+.ui-actions{ display:flex; justify-content:flex-end; margin-top:10px; }
+
+/* Método de pago select alineado */
+.money-method-select{ max-width:220px; }
+
+/* Tarjeta transferencias hereda estilo base .money-card */
+.money-card.transfer h5, .money-card.transfer p { text-shadow: 1px 1px 3px rgba(0,0,0,.08); }
+
+/* Ajustes responsivos */
+@media (max-width: 576px){
+  .money-header-row{ flex-direction:column; align-items:flex-start; gap:8px; }
+  .money-method-select{ max-width:100%; }
+}
+.kpi-counter {
+  margin-top: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  color: black;
+  opacity: .95;
+}

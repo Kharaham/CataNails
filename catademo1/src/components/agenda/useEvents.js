@@ -19,7 +19,7 @@ const useEvents = () => {
           allDay: data.allDay,
         };
       })
-      .filter((event) => event.start && event.end); 
+      .filter((event) => event.start && event.end);
 
     setEvents(loadedEvents);
   };

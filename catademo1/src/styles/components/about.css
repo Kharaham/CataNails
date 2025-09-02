@@ -1,105 +1,679 @@
-
-.about {
-    background-color: #f7f7f9;
-    padding: 60px 0;
-    
-  }
-  
-  .section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 2.0rem;
-    color: #333;
-    text-transform: uppercase;
-    position: relative;
-  }
-  
-  .section-title::after {
-    content: '';
-    display: block;
-    width: 60px;
-    height: 4px;
-    background-color: #ff79c6;
-    margin: 10px auto;
-    border-radius: 2px;
-  }
-  
-  .about-card {
-    background: #fff;
-    padding: 20px;
-    
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    text-align: center;
-  }
-  
-  .about-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
-  }
-  
-  .about-card h4 {
-    font-size: 1.8rem;
-    color: #ff79c6;
-    margin-top: 15px;
-  }
-  
-  .about-card p, .about-card ul {
-    font-size: 1rem;
-    color: #666;
-    line-height: 1.6;
-  }
-  
-  .about-card ul {
-    padding-left: 0;
-    list-style: none;
-  }
-  
-  .about-card ul li {
-    margin-bottom: 10px;
-  }
-  
-  .icon {
-    font-size: 2.5rem;
-    color: #ff79c6;
-    margin-bottom: 15px;
-    transition: color 0.3s ease;
-  }
-  
-  .about-card:hover .icon {
-    color: #d500f9;
-  }
-  
-  @media (max-width: 768px) {
-    .section-title {
-      font-size: 2rem;
-    }
-  
-    .about-card h4 {
-      font-size: 1.6rem;
-    }
-  
-    .about-card p, .about-card ul {
-      font-size: 0.95rem;
-    }
-  }
-  
-
-.btn-contacto-about{
-  background-color: #ff79c6;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  font-size: 1em;
-  font-weight: bold;
-  width: 100%;
-  border-radius: 4px;
- 
- 
+:root {
+  --brand: #d63384;
+  --brand2: #ff7aa7;
+  --bg: #f6f7fb;
+  --card: #ffffff;
+  --text: #111827;
+  --muted: #6b7280;
+  --border: #e5e7eb;
 }
 
-input:focus, textarea:focus {
+.about {
+  background: var(--bg);
+}
+
+/* container helper (si usas Bootstrap ya lo tienes; esto no interfiere) */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* HERO */
+.about-hero {
+  position: relative;
+  color: #fff;
+  padding: 56px 0 48px;
+  background: radial-gradient(
+      90% 100% at 10% 0%,
+      rgba(233, 30, 99, 0.18),
+      transparent 60%
+    ),
+    linear-gradient(180deg, #111316, #171a1f);
+  overflow: hidden;
+}
+.about-hero .eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #e5e7eb;
+  margin: 0 0 6px;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+.about-hero h1 {
+  margin: 0 0 10px;
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-weight: 800;
+}
+.about-hero .subtitle {
+  color: #cbd5e1;
+  max-width: 720px;
+  margin: 0 0 16px;
+}
+.hero-cta {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  background: linear-gradient(90deg, var(--brand), var(--brand2));
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  font-weight: 800;
+  box-shadow: 0 14px 34px rgba(233, 30, 99, 0.28);
+  text-decoration: none;
+  display: inline-block;
+}
+.btn-ghost {
+  background: #fff;
+  color: #111827;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  font-weight: 800;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.hero-glow {
+  position: absolute;
+  inset: auto -20% -40% -20%;
+  height: 280px;
+  background: radial-gradient(
+    60% 60% at 50% 0%,
+    rgba(233, 30, 99, 0.25),
+    transparent 60%
+  );
+  pointer-events: none;
+}
+
+/* TARJETAS */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-top: 18px;
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.05);
+  transition: transform 0.08s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.card:hover {
+  transform: translateY(-2px);
+  border-color: #f3accd;
+  box-shadow: 0 16px 36px rgba(233, 30, 99, 0.12);
+}
+.card-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(90deg, var(--brand), var(--brand2));
+  color: #fff;
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+}
+.card h3 {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+}
+.card p {
+  color: var(--muted);
+  margin: 0;
+}
+.bullet {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--muted);
+}
+.bullet li {
+  margin: 0.25rem 0;
+}
+
+/* MÉTRICAS */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 16px 0;
+}
+.metric {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 16px;
+  text-align: center;
+}
+.metric-value {
+  display: block;
+  font-weight: 900;
+  font-size: 1.4rem;
+}
+.metric-label {
+  color: var(--muted);
+}
+
+/* CONTACTO */
+.contact {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 16px;
+  margin: 8px 0 28px;
+}
+.contact-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.05);
+}
+.contact-card h2 {
+  margin: 0 0 4px;
+}
+.muted {
+  color: var(--muted);
+}
+
+.contact-form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 8px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.field.full {
+  grid-column: 1 / -1;
+}
+.field input,
+.field textarea {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.7rem 0.8rem;
+  background: #fff;
+}
+.field input:focus,
+.field textarea:focus {
   outline: none;
-  box-shadow: none;
-  border: 1px solid #ff79c6; 
+  border-color: #f3accd;
+  box-shadow: 0 0 0 4px rgba(233, 30, 99, 0.12);
+}
+.helper {
+  display: flex;
+  justify-content: space-between;
+  color: #9ca3af;
+  margin-top: 4px;
+}
+
+/* honeypot oculto */
+.hp {
+  position: absolute !important;
+  left: -9999px !important;
+  width: 1px;
+  height: 1px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+/* ASIDE */
+.contact-aside {
+  display: grid;
+  gap: 10px;
+}
+.mini-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.04);
+}
+.mini-card h4 {
+  margin: 0 0 4px;
+}
+
+/* ALERTS */
+.alert {
+  border-radius: 12px;
+  padding: 0.6rem 0.8rem;
+  margin: 10px 0;
+  font-weight: 600;
+}
+.alert.ok {
+  background: #d1e7dd;
+  color: #0f5132;
+  border: 1px solid #badbcc;
+}
+.alert.err {
+  background: #ffe6f1;
+  color: #b4235a;
+  border: 1px solid #ffd0e6;
+}
+
+/* RESPONSIVE */
+@media (max-width: 992px) {
+  .cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .contact {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 640px) {
+  .cards {
+    grid-template-columns: 1fr;
+  }
+  .metrics {
+    grid-template-columns: 1fr;
+  }
+  .contact-form {
+    grid-template-columns: 1fr;
+  }
+}
+/* ====== CENTRADO GLOBAL Y FIX DE NAVBAR ====== */
+.about-hero {
+  /* si tu navbar es fija y tapa el título, ajusta este padding-top */
+  padding-top: 96px; /* prueba 80–120px según la altura real de tu navbar */
+}
+.about .container {
+  max-width: 1100px;
+  margin-inline: auto; /* centra los bloques */
+}
+
+/* Hero centrado */
+.about-hero .container {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.hero-cta {
+  justify-content: center; /* centra los botones */
+}
+
+/* ====== TARJETAS (Misión/Visión/Valores/Conócenos) ====== */
+.cards {
+  /* centra el grid y hazlo fluido */
+  max-width: 1100px;
+  margin: 18px auto 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  align-items: stretch;
+}
+
+/* ====== MÉTRICAS ====== */
+.metrics {
+  max-width: 1100px;
+  margin: 16px auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+@media (max-width: 768px) {
+  .metrics {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ====== CONTACTO ====== */
+.contact {
+  max-width: 1100px;
+  margin: 8px auto 28px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 16px;
+}
+@media (max-width: 992px) {
+  .contact {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Opcional: da un poco más de sombra y suaviza bordes para resaltar bloques */
+.card,
+.metric,
+.contact-card,
+.mini-card {
+  border-radius: 16px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+}
+/* Profesional Section */
+.professional-section {
+  margin: 40px auto;
+  max-width: 1000px;
+}
+
+.professional-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  padding: 20px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.05);
+}
+
+.professional-photo img {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #f3accd;
+}
+
+.professional-info h2 {
+  margin: 0;
+  font-size: 1.6rem;
+  color: var(--brand);
+}
+
+.professional-info .role {
+  color: var(--muted);
+  font-weight: 500;
+  margin: 4px 0 10px;
+}
+
+.professional-info .bio {
+  margin-bottom: 10px;
+  color: #444;
+  line-height: 1.5;
+}
+
+.highlights {
+  list-style: disc;
+  padding-left: 18px;
+  margin: 0;
+  color: #555;
+}
+
+.highlights li {
+  margin-bottom: 4px;
+}
+
+/* Formulario mejorado */
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.contact-form .form-row input,
+.contact-form .form-row textarea {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 1rem;
+  width: 100%;
+}
+
+.contact-form .form-row input:focus,
+.contact-form .form-row textarea:focus {
+  border-color: #f3accd;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.1);
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 10px;
+}
+/* ===== Alternado de tarjetas + fotos ===== */
+.feature-rows {
+  margin: 22px auto 8px;
+  max-width: 1100px;
+}
+
+.feature-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  align-items: stretch;
+  margin-bottom: 16px;
+}
+
+.feature-row.inverted {
+  /* invierte visualmente en desktop */
+  direction: rtl;
+}
+.feature-row.inverted > * {
+  direction: ltr; /* corrige el texto */
+}
+
+.feature-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.05);
+  transition: transform 0.08s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.feature-card:hover {
+  transform: translateY(-2px);
+  border-color: #f3accd;
+  box-shadow: 0 16px 36px rgba(233, 30, 99, 0.12);
+}
+.feature-card h3 {
+  margin: 0 0 6px;
+  font-size: 1.06rem;
+}
+.feature-card p {
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.45;
+}
+.feature-card .bullet {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--muted);
+}
+.feature-card .bullet li {
+  margin: 0.25rem 0;
+}
+
+.card-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 10px;
+  background: linear-gradient(90deg, var(--brand), var(--brand2));
+  color: #fff;
+  font-size: 1.1rem;
+  box-shadow: 0 8px 20px rgba(233, 30, 99, 0.25);
+}
+
+.feature-photo {
+  position: relative;
+  margin: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+  background: #000;
+}
+.feature-photo img {
+  width: 100%;
+  height: 100%;
+  min-height: 220px;
+  object-fit: cover;
+  display: block;
+  transform: scale(1.01);
+  transition: transform 0.5s ease;
+}
+.feature-photo:hover img {
+  transform: scale(1.05);
+}
+.feature-photo figcaption {
+  position: absolute;
+  left: 12px;
+  bottom: 10px;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .feature-row {
+    grid-template-columns: 1fr;
+  }
+  .feature-row.inverted {
+    direction: ltr;
+  }
+  .feature-photo img {
+    min-height: 200px;
+  }
+}
+
+/* === Alturas iguales para las 3 columnas de cada fila === */
+
+/* Alto responsivo de la fila (ajústalo a tu gusto) */
+.feature-row {
+  /* ya tienes display:grid y 3 columnas */
+  grid-template-rows: clamp(
+    260px,
+    28vw,
+    340px
+  ); /* min 260, crece con el viewport, máx 340 */
+  align-items: stretch; /* estira las celdas a la altura de la fila */
+}
+
+/* Cada tarjeta ocupa el 100% de la altura de la fila */
+.feature-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* El contenido interno puede crecer sin romper la altura */
+.feature-card p,
+.feature-card .bullet {
+  margin-top: 4px;
+  /* si alguna tarjeta se pasa en texto, quita el overflow hidden */
+  overflow: auto;
+}
+
+/* La foto también ocupa el 100% de la altura de la fila */
+.feature-photo {
+  height: 100%;
+  display: grid; /* facilita centrar y estirar el <img> */
+  place-items: stretch;
+}
+.feature-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* recorte elegante manteniendo proporción */
+  min-height: 0; /* evita que el grid fuerce altura extra */
+}
+.feature-photo figcaption {
+  /* sigue igual; queda superpuesto sin afectar el alto */
+}
+
+/* En móvil volvemos a altura auto para que no quede encajonado */
+@media (max-width: 992px) {
+  .feature-row {
+    grid-template-rows: auto; /* altura según contenido en 1 columna */
+  }
+  .feature-card,
+  .feature-photo {
+    height: auto;
+  }
+}
+/* Lista sin viñetas + estilo elegante */
+.highlights.clean {
+  list-style: none; /* quita los puntos */
+  padding: 0;
+  margin: 10px 0 0;
+  display: grid;
+  gap: 8px;
+}
+.highlights.clean li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff; /* mismo fondo de card */
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
+}
+
+/* Icono de check (puedes reemplazar por react-icons si quieres) */
+.hi-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: #fff;
+  background: linear-gradient(90deg, var(--brand), var(--brand2));
+  box-shadow: 0 6px 14px rgba(233, 30, 99, 0.25);
+}
+/* Ajusta el contenedor de valores */
+.values-list.clean {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px; /* menos espacio entre filas */
+}
+
+/* Cada fila más compacta y con fondo sutil */
+.values-list.clean li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f9f9fb; /* gris muy claro para que contraste con la card */
+  border: 1px solid var(--border);
+  border-radius: 8px; /* esquinas más suaves */
+  padding: 6px 10px; /* menos padding */
+  font-size: 0.95rem; /* texto más compacto */
+  box-shadow: none; /* quita sombra para que parezca integrado */
+}
+
+/* Ícono más pequeño y alineado */
+.values-list.clean .hi-icon {
+  width: 18px;
+  height: 18px;
+  font-size: 0.75rem;
+  border-radius: 50%;
+  display: inline-grid;
+  place-items: center;
+  color: #fff;
+  background: linear-gradient(90deg, var(--brand), var(--brand2));
+  flex-shrink: 0;
+}
+
+/* Texto alineado y limpio */
+.values-list.clean li strong {
+  margin-right: 4px;
+  font-weight: 600;
+  color: #333;
 }
