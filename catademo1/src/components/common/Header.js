@@ -7,82 +7,126 @@ import { getAuth } from "firebase/auth";
 const Header = ({ user }) => {
   const auth = getAuth();
   const navigate = useNavigate();
-  const [isNavbarCollapsed, setIsNavbarCollapsed] = useState(true);
 
-  const handleLogout = () => auth.signOut();
+  // === Estado (prefijo headerC_) ===
+  const [headerC_isCollapsed, setHeaderC_isCollapsed] = useState(true);
 
-  const handleProfileClick = () => {
+  // === Handlers (prefijo headerC_) ===
+  const headerC_handleLogout = async () => {
+    try {
+      await auth.signOut();
+      navigate("/");
+    } catch (_) {}
+  };
+
+  const headerC_goProfile = () => {
     if (user?.rol === "admin") navigate("/admin/dashboard");
     else navigate("/perfil");
-    setIsNavbarCollapsed(true);
+    setHeaderC_isCollapsed(true);
   };
 
-  const handleNavLinkClick = () => {
-    if (window.innerWidth <= 768) setIsNavbarCollapsed(true);
+  const headerC_onNavClick = () => {
+    if (window.innerWidth <= 768) setHeaderC_isCollapsed(true);
   };
 
-  const toggleNavbar = () => setIsNavbarCollapsed(!isNavbarCollapsed);
+  const headerC_toggle = () =>
+    setHeaderC_isCollapsed((v) => !v);
 
   return (
-    <header className="site-header" role="banner">
-      <nav className="navbar navbar-expand-lg header-nav" role="navigation" aria-label="Principal">
+    <header className="headerC_root" role="banner">
+      <nav
+        className="navbar navbar-expand-lg headerC_nav"
+        role="navigation"
+        aria-label="Principal"
+      >
         <div className="container">
-
           {/* Brand */}
-          <Link className="navbar-brand brand" to="/" onClick={handleNavLinkClick}>
-            <img src={logo} alt="CataaNails" className="brand-logo" />
-            <span className="brand-text">CataaNails</span>
+          <Link
+            className="navbar-brand headerC_brand"
+            to="/"
+            onClick={headerC_onNavClick}
+          >
+            <img src={logo} alt="CataaNails" className="headerC_brandLogo" />
+            <span className="headerC_brandText">CataaNails</span>
           </Link>
 
           {/* Toggler */}
           <button
-            className="navbar-toggler header-toggle"
+            className="navbar-toggler headerC_toggle"
             type="button"
-            onClick={toggleNavbar}
-            aria-controls="navbarNav"
-            aria-expanded={!isNavbarCollapsed}
+            onClick={headerC_toggle}
+            aria-controls="headerC_navbar"
+            aria-expanded={!headerC_isCollapsed}
             aria-label="Abrir menú"
           >
             <span className="navbar-toggler-icon"></span>
           </button>
 
-          {/* Menu */}
-          <div className={`collapse navbar-collapse ${isNavbarCollapsed ? "" : "show"}`} id="navbarNav">
-            <ul className="navbar-nav mx-auto header-links">
+          {/* Menú */}
+          <div
+            className={`collapse navbar-collapse ${
+              headerC_isCollapsed ? "" : "show"
+            }`}
+            id="headerC_navbar"
+          >
+            <ul className="navbar-nav mx-auto headerC_links">
               <li className="nav-item">
-                <Link className="nav-link uline" to="/" onClick={handleNavLinkClick}>
+                <Link
+                  className="nav-link headerC_uline"
+                  to="/"
+                  onClick={headerC_onNavClick}
+                >
                   Inicio
                 </Link>
               </li>
 
               <li className="nav-item dropdown">
                 <button
-                  className="nav-link dropdown-toggle btn uline"
+                  className="nav-link dropdown-toggle btn headerC_uline headerC_dropdownBtn"
                   type="button"
-                  id="navbarDropdown"
+                  id="headerC_dropdown"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
                   Servicios
                 </button>
-                <ul className="dropdown-menu menu-card" aria-labelledby="navbarDropdown">
+                <ul
+                  className="dropdown-menu headerC_menuCard"
+                  aria-labelledby="headerC_dropdown"
+                >
                   <li>
-                    <Link className="dropdown-item" to="/manicure" onClick={handleNavLinkClick}>
+                    <Link
+                      className="dropdown-item"
+                      to="/manicure"
+                      onClick={headerC_onNavClick}
+                    >
                       Manicure
                     </Link>
                   </li>
                   <li>
-                    <Link className="dropdown-item" to="/pedicure" onClick={handleNavLinkClick}>
+                    <Link
+                      className="dropdown-item"
+                      to="/pedicure"
+                      onClick={headerC_onNavClick}
+                    >
                       Pedicure
                     </Link>
                   </li>
                   <li>
-                    <Link className="dropdown-item" to="/alisado-permanente" onClick={handleNavLinkClick}>
+                    <Link
+                      className="dropdown-item"
+                      to="/alisado-permanente"
+                      onClick={headerC_onNavClick}
+                    >
                       Alisado Permanente
                     </Link>
                   </li>
                   <li>
-                    <Link className="dropdown-item" to="/botox-capilar" onClick={handleNavLinkClick}>
+                    <Link
+                      className="dropdown-item"
+                      to="/botox-capilar"
+                      onClick={headerC_onNavClick}
+                    >
                       Botox Capilar
                     </Link>
                   </li>
@@ -90,35 +134,49 @@ const Header = ({ user }) => {
               </li>
 
               <li className="nav-item">
-                <Link className="nav-link uline" to="/trabajos-realizados" onClick={handleNavLinkClick}>
+                <Link
+                  className="nav-link headerC_uline"
+                  to="/trabajos-realizados"
+                  onClick={headerC_onNavClick}
+                >
                   Portafolio
                 </Link>
               </li>
 
               <li className="nav-item">
-                <Link className="nav-link uline" to="/about" onClick={handleNavLinkClick}>
+                <Link
+                  className="nav-link headerC_uline"
+                  to="/about"
+                  onClick={headerC_onNavClick}
+                >
                   Sobre mí
                 </Link>
               </li>
             </ul>
 
             {/* CTA + Auth */}
-            <div className="d-flex align-items-center gap-2 header-cta">
-              <Link to="/reservas" className="btn btn-reserve" onClick={handleNavLinkClick}>
-                Reservar
-              </Link>
-
+            <div className="d-flex align-items-center gap-2 headerC_cta">
               {user ? (
                 <>
-                  <button className="btn btn-ghost" onClick={handleProfileClick}>
+                  <button
+                    className="headerC_btnGhost"
+                    onClick={headerC_goProfile}
+                  >
                     Hola, {user.nombre || "Usuario"}
                   </button>
-                  <button className="btn btn-link link-logout" onClick={handleLogout}>
+                  <button
+                    className="headerC_linkLogout"
+                    onClick={headerC_handleLogout}
+                  >
                     Cerrar sesión
                   </button>
                 </>
               ) : (
-                <Link className="btn btn-ghost" to="/login" onClick={handleNavLinkClick}>
+                <Link
+                  className="headerC_btnGhost"
+                  to="/login"
+                  onClick={headerC_onNavClick}
+                >
                   Iniciar sesión
                 </Link>
               )}

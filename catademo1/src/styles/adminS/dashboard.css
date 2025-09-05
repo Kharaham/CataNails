@@ -1,335 +1,698 @@
-.dashboard-container {
-  padding: 20px;
+/* ===== Tema (light/dark) ===== */
+:root {
+  --dashC-bg: #ffffff;
+  --dashC-ink: #0f172a;
+  --dashC-muted: #64748b;
+  --dashC-border: #e5e7eb;
+  --dashC-card: #ffffff;
+  --dashC-ring: rgba(14, 165, 233, 0.15);
+  --dashC-ok: #16a34a;
+  --dashC-err: #ef4444;
+
+  --dashC-blue: #0ea5e9;
+  --dashC-cyan: #22d3ee;
+  --dashC-green: #22c55e;
+  --dashC-pink: #f472b6;
+  --dashC-indigo: #6366f1;
+  --dashC-orange: #f59e0b;
+  --dashC-purple: #8b5cf6;
+  --dashC-teal: #14b8a6;
+}
+.dashC_wrap[data-theme="dark"] {
+  --dashC-bg: #0b1220;
+  --dashC-ink: #e5e7eb;
+  --dashC-muted: #9ca3af;
+  --dashC-border: #1f2937;
+  --dashC-card: #0f172a;
+  --dashC-ring: rgba(59, 130, 246, 0.25);
 }
 
-.appointment-item.pending {
-  background-color: #fff9c4;
-  border-left: 5px solid #ffeb3b;
+/* ===== Contenedor ===== */
+.dashC_wrap {
+  padding: 18px 18px 28px;
+  background: var(--dashC-bg);
+  color: var(--dashC-ink);
+}
+@media (min-width: 992px) {
+  .dashC_wrap {
+    padding: 22px 24px 32px;
+  }
 }
 
-.appointment-item.completed {
-  background-color: #c8e6c9;
-  border-left: 5px solid #4caf50;
-}
-
-.appointment-item {
+/* ===== Header ===== */
+.dashC_header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 15px;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s;
+  gap: 1rem;
+  margin-bottom: 16px;
 }
-
-.appointment-item:hover {
-  transform: scale(1.02);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-.custom-card {
-  text-align: center;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s, box-shadow 0.3s;
-  margin-bottom: 20px;
-  background-color: #ffffff;
-  border: 1px solid #e0e0e0;
-}
-
-.custom-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-.custom-card.clientes-card {
-  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-}
-
-.custom-card.ingresos-card {
-  background: linear-gradient(135deg, #fff3e0, #ffe0b2);
-}
-
-.custom-card.citas-pendientes-card {
-  background: linear-gradient(135deg, #ffebee, #ffcdd2);
-}
-
-.custom-card.citas-realizadas-card {
-  background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
-}
-
-@media (max-width: 576px) {
-  .custom-card {
-    padding: 15px;
-    font-size: 14px;
-    margin-bottom: 15px;
-  }
-
-  .dashboard-container .row {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  .dashboard-container .col-3 {
-    flex: 0 0 48%;
-    max-width: 48%;
-    margin: 1%;
-  }
-
-  .appointment-item {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .appointment-item .appointment-details {
-    font-size: 14px;
-  }
-}
-
-@media (min-width: 577px) and (max-width: 768px) {
-  .custom-card {
-    padding: 18px;
-    font-size: 16px;
-  }
-
-  .appointment-item {
-    flex-direction: row;
-  }
-}
-
-@media (min-width: 769px) and (max-width: 1199px) {
-  .custom-card {
-    padding: 20px;
-    font-size: 18px;
-  }
-
-  .appointment-item {
-    flex-direction: row;
-  }
-}
-
-@media (min-width: 1200px) {
-  .appointment-item {
-    padding: 20px;
-  }
-
-  .appointment-item div {
-    font-size: 18px;
-  }
-
-  .custom-card {
-    padding: 25px;
-    font-size: 20px;
-  }
-
-  .dashboard-container {
-    padding: 30px;
-  }
-}
-
-.appointment-item.canceled {
-  background-color: #f8d7da;
-  color: #721c24;
-  border-left: 5px solid #f5c6cb;
-}
-
-@media (max-width: 767px) {
-  .appointment-card {
-    margin-bottom: 10px;
-    padding: 15px;
-  }
-
-  .appointment-item {
-    margin-bottom: 20px;
-  }
-
-  .appointment-item.completed {
-    padding: 12px;
-    font-size: 14px;
-  }
-}
-
-.popover-header-custom {
-  background-color: #563d7c;
-  color: #fff;
-  font-weight: 600;
-  text-align: center;
-  border-bottom: 2px solid #6c5ab8;
-  padding: 0.75rem;
-  border-radius: 0.5rem 0.5rem 0 0;
-}
-
-.popover-body-custom {
-  background-color: #f9f9fb;
-  color: #333;
-  padding: 1.25rem;
-  border-radius: 0 0 0.5rem 0.5rem;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.citas-list {
-  list-style: none;
-  padding: 0;
+.dashC_title {
   margin: 0;
+  font-weight: 800;
+  color: var(--dashC-ink);
 }
-
-.cita-item {
-  border-bottom: 1px solid #ddd;
-  padding: 0.5rem 0;
+.dashC_sub {
+  margin: 2px 0 0;
+  color: var(--dashC-muted);
+}
+.dashC_actions {
   display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  transition: background-color 0.3s ease;
+  gap: 0.5rem;
 }
-
-.cita-item:last-child {
-  border-bottom: none;
-}
-
-.cita-detail {
-  font-size: 0.9rem;
-  color: #555;
-}
-
-.cita-item:hover {
-  background-color: #f1f1f5;
-  border-radius: 0.25rem;
-}
-
-.no-citas-text {
-  font-size: 0.95rem;
-  color: #999;
-  text-align: center;
-  font-style: italic;
-  padding: 0.5rem 0;
-}
-
-.popover {
-  border: none;
-  border-radius: 0.5rem;
-  overflow: hidden;
-}
-
-.popover::before {
-  content: "";
-  position: absolute;
-  top: -5px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 12px;
-  height: 12px;
-  background-color: #563d7c;
-  transform: rotate(45deg);
-  z-index: -1;
-}
-
-/* ======== DASH EXTRA ======== */
-.dash_chart-card {
-  background: #ffffff;
-}
-
-.dash_chart-header {
-  display: flex;
+.dashC_btnPrimary {
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  gap: .75rem;
-  margin-bottom: .5rem;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 0.7rem;
+  text-decoration: none;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  color: #fff;
+  background: var(--dashC-blue);
+  border: 1px solid var(--dashC-blue);
 }
-
-.dash_card-kpi {
-  background: linear-gradient(135deg, #eef7ff, #ddeeff);
+.dashC_btnPrimary:hover {
+  filter: brightness(0.98);
 }
-
-.dash_card-market {
-  background: linear-gradient(135deg, #fff7ed, #fff1e6);
-}
-
-.dash_market-header {
-  display: flex;
-  justify-content: space-between;
+.dashC_btnGhost {
+  display: inline-flex;
   align-items: center;
-  margin-bottom: .75rem;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 0.7rem;
+  text-decoration: none;
+  font-weight: 600;
+  color: var(--dashC-ink);
+  background: var(--dashC-card);
+  border: 1px solid var(--dashC-border);
 }
-
-.dash_market-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: .5rem;
+.dashC_btnGhost:hover {
+  background: rgba(148, 163, 184, 0.08);
 }
-
-.dash_market-item {
-  background: #fff;
-  border: 1px solid #eee;
+.dashC_themeBtn {
+  width: 40px;
+  height: 40px;
   border-radius: 10px;
-  padding: .5rem .75rem;
+}
+
+/* ===== KPIs ===== */
+.dashC_stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+@media (min-width: 992px) {
+  .dashC_stats {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+}
+@media (min-width: 1280px) {
+  .dashC_stats {
+    grid-template-columns: repeat(8, 1fr);
+  }
+}
+.dashC_statCard {
+  background: var(--dashC-card);
+  border: 1px solid var(--dashC-border);
+  border-radius: 14px;
+  padding: 14px;
   display: flex;
-  flex-direction: column;
-  gap: .25rem;
-  text-align: center;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.04);
+}
+.dashC_statIcon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: 18px;
+}
+.dashC_icBlue {
+  background: var(--dashC-blue);
+}
+.dashC_icCyan {
+  background: #06b6d4;
+}
+.dashC_icGreen {
+  background: var(--dashC-green);
+}
+.dashC_icPink {
+  background: var(--dashC-pink);
+}
+.dashC_icIndigo {
+  background: var(--dashC-indigo);
+}
+.dashC_icOrange {
+  background: var(--dashC-orange);
+}
+.dashC_icPurple {
+  background: var(--dashC-purple);
+}
+.dashC_icTeal {
+  background: var(--dashC-teal);
+}
+.dashC_statMeta {
+  display: grid;
+}
+.dashC_statLabel {
+  color: var(--dashC-muted);
+  font-size: 0.9rem;
+}
+.dashC_statValue {
+  color: var(--dashC-ink);
+  font-weight: 800;
+  font-size: 1.1rem;
 }
 
-.dash_market-item span {
-  font-size: .8rem;
-  color: #666;
+/* ===== Grids de tarjetas ===== */
+.dashC_gridCharts {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin-bottom: 14px;
 }
-
-.dash_market-item strong {
-  font-size: 1rem;
-}
-
-.dash_market-link {
-  text-decoration: none;
-  font-size: .9rem;
-}
-
-.dash_market-error {
-  margin-top: .5rem;
-  font-size: .85rem;
-  color: #b91c1c;
-}
-
-.dash_filters-wrap {
-  gap: .5rem;
-}
-
-.dash_link {
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.dash_btn {
-  border-radius: 999px;
-}
-
-/* Tabla del modal */
-.dash_table thead th {
-  border-bottom: 2px solid #ececec;
-}
-
-.dash_row-canceled {
-  background: #fef2f2;
-}
-
-.dash_row-completed {
-  background: #f0fdf4;
-}
-
-.dash_pagination button {
-  margin-left: .5rem;
-}
-
-/* Responsivo mercado */
-@media (max-width: 992px) {
-  .dash_market-grid {
+@media (min-width: 1200px) {
+  .dashC_gridCharts {
     grid-template-columns: repeat(3, 1fr);
   }
 }
+.dashC_gridBottom {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.dashC_card {
+  background: var(--dashC-card);
+  border: 1px solid var(--dashC-border);
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+}
+.dashC_cardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 10px;
+}
+.dashC_cardTitle {
+  margin: 0;
+  color: var(--dashC-ink);
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+.dashC_chartBox {
+  height: 240px;
+}
+
+/* ===== Tabs ===== */
+.dashC_tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.dashC_tabBtn {
+  border: 1px solid var(--dashC-ink);
+  background: var(--dashC-card);
+  color: var(--dashC-ink);
+  padding: 0.45rem 0.75rem;
+  border-radius: 0.7rem;
+  font-weight: 700;
+}
+.dashC_tabBtn.is-active {
+  border-color: var(--dashC-pink);
+  color: var(--dashC-pink);
+}
+
+/* ===== Lista con filtros ===== */
+.dashC_filterRow {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.dashC_chipGroup {
+  display: flex;
+  gap: 0.35rem;
+}
+.dashC_chip {
+  border: 1px solid var(--dashC-border);
+  background: var(--dashC-card);
+  color: var(--dashC-ink);
+  border-radius: 999px;
+  padding: 0.35rem 0.7rem;
+  font-weight: 700;
+}
+.dashC_chip.is-active {
+  background: rgba(14, 165, 233, 0.08);
+  border-color: var(--dashC-blue);
+  color: var(--dashC-blue);
+  box-shadow: 0 0 0 3px var(--dashC-ring);
+}
+.dashC_date {
+  border: 1px solid var(--dashC-border);
+  border-radius: 0.6rem;
+  padding: 0.35rem 0.5rem;
+}
+
+.dashC_alert {
+  margin: 8px 0;
+  padding: 0.5rem 0.7rem;
+  border-radius: 0.6rem;
+  background: rgba(14, 165, 233, 0.08);
+  border: 1px solid rgba(14, 165, 233, 0.25);
+  color: #0369a1;
+  font-weight: 600;
+}
+
+.dashC_listWrap {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+.dashC_item {
+  display: grid;
+  grid-template-columns: 110px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  border: 1px solid var(--dashC-border);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
 @media (max-width: 576px) {
-  .dash_market-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .dashC_item {
+    grid-template-columns: 1fr;
+    align-items: flex-start;
+  }
+  .dashC_right {
+    justify-self: flex-start;
+  }
+}
+.dashC_itemCol {
+  display: grid;
+  gap: 2px;
+}
+.dashC_itemTitle {
+  font-weight: 700;
+  color: var(--dashC-ink);
+}
+.dashC_itemSub {
+  color: var(--dashC-muted);
+  font-size: 0.92rem;
+}
+.dashC_badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #f1f5f9;
+  color: var(--dashC-ink);
+  border-radius: 8px;
+  padding: 0.2rem 0.45rem;
+  font-weight: 700;
+}
+.dashC_muted {
+  color: var(--dashC-muted);
+  font-size: 0.9rem;
+}
+
+.dashC_btnSmall {
+  border: 1px solid var(--dashC-border);
+  border-radius: 10px;
+  padding: 0.35rem 0.55rem;
+  background: var(--dashC-card);
+  font-weight: 700;
+  color: var(--dashC-ink);
+  cursor: pointer;
+}
+.dashC_btnSmall:hover {
+  background: rgba(148, 163, 184, 0.08);
+}
+
+.dashC_tag {
+  border-radius: 999px;
+  padding: 0.25rem 0.55rem;
+  font-weight: 700;
+  display: inline-flex;
+  gap: 0.35rem;
+  align-items: center;
+}
+.dashC_ok {
+  background: rgba(22, 163, 74, 0.12);
+  color: var(--dashC-ok);
+}
+.dashC_err {
+  background: rgba(239, 68, 68, 0.12);
+  color: var(--dashC-err);
+}
+.dashC_isDone {
+  border-color: rgba(22, 163, 74, 0.35);
+}
+.dashC_isCanceled {
+  border-color: rgba(239, 68, 68, 0.35);
+}
+.dashC_empty {
+  color: var(--dashC-muted);
+  text-align: center;
+  padding: 0.6rem 0;
+}
+
+/* ===== Calendar (FullCalendar) ===== */
+.dashC_calendarBox .fc .dashC_fcEvent {
+  border: 0 !important;
+  background: transparent !important;
+}
+.dashC_event {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.dashC_eventDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+.dashC_eventTitle {
+  font-weight: 700;
+  font-size: 0.86rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dashC_eventSub {
+  margin-left: auto;
+  color: var(--dashC-muted);
+  font-size: 0.78rem;
+}
+.dashC_calendarBox .fc .dashC_fcEvent.is-done .dashC_eventTitle {
+  color: var(--dashC-ok);
+}
+.dashC_calendarBox .fc .dashC_fcEvent.is-canceled .dashC_eventTitle {
+  color: var(--dashC-err);
+}
+
+/* ===== Modal Global ===== */
+.dashC_modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.dashC_modalCard {
+  width: min(520px, 96vw);
+  background: var(--dashC-card);
+  color: var(--dashC-ink);
+  border: 1px solid var(--dashC-border);
+  border-radius: 16px;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.35);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.dashC_modalHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--dashC-border);
+}
+.dashC_modalTitle {
+  margin: 0;
+  font-weight: 800;
+}
+.dashC_modalClose {
+  border: 0;
+  background: transparent;
+  color: var(--dashC-muted);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+.dashC_modalBody {
+  padding: 12px 14px;
+  display: grid;
+  gap: 10px;
+}
+.dashC_modalRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.dashC_modalRow span:first-child {
+  color: var(--dashC-muted);
+}
+.dashC_modalFoot {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  padding: 12px 14px;
+  border-top: 1px solid var(--dashC-border);
+}
+
+/* ===== Tooltips (Recharts) ===== */
+.dashC_tooltip {
+  background: var(--dashC-card);
+  color: var(--dashC-ink);
+  border: 1px solid var(--dashC-border);
+  border-radius: 10px;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.15);
+  padding: 0.5rem 0.7rem;
+}
+.dashC_tooltipLabel {
+  font-weight: 800;
+  margin-bottom: 0.25rem;
+}
+.dashC_tooltipRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: space-between;
+}
+.dashC_dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+}
+.dashC_tooltipVal {
+  font-weight: 800;
+}
+
+/* ===== Skeletons ===== */
+.dashC_skel {
+  background: linear-gradient(
+    90deg,
+    rgba(148, 163, 184, 0.15),
+    rgba(148, 163, 184, 0.25),
+    rgba(148, 163, 184, 0.15)
+  );
+  background-size: 200% 100%;
+  animation: dashC_skel 1.2s infinite;
+  border-radius: 10px;
+}
+.dashC_skelChart {
+  height: 240px;
+}
+.dashC_skelCal {
+  height: 480px;
+}
+.dashC_skelLine {
+  height: 44px;
+}
+.dashC_skelLine.sm {
+  height: 28px;
+}
+@keyframes dashC_skel {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+/* === Mobile-first refinements (≤ 768px) === */
+@media (max-width: 768px) {
+  .dashC_wrap {
+    padding: 14px 12px 22px;
+  }
+
+  /* Header apilado y tipografías más legibles */
+  .dashC_header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .dashC_title {
+    font-size: 1.25rem;       /* ~20px */
+    line-height: 1.25;
+  }
+  .dashC_sub {
+    font-size: 0.95rem;
+  }
+  .dashC_actions {
+    width: 100%;
+    gap: 8px;
+  }
+  .dashC_btnPrimary,
+  .dashC_btnGhost {
+    flex: 1 1 auto;            /* que llenen ancho */
+    min-height: 42px;          /* target táctil cómodo */
+  }
+
+  /* KPIs a 1 columna */
+  .dashC_stats {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .dashC_statCard {
+    padding: 12px;
+    gap: 10px;
+  }
+  .dashC_statLabel { font-size: 0.88rem; }
+  .dashC_statValue { font-size: 1.02rem; }
+
+  /* Grids de tarjetas */
+  .dashC_gridCharts,
+  .dashC_gridBottom {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .dashC_card { padding: 12px; }
+  .dashC_cardHead { margin-bottom: 8px; }
+  .dashC_cardTitle { font-size: 1rem; }
+
+  /* Filtros/chips cómodos al tacto */
+  .dashC_filterRow {
+    gap: 8px;
+  }
+  .dashC_chipGroup {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .dashC_chip,
+  .dashC_date {
+    padding: 0.45rem 0.7rem;
+    font-size: 0.95rem;
+  }
+
+  /* Lista: ya tienes versión 1-col en <=576, la anticipamos a 768 */
+  .dashC_item {
+    grid-template-columns: 1fr;
+    align-items: flex-start;
+  }
+  .dashC_right { justify-self: flex-start; }
+
+  /* Botones pequeños: tacto cómodo */
+  .dashC_btnSmall {
+    padding: 0.45rem 0.65rem;
+    border-radius: 12px;
+  }
+
+  /* Alturas de gráfico más bajas en móvil */
+  .dashC_chartBox,
+  .dashC_skelChart { height: 200px; }
+}
+
+/* === Teléfonos pequeños (≤ 576px) === */
+@media (max-width: 576px) {
+  .dashC_title { font-size: 1.15rem; }
+  .dashC_sub   { font-size: 0.92rem; }
+
+  /* KPIs compactos */
+  .dashC_statIcon {
+    width: 38px; height: 38px; font-size: 16px; border-radius: 10px;
+  }
+
+  /* Tarjetas aún más compactas */
+  .dashC_card { padding: 10px; }
+  .dashC_cardTitle { font-size: 0.98rem; }
+
+  /* Inputs de fecha/selector ocupan ancho completo */
+  .dashC_date { width: 100%; }
+
+  /* Skeletons más bajos */
+  .dashC_skelCal { height: 380px; }
+}
+
+/* === Calendario (FullCalendar) responsive === */
+.dashC_calendarBox {
+  overflow: hidden;            /* base */
+}
+
+/* En móvil permitir scroll horizontal si la vista no cabe */
+@media (max-width: 768px) {
+  .dashC_calendarBox {
+    overflow-x: auto;          /* scroll horizontal suave */
+    -webkit-overflow-scrolling: touch;
+  }
+  /* Contenedor mínimo para que surja el scroll si es necesario */
+  .dashC_calendarBox .fc {
+    min-width: 560px;          /* ajusta según tu vista (timeGrid suele necesitar ancho) */
+  }
+
+  /* Toolbar compacta */
+  .dashC_calendarBox .fc .fc-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+  .dashC_calendarBox .fc .fc-toolbar-title {
+    font-size: 1rem;
+  }
+  .dashC_calendarBox .fc .fc-button {
+    padding: 6px 8px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+  }
+
+  /* Encabezados y celdas más densos */
+  .dashC_calendarBox .fc .fc-col-header-cell-cushion {
+    padding: 6px 4px;
+    font-size: 0.9rem;
+  }
+  .dashC_calendarBox .fc .fc-timegrid-slot-label {
+    padding: 2px 4px;
+    font-size: 0.85rem;
+  }
+
+  /* Eventos: mejor legibilidad y truncado limpio */
+  .dashC_eventTitle { font-size: 0.9rem; }
+  .dashC_eventSub   { font-size: 0.78rem; }
+  .dashC_event {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
-/* Mantener tu estilo existente de tarjetas/appointments sin romper nada */
+/* === Accesibilidad: foco visible en móvil === */
+@media (hover: none) {
+  .dashC_btnPrimary:focus,
+  .dashC_btnGhost:focus,
+  .dashC_chip:focus,
+  .dashC_date:focus,
+  .dashC_btnSmall:focus {
+    outline: 2px solid var(--dashC-blue);
+    outline-offset: 2px;
+  }
+}

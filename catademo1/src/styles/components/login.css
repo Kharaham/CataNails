@@ -10,7 +10,7 @@
 }
 
 /* ====== Background ====== */
-.login-background {
+.loginC-background {
   background-image: url("../../assets/images/home/fondo5.jpg");
   background-size: cover;
   background-position: center;
@@ -21,7 +21,7 @@
   padding: 32px;
   position: relative;
 }
-.login-background::before {
+.loginC-background::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -30,39 +30,31 @@
       rgba(255, 255, 255, 0.65),
       rgba(255, 255, 255, 0.45)
     ),
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.35),
-      rgba(255, 255, 255, 0.65)
-    );
+    linear-gradient(180deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.65));
   backdrop-filter: blur(3px);
   z-index: 0;
 }
-.login-container {
+.loginC-container {
   position: relative;
   z-index: 1;
 }
 
 /* ====== Card ====== */
-.login-card {
+.loginC-card {
   width: min(980px, 92vw);
   border-radius: 22px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.45);
   box-shadow: 0 24px 80px rgba(17, 17, 17, 0.18);
 }
-.login-card.glass {
+.loginC-glass {
   background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(10px);
 }
 
 /* ====== Left side (branding) ====== */
-.login-side {
-  background: radial-gradient(
-      90% 90% at 20% 10%,
-      rgba(233, 30, 99, 0.2),
-      transparent 60%
-    ),
+.loginC-side {
+  background: radial-gradient(90% 90% at 20% 10%, rgba(233, 30, 99, 0.2), transparent 60%),
     linear-gradient(160deg, #0f1216 0%, #171a1f 100%);
   color: #eef2f7;
   padding: 44px 28px;
@@ -70,11 +62,11 @@
   align-items: center;
   justify-content: center;
 }
-.login-side .brand {
+.loginC-brand {
   text-align: center;
   max-width: 260px;
 }
-.login-side .brand-dot {
+.loginC-brand-dot {
   width: 10px;
   height: 10px;
   border-radius: 999px;
@@ -82,26 +74,26 @@
   background: radial-gradient(circle at 40% 40%, var(--brand-2), var(--brand));
   box-shadow: 0 0 18px rgba(233, 30, 99, 0.55);
 }
-.login-side h2 {
+.loginC-side h2 {
   font-weight: 800;
   letter-spacing: 0.3px;
   margin-bottom: 6px;
 }
-.login-side p {
+.loginC-side p {
   color: #b8c0cc;
 }
 
 /* ====== Right side (form) ====== */
-.login-form-col {
+.loginC-form-col {
   background: var(--card);
   padding: 28px 28px 24px;
 }
 
 /* ====== Tabs pill ====== */
-.login-tabs .nav {
-  gap: 10px;
+.loginC-tabs .nav {
+  display: none !important;
 }
-.login-tabs .nav-link {
+.loginC-tabs .nav-link {
   border-radius: 999px !important;
   border: 1px solid var(--border) !important;
   padding: 0.55rem 1rem;
@@ -109,51 +101,51 @@
   font-weight: 700;
   background: #fff;
 }
-.login-tabs .nav-link.active {
+.loginC-tabs .nav-link.active {
   color: #fff !important;
   background: linear-gradient(90deg, var(--brand), var(--brand-2)) !important;
   border-color: transparent !important;
   box-shadow: 0 6px 18px rgba(233, 30, 99, 0.25);
 }
 
-/* ====== Labels & inputs ====== */
-.form-label {
+/* ====== Scoped Bootstrap overrides ====== */
+.loginC-root .form-label {
   font-weight: 700;
   color: #374151;
   margin-bottom: 6px;
 }
-.input-group-text {
+.loginC-root .input-group-text {
   background: #fff;
   color: var(--brand);
   border-color: var(--border);
   border-right: none;
 }
-.form-control {
+.loginC-root .form-control {
   border-color: var(--border);
   padding: 0.75rem 0.9rem;
   border-left: none;
 }
-.input-group .form-control:focus {
+.loginC-root .input-group .form-control:focus {
   box-shadow: none;
 }
-.form-control:focus {
+.loginC-root .form-control:focus {
   border-color: #f4b1d1;
   box-shadow: 0 0 0 0.2rem rgba(233, 30, 99, 0.15);
 }
 
 /* ====== Links ====== */
-.login-form-col .btn.btn-link {
+.loginC-form-col .btn.btn-link {
   color: var(--brand);
   text-decoration: none;
   font-weight: 600;
 }
-.login-form-col .btn.btn-link:hover {
+.loginC-form-col .btn.btn-link:hover {
   color: #c12578;
   text-decoration: underline;
 }
 
 /* ====== CTA principal ====== */
-.login-button {
+.loginC-button {
   background: linear-gradient(90deg, var(--brand), var(--brand-2));
   border: none;
   padding: 0.9rem 1rem;
@@ -161,57 +153,65 @@
   border-radius: 14px;
   transition: transform 0.07s ease, box-shadow 0.25s ease, filter 0.2s ease;
   box-shadow: 0 12px 28px rgba(233, 30, 99, 0.25);
+  color: #fff;
 }
-.login-button:hover {
+.loginC-button:hover {
   filter: brightness(1.02);
   box-shadow: 0 18px 36px rgba(233, 30, 99, 0.32);
 }
-.login-button:active {
+.loginC-button:active {
   transform: translateY(1px);
 }
 
-/* ====== Divider ====== */
-.divider {
+/* ====== Divider (si la usas) ====== */
+.loginC-divider {
   display: flex;
   align-items: center;
   gap: 10px;
   margin: 16px 0;
 }
-.divider::before,
-.divider::after {
+.loginC-divider::before,
+.loginC-divider::after {
   content: "";
   flex: 1;
   height: 1px;
   background: var(--border);
 }
-.divider span {
+.loginC-divider span {
   color: #9ca3af;
   font-size: 0.9rem;
 }
 
-/* ====== Google button ====== */
-.google-btn {
-  background: #fff;
-  color: #111827;
-  border: 1px solid var(--border);
-  padding: 0.8rem 1rem;
-  border-radius: 12px;
-  gap: 0.6rem;
+/* ====== Google button variant ====== */
+.loginC-button--google {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.06s ease, box-shadow 0.2s ease, background 0.15s ease;
+  gap: 0.55rem;
 }
-.google-btn:hover {
-  background: #fafafa;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+.loginC-button--google svg {
+  filter: brightness(0) invert(1);
 }
-.google-btn svg {
-  font-size: 1rem;
+
+/* ====== Password strength ====== */
+.loginC-pwd-strength {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.loginC-pwd-strength span {
+  width: 30px;
+  height: 6px;
+  border-radius: 999px;
+  background: #e5e7eb;
+  display: inline-block;
+}
+.loginC-pwd-strength span.on {
+  background: linear-gradient(90deg, var(--brand), var(--brand-2));
 }
 
 /* ====== Messages ====== */
-.login-error-message {
+.loginC-error-message {
   color: #b4235a;
   background: #ffe6f1;
   border: 1px solid #ffd0e6;
@@ -219,7 +219,7 @@
   border-radius: 10px;
   margin: 16px 0 0;
 }
-.login-success-message {
+.loginC-success-message {
   color: #0f5132;
   background: #d1e7dd;
   border: 1px solid #badbcc;
@@ -229,108 +229,72 @@
 }
 
 /* ====== Micro-detalles ====== */
-.input-group .btn.btn-outline-secondary {
+.loginC-root .input-group .btn.btn-outline-secondary {
   border-color: var(--border);
 }
-.input-group .btn.btn-outline-secondary:hover {
+.loginC-root .input-group .btn.btn-outline-secondary:hover {
   background: #f9fafb;
 }
 
 /* ====== Responsive ====== */
 @media (max-width: 992px) {
-  .login-card {
+  .loginC-card {
     width: min(760px, 94vw);
   }
 }
 @media (max-width: 768px) {
-  .login-form-col {
+  .loginC-form-col {
     padding: 22px;
   }
-  .login-tabs .nav {
+  .loginC-tabs .nav {
     gap: 6px;
   }
 }
-/* Estructura para empujar los botones al fondo */
-.form-stretch {
+
+/* ====== Layout form ====== */
+.loginC-form-stretch {
   display: flex;
   flex-direction: column;
-  min-height: 440px; /* ajusta si quieres más alto */
+  min-height: 440px;
 }
-.form-actions {
-  margin-top: auto; /* empuja al fondo */
-  display: grid;
-  gap: 12px;
-}
-
-/* Botón principal (ya existía) y variante Google con el mismo estilo */
-.login-button {
-  background: linear-gradient(90deg, var(--brand), var(--brand-2));
-  border: none;
-  padding: 0.9rem 1rem;
-  font-weight: 800;
-  border-radius: 14px;
-  transition: transform 0.07s ease, box-shadow 0.25s ease, filter 0.2s ease;
-  box-shadow: 0 12px 28px rgba(233, 30, 99, 0.25);
-  color: #fff;
-}
-.login-button:hover {
-  filter: brightness(1.02);
-  box-shadow: 0 18px 36px rgba(233, 30, 99, 0.32);
-}
-.login-button:active {
-  transform: translateY(1px);
-}
-
-/* Misma apariencia para Google (con icono blanco) */
-.login-button--google {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.55rem;
-}
-.login-button--google svg {
-  filter: brightness(0) invert(1);
-} /* icono blanco */
-
-/* Ajuste tabs (ya existía; por si no lo tienes) */
-.login-tabs .nav-link {
-  border-radius: 999px !important;
-  border: 1px solid var(--border) !important;
-  padding: 0.55rem 1rem;
-  color: var(--muted);
-  font-weight: 700;
-  background: #fff;
-}
-.login-tabs .nav-link.active {
-  color: #fff !important;
-  background: linear-gradient(90deg, var(--brand), var(--brand-2)) !important;
-  border-color: transparent !important;
-  box-shadow: 0 6px 18px rgba(233, 30, 99, 0.25);
-}
-.form-stretch {
-  display: flex;
-  flex-direction: column;
-  min-height: 340px;
-}
-.form-actions {
+.loginC-form-actions {
   margin-top: auto;
   display: grid;
   gap: 12px;
 }
-.login-button {
+/* Ocultar navegación de tabs (dejamos solo el contenido) */
+.loginC-tabs--hidden .nav { display: none; }
+
+/* Brand side más bonito */
+.loginC-brand-title {
+  font-weight: 900;
+  letter-spacing: .3px;
+  margin-bottom: 6px;
   background: linear-gradient(90deg, var(--brand), var(--brand-2));
-  color: #fff;
-  border: none;
-  padding: 0.9rem 1rem;
-  font-weight: 800;
-  border-radius: 14px;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
-.login-button--google {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.55rem;
+.loginC-brand-sub {
+  color: #d2d7e1;
+  margin-bottom: 14px;
+  font-weight: 600;
 }
-.login-button--google svg {
-  filter: brightness(0) invert(1);
+.loginC-brand-bullets {
+  list-style: none; padding: 0; margin: 0; color: #c3cad6;
 }
+.loginC-bullet {
+  display: inline-block;
+  width: 18px; height: 18px; margin-right: 8px; transform: translateY(3px);
+  border-radius: 999px;
+  background: radial-gradient(circle at 40% 40%, var(--brand-2), var(--brand));
+  box-shadow: 0 0 12px rgba(233, 30, 99, .45);
+}
+
+/* Enlace pequeño (olvidaste) debajo del campo */
+.loginC-link-sm {
+  color: var(--brand);
+  text-decoration: none;
+  font-weight: 600;
+}
+.loginC-link-sm:hover { text-decoration: underline; }

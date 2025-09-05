@@ -1,103 +1,101 @@
 :root{
-  --accent: #e11d48;        /* rosa delicado */
-  --accent-900: #9f1239;
-  --ink: #111827;           /* texto principal */
-  --muted: #6b7280;         /* texto suave */
-  --glass: rgba(255,255,255,.72);
+  --headerC-accent: #e11d48;
+  --headerC-accent-900: #9f1239;
+  --headerC-ink: #111827;
+  --headerC-muted: #6b7280;
+  --headerC-glass: rgba(255,255,255,.72);
 }
 
-/* Contenedor fijo con sombra suave */
-.site-header{
+/* Contenedor fijo con blur y sombra */
+.headerC_root{
   position: sticky; top: 0; z-index: 1030;
   backdrop-filter: blur(8px);
 }
-.header-nav{
-  background: var(--glass);
+.headerC_nav{
+  background: var(--headerC-glass);
   border-bottom: 1px solid rgba(17,24,39,.05);
   box-shadow: 0 10px 30px rgba(17,24,39,.06);
 }
 
 /* Brand */
-.brand{
+.headerC_brand{
   display: flex; align-items: center; gap: .6rem;
   text-decoration: none !important;
 }
-.brand-logo{
+.headerC_brandLogo{
   width: 40px; height: 40px; object-fit: cover;
   border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,.08);
 }
-.brand-text{
-  font-weight: 800; color: var(--ink);
+.headerC_brandText{
+  font-weight: 800; color: var(--headerC-ink);
   letter-spacing: .2px;
 }
 
 /* Links centrales */
-.header-links .nav-link{
-  color: var(--ink);
+.headerC_links .nav-link{
+  color: var(--headerC-ink);
   font-weight: 600;
   padding: .75rem .9rem;
 }
-.header-links .nav-link:hover{ color: var(--ink); }
+.headerC_links .nav-link:hover{ color: var(--headerC-ink); }
 
 /* Subrayado fluido */
-.uline{
+.headerC_uline{
   position: relative;
 }
-.uline::after{
+.headerC_uline::after{
   content: ""; position: absolute; left: 12px; right: 12px; bottom: .45rem;
-  height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent-900));
+  height: 2px; background: linear-gradient(90deg, var(--headerC-accent), var(--headerC-accent-900));
   transform: scaleX(0); transform-origin: left; transition: transform .25s ease;
   border-radius: 999px;
 }
-.uline:hover::after{ transform: scaleX(1); }
+.headerC_uline:hover::after{ transform: scaleX(1); }
 
-/* Dropdown como tarjeta minimal */
-.menu-card{
+/* Dropdown como tarjeta */
+.headerC_menuCard{
   border: 1px solid rgba(17,24,39,.08);
   box-shadow: 0 16px 40px rgba(17,24,39,.08);
   border-radius: .8rem;
   padding: .4rem;
 }
-.menu-card .dropdown-item{
+.headerC_menuCard .dropdown-item{
   border-radius: .6rem;
   padding: .55rem .8rem;
-  color: var(--ink);
+  color: var(--headerC-ink);
 }
-.menu-card .dropdown-item:hover{
+.headerC_menuCard .dropdown-item:hover{
   background: #f9fafb;
-  color: var(--ink);
+  color: var(--headerC-ink);
 }
 
 /* CTA y botones */
-.btn-reserve{
-  background: linear-gradient(90deg,#ff7a59,#ff3d5a);
-  color: #fff !important;
-  border-radius: .7rem;
-  font-weight: 700;
-  padding: .55rem .9rem;
-  box-shadow: 0 8px 20px rgba(255,86,100,.25);
-  border: none;
-}
-.btn-reserve:hover{ filter: brightness(.95); }
-
-.btn-ghost{
+.headerC_cta{ }
+.headerC_btnGhost{
   border: 1px solid rgba(17,24,39,.12);
   background: #fff;
-  color: var(--ink);
+  color: var(--headerC-ink);
   border-radius: .7rem;
   padding: .5rem .8rem;
   font-weight: 600;
+  cursor: pointer;
 }
-.btn-ghost:hover{ background: #f8fafc; }
+.headerC_btnGhost:hover{ background: #f8fafc; }
 
-.link-logout{
-  color: var(--muted) !important;
-  text-decoration: none;
+.headerC_linkLogout{
+  background: transparent;
+  border: none;
+  color: var(--headerC-muted);
+  font-weight: 600;
+  cursor: pointer;
+  padding: .5rem .6rem;
 }
-.link-logout:hover{ color: var(--ink) !important; text-decoration: underline; }
+.headerC_linkLogout:hover{
+  color: var(--headerC-ink);
+  text-decoration: underline;
+}
 
 /* Toggler más visible en móvil */
-.header-toggle{
+.headerC_toggle{
   border: 1px solid rgba(17,24,39,.12);
   border-radius: .6rem;
   padding: .35rem .55rem;
@@ -105,10 +103,9 @@
 
 /* Responsivo */
 @media (max-width: 992px){
-  .header-links{ margin-top: .6rem; }
-  .header-cta{ margin-top: .4rem; }
+  .headerC_links{ margin-top: .6rem; }
+  .headerC_cta{ margin-top: .4rem; }
 }
 @media (max-width: 576px){
-  .brand-text{ display: none; }         /* solo logo en pantallas pequeñas */
-  .btn-reserve{ padding: .5rem .75rem; }
+  .headerC_brandText{ display: none; }  /* solo logo en pantallas pequeñas */
 }

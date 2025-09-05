@@ -9,17 +9,11 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
-  sendEmailVerification,
   signInWithPopup,
   GoogleAuthProvider,
-  fetchSignInMethodsForEmail,
+  onAuthStateChanged,
 } from "firebase/auth";
-import {
-  getFirestore,
-  doc,
-  setDoc,
-  getDoc,
-} from "firebase/firestore";
+import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 import {
   Button,
   Form,
@@ -32,15 +26,21 @@ import {
   InputGroup,
 } from "react-bootstrap";
 import {
-  FaEnvelope, FaLock, FaUser, FaPhone, FaGoogle, FaEye, FaEyeSlash
+  FaEnvelope,
+  FaLock,
+  FaUser,
+  FaPhone,
+  FaGoogle,
+  FaEye,
+  FaEyeSlash,
 } from "react-icons/fa";
-import "../../styles/components/login.css";
+import "../../styles/components/login.css"; // puedes mantener la misma ruta
 
-const auth = getAuth(firebaseApp);
-const firestore = getFirestore(firebaseApp);
-const googleProvider = new GoogleAuthProvider();
+const loginC_auth = getAuth(firebaseApp);
+const loginC_firestore = getFirestore(firebaseApp);
+const loginC_googleProvider = new GoogleAuthProvider();
 
-const getStrength = (pwd) => {
+const loginC_getStrength = (pwd) => {
   let s = 0;
   if (pwd.length >= 8) s++;
   if (/[A-Z]/.test(pwd)) s++;
@@ -53,26 +53,38 @@ const getStrength = (pwd) => {
 export default function Login() {
   const navigate = useNavigate();
 
-  const [tab, setTab] = useState("login");
-  const [loading, setLoading] = useState(false);
-  const [persist, setPersist] = useState(true);
-  const [showPwd, setShowPwd] = useState(false);
-  const [messages, setMessages] = useState({ error: "", success: "" });
+  const [loginC_tab, loginC_setTab] = useState("login");
+  const [loginC_loading, loginC_setLoading] = useState(false);
+  const [loginC_persist, loginC_setPersist] = useState(true);
+  const [loginC_showPwd, loginC_setShowPwd] = useState(false);
+  const [loginC_messages, loginC_setMessages] = useState({
+    error: "",
+    success: "",
+  });
 
-  const [correo, setCorreo] = useState("");
-  const [password, setPassword] = useState("");
-  const [nombre, setNombre] = useState("");
-  const [telefono, setTelefono] = useState("");
+  const [loginC_correo, loginC_setCorreo] = useState("");
+  const [loginC_password, loginC_setPassword] = useState("");
+  const [loginC_nombre, loginC_setNombre] = useState("");
+  const [loginC_telefono, loginC_setTelefono] = useState("");
 
   useEffect(() => {
-    // correo de Firebase en español
-    auth.useDeviceLanguage?.();
-    // foco inicial
-    const first = document.querySelector("input[type='email']");
+    loginC_auth.useDeviceLanguage?.();
+    const first = document.querySelector(".loginC-root input[type='email']");
     first && first.focus();
-  }, [tab]);
+  }, [loginC_tab]);
 
-  const mapFirebaseError = (code) => {
+  // Redirección si ya está logueado
+  useEffect(() => {
+    const unsub = onAuthStateChanged(loginC_auth, async (user) => {
+      if (user) {
+        const rol = await loginC_getRol(user.uid);
+        navigate(rol === "admin" ? "/admin/dashboard" : "/");
+      }
+    });
+    return () => unsub();
+  }, [navigate]);
+
+  const loginC_mapFirebaseError = (code) => {
     const d = {
       "auth/invalid-email": "El correo no es válido.",
       "auth/user-disabled": "La cuenta está deshabilitada.",
@@ -82,108 +94,127 @@ export default function Login() {
       "auth/email-already-in-use": "Ese correo ya está registrado.",
       "auth/weak-password": "La contraseña es débil.",
       "auth/popup-closed-by-user": "Se cerró la ventana de Google.",
-      "auth/invalid-continue-uri": "URL de retorno no autorizada en Firebase Auth.",
+      "auth/invalid-continue-uri":
+        "URL de retorno no autorizada en Firebase Auth.",
     };
     return d[code] || "Ocurrió un error. Intenta nuevamente.";
   };
 
-  const getRol = async (uid) => {
-    const snap = await getDoc(doc(firestore, "usuarios", uid));
+  const loginC_getRol = async (uid) => {
+    const snap = await getDoc(doc(loginC_firestore, "usuarios", uid));
     return snap.exists() ? snap.data().rol : null;
   };
 
-  const setAuthPersistence = async (remember) => {
-    await setPersistence(auth, remember ? browserLocalPersistence : browserSessionPersistence);
+  const loginC_setAuthPersistence = async (remember) => {
+    await setPersistence(
+      loginC_auth,
+      remember ? browserLocalPersistence : browserSessionPersistence
+    );
   };
 
-  // ---- LOGIN ----
-  const handleLogin = async (e) => {
+  // ===== LOGIN (sin exigir verificación) =====
+  const loginC_handleLogin = async (e) => {
     e.preventDefault();
-    setMessages({ error: "", success: "" });
-    setLoading(true);
+    loginC_setMessages({ error: "", success: "" });
+    loginC_setLoading(true);
     try {
-      await setAuthPersistence(persist);
-      const { user } = await signInWithEmailAndPassword(auth, correo.trim(), password);
-      if (!user.emailVerified) {
-        await sendEmailVerification(user);
-        setMessages({ error: "Tu correo no está verificado. Te reenviamos el email.", success: "" });
-        setLoading(false);
-        return;
-      }
-      const rol = await getRol(user.uid);
+      await loginC_setAuthPersistence(loginC_persist);
+      const { user } = await signInWithEmailAndPassword(
+        loginC_auth,
+        loginC_correo.trim(),
+        loginC_password
+      );
+      const rol = await loginC_getRol(user.uid);
       navigate(rol === "admin" ? "/admin/dashboard" : "/");
     } catch (err) {
       console.error("LOGIN ERROR:", err);
-      setMessages({ error: mapFirebaseError(err.code), success: "" });
+      loginC_setMessages({
+        error: loginC_mapFirebaseError(err.code),
+        success: "",
+      });
     } finally {
-      setLoading(false);
+      loginC_setLoading(false);
     }
   };
 
-  // ---- REGISTER ----
-  const handleRegister = async (e) => {
+  // ===== REGISTER (redirige directo) =====
+  const loginC_handleRegister = async (e) => {
     e.preventDefault();
-    setMessages({ error: "", success: "" });
-    if (getStrength(password) < 4) {
-      setMessages({ error: "La contraseña debe incluir 8+ caracteres, mayúsculas, minúsculas y números.", success: "" });
+    loginC_setMessages({ error: "", success: "" });
+    if (loginC_getStrength(loginC_password) < 4) {
+      loginC_setMessages({
+        error:
+          "La contraseña debe incluir 8+ caracteres, mayúsculas, minúsculas y números.",
+        success: "",
+      });
       return;
     }
-    setLoading(true);
+    loginC_setLoading(true);
     try {
-      const { user } = await createUserWithEmailAndPassword(auth, correo.trim(), password);
-      await sendEmailVerification(user);
-      await setDoc(doc(firestore, "usuarios", user.uid), {
-        nombre: nombre.trim(),
-        correo: correo.trim(),
-        telefono: telefono.trim(),
+      const { user } = await createUserWithEmailAndPassword(
+        loginC_auth,
+        loginC_correo.trim(),
+        loginC_password
+      );
+      await setDoc(doc(loginC_firestore, "usuarios", user.uid), {
+        nombre: loginC_nombre.trim(),
+        correo: loginC_correo.trim(),
+        telefono: loginC_telefono.trim(),
         rol: "user",
         createdAt: new Date().toISOString(),
       });
-      setMessages({ error: "", success: "Cuenta creada. Revisa tu correo para verificarla." });
-      setTab("login");
+      navigate("/");
     } catch (err) {
       console.error("REGISTER ERROR:", err);
-      setMessages({ error: mapFirebaseError(err.code), success: "" });
+      loginC_setMessages({
+        error: loginC_mapFirebaseError(err.code),
+        success: "",
+      });
     } finally {
-      setLoading(false);
+      loginC_setLoading(false);
     }
   };
 
-  // ---- RESET (SOLO CORREO) ----
-  const handlePasswordReset = async (e) => {
+  // ===== RESET (siempre intenta enviar) =====
+  const loginC_handlePasswordReset = async (e) => {
     e.preventDefault();
-    setMessages({ error: "", success: "" });
-    setLoading(true);
+    loginC_setMessages({ error: "", success: "" });
+    loginC_setLoading(true);
     try {
-      // (opcional) validamos que el correo tenga un método registrado para feedback más claro
-      const methods = await fetchSignInMethodsForEmail(auth, correo.trim());
-      if (!methods.length) {
-        // Si prefieres no revelar existencia del correo, comenta la siguiente línea
-        throw { code: "auth/user-not-found" };
-      }
-
-      // Asegúrate de tener este dominio en Auth > Dominios autorizados
       const continueUrl = `${window.location.origin}/login`;
       const actionCodeSettings = { url: continueUrl, handleCodeInApp: false };
-
-      await sendPasswordResetEmail(auth, correo.trim(), actionCodeSettings);
-      setMessages({ error: "", success: "Te enviamos un correo para restablecer la contraseña." });
-      setTab("login");
+      await sendPasswordResetEmail(
+        loginC_auth,
+        loginC_correo.trim(),
+        actionCodeSettings
+      );
+      loginC_setMessages({
+        error: "",
+        success:
+          "Si el correo está registrado, te enviamos instrucciones para restablecer la contraseña.",
+      });
+      loginC_setTab("login");
     } catch (err) {
       console.error("RESET ERROR:", err);
-      setMessages({ error: mapFirebaseError(err.code), success: "" });
+      loginC_setMessages({
+        error: loginC_mapFirebaseError(err.code),
+        success: "",
+      });
     } finally {
-      setLoading(false);
+      loginC_setLoading(false);
     }
   };
 
-  // ---- GOOGLE ----
-  const handleGoogleSignIn = async () => {
-    setMessages({ error: "", success: "" });
-    setLoading(true);
+  // ===== GOOGLE =====
+  const loginC_handleGoogleSignIn = async () => {
+    loginC_setMessages({ error: "", success: "" });
+    loginC_setLoading(true);
     try {
-      const { user } = await signInWithPopup(auth, googleProvider);
-      const ref = doc(firestore, "usuarios", user.uid);
+      const { user } = await signInWithPopup(
+        loginC_auth,
+        loginC_googleProvider
+      );
+      const ref = doc(loginC_firestore, "usuarios", user.uid);
       const exists = await getDoc(ref);
       if (!exists.exists()) {
         await setDoc(ref, {
@@ -195,52 +226,81 @@ export default function Login() {
           provider: "google",
         });
       }
-      const rol = await getRol(user.uid);
+      const rol = await loginC_getRol(user.uid);
       navigate(rol === "admin" ? "/admin/dashboard" : "/");
     } catch (err) {
       console.error("GOOGLE ERROR:", err);
-      setMessages({ error: mapFirebaseError(err.code), success: "" });
+      loginC_setMessages({
+        error: loginC_mapFirebaseError(err.code),
+        success: "",
+      });
     } finally {
-      setLoading(false);
+      loginC_setLoading(false);
     }
   };
 
   return (
-    <div className="login-background">
-      <Container className="login-container">
+    <div className="loginC-background loginC-root">
+      <div className="loginC-blob loginC-blob--1" />
+      <div className="loginC-blob loginC-blob--2" />
+
+      <Container className="loginC-container">
         <Row className="justify-content-center">
           <Col xs={12} lg={10}>
-            <div className="login-card glass">
+            <div className="loginC-card loginC-glass">
               <Row className="g-0">
                 {/* Branding */}
-                <Col md={5} className="login-side d-none d-md-flex">
-                  <div className="brand">
-                    <div className="brand-dot" />
-                    <h2>CataaNails</h2>
-                    <p>Agenda inteligente y segura para tus servicios.</p>
+                <Col md={5} className="loginC-side d-none d-md-flex">
+                  <div className="loginC-brand">
+                    <div className="loginC-brand-dot" />
+                    <h2 className="loginC-brand-title">CataaNails</h2>
+                    <p className="loginC-brand-sub">
+                      Agenda inteligente con IA para tu salón
+                    </p>
+                    <ul className="loginC-brand-bullets">
+                      <li>
+                        <span className="loginC-bullet" />
+                        Reservas sin fricción
+                      </li>
+                      <li>
+                        <span className="loginC-bullet" />
+                        Recordatorios automáticos
+                      </li>
+                      <li>
+                        <span className="loginC-bullet" />
+                        Reportes y métricas
+                      </li>
+                    </ul>
                   </div>
                 </Col>
 
                 {/* Formulario */}
-                <Col md={7} xs={12} className="login-form-col">
-                  <Tabs
-                    id="auth-tabs"
-                    activeKey={tab}
-                    onSelect={(k) => setTab(k || "login")}
-                    className="login-tabs"
-                    justify
-                  >
+                <Col md={7} xs={12} className="loginC-form-col">
+                  <div className="loginC-header">
+                    <h3 className="loginC-title">Bienvenida ✨</h3>
+                    <p className="loginC-subtitle">
+                      Inicia sesión o crea tu cuenta para continuar.
+                    </p>
+                  </div>
+
+                  {/* Ocultamos la navegación de Tabs, usamos los links de abajo */}
+                  <Tabs>
                     {/* -------- LOGIN -------- */}
                     <Tab eventKey="login" title="Iniciar sesión">
-                      <Form onSubmit={handleLogin} className="form-stretch pt-3">
+                      <Form
+                        onSubmit={loginC_handleLogin}
+                        className="loginC-form-stretch pt-3"
+                      >
                         <Form.Group className="mb-3">
                           <Form.Label>Correo</Form.Label>
                           <InputGroup>
-                            <InputGroup.Text><FaEnvelope /></InputGroup.Text>
+                            <InputGroup.Text>
+                              <FaEnvelope />
+                            </InputGroup.Text>
                             <Form.Control
                               type="email"
-                              value={correo}
-                              onChange={(e) => setCorreo(e.target.value)}
+                              value={loginC_correo}
+                              onChange={(e) => loginC_setCorreo(e.target.value)}
                               placeholder="tucorreo@dominio.com"
                               required
                             />
@@ -250,55 +310,92 @@ export default function Login() {
                         <Form.Group className="mb-2">
                           <Form.Label>Contraseña</Form.Label>
                           <InputGroup>
-                            <InputGroup.Text><FaLock /></InputGroup.Text>
+                            <InputGroup.Text>
+                              <FaLock />
+                            </InputGroup.Text>
                             <Form.Control
-                              type={showPwd ? "text" : "password"}
-                              value={password}
-                              onChange={(e) => setPassword(e.target.value)}
+                              type={loginC_showPwd ? "text" : "password"}
+                              value={loginC_password}
+                              onChange={(e) =>
+                                loginC_setPassword(e.target.value)
+                              }
                               placeholder="Tu contraseña"
                               required
                             />
                             <Button
                               variant="outline-secondary"
-                              onClick={() => setShowPwd((v) => !v)}
-                              aria-label={showPwd ? "Ocultar contraseña" : "Mostrar contraseña"}
+                              onClick={() => loginC_setShowPwd((v) => !v)}
+                              aria-label={
+                                loginC_showPwd
+                                  ? "Ocultar contraseña"
+                                  : "Mostrar contraseña"
+                              }
                             >
-                              {showPwd ? <FaEyeSlash /> : <FaEye />}
+                              {loginC_showPwd ? <FaEyeSlash /> : <FaEye />}
                             </Button>
                           </InputGroup>
+
+                          {/* Olvidaste debajo del campo */}
+                          <div className="d-flex justify-content-end mt-2">
+                            <Button
+                              variant="link"
+                              className="p-0 loginC-link-sm"
+                              onClick={() => loginC_setTab("reset")}
+                            >
+                              ¿Olvidaste tu contraseña?
+                            </Button>
+                          </div>
+
+                          {/* Recordarme */}
+                          <div className="d-flex align-items-center gap-2 mt-2">
+                            <Form.Check
+                              type="checkbox"
+                              id="loginC-remember"
+                              label="Recordarme"
+                              checked={loginC_persist}
+                              onChange={(e) =>
+                                loginC_setPersist(e.target.checked)
+                              }
+                            />
+                          </div>
                         </Form.Group>
 
-                        <div className="d-flex justify-content-between align-items-center mb-3">
-                          <Form.Check
-                            type="checkbox"
-                            id="remember"
-                            label="Recordarme"
-                            checked={persist}
-                            onChange={(e) => setPersist(e.target.checked)}
-                          />
-                          <Button variant="link" className="p-0" onClick={() => setTab("reset")}>
-                            ¿Olvidaste tu contraseña?
+                        {/* Acciones */}
+                        <div className="loginC-form-actions">
+                          <Button
+                            className="loginC-button w-100"
+                            type="submit"
+                            disabled={loginC_loading}
+                          >
+                            {loginC_loading ? (
+                              <Spinner size="sm" animation="border" />
+                            ) : (
+                              "Ingresar"
+                            )}
                           </Button>
-                        </div>
 
-                        {/* Acciones al fondo */}
-                        <div className="form-actions">
-                          <Button className="login-button w-100" type="submit" disabled={loading}>
-                            {loading ? <Spinner size="sm" animation="border" /> : "Ingresar"}
-                          </Button>
+                          <div className="loginC-divider">
+                            <span>o</span>
+                          </div>
 
                           <Button
-                            className="login-button login-button--google w-100"
+                            className="loginC-button loginC-button--alt w-100"
                             type="button"
-                            onClick={handleGoogleSignIn}
-                            disabled={loading}
+                            onClick={loginC_handleGoogleSignIn}
+                            disabled={loginC_loading}
                           >
                             <FaGoogle /> <span>Continuar con Google</span>
                           </Button>
 
                           <div className="text-center">
-                            <Button variant="link" onClick={() => setTab("register")}>
-                              ¿No tienes cuenta? Regístrate
+                            <Button
+                              variant="link"
+                              onClick={() => loginC_setTab("register")}
+                            >
+                              ¿No tienes cuenta?{" "}
+                              <span className="loginC-link-strong">
+                                Crear cuenta
+                              </span>
                             </Button>
                           </div>
                         </div>
@@ -307,43 +404,61 @@ export default function Login() {
 
                     {/* -------- REGISTRO -------- */}
                     <Tab eventKey="register" title="Crear cuenta">
-                      <Form onSubmit={handleRegister} className="form-stretch pt-3">
-                        <Form.Group className="mb-3">
-                          <Form.Label>Nombre</Form.Label>
-                          <InputGroup>
-                            <InputGroup.Text><FaUser /></InputGroup.Text>
-                            <Form.Control
-                              type="text"
-                              value={nombre}
-                              onChange={(e) => setNombre(e.target.value)}
-                              placeholder="Tu nombre completo"
-                              required
-                            />
-                          </InputGroup>
-                        </Form.Group>
-
-                        <Form.Group className="mb-3">
-                          <Form.Label>Teléfono</Form.Label>
-                          <InputGroup>
-                            <InputGroup.Text><FaPhone /></InputGroup.Text>
-                            <Form.Control
-                              type="tel"
-                              value={telefono}
-                              onChange={(e) => setTelefono(e.target.value)}
-                              placeholder="+56 9 xxxx xxxx"
-                              required
-                            />
-                          </InputGroup>
-                        </Form.Group>
+                      <Form
+                        onSubmit={loginC_handleRegister}
+                        className="loginC-form-stretch pt-3"
+                      >
+                        <Row>
+                          <Col md={6}>
+                            <Form.Group className="mb-3">
+                              <Form.Label>Nombre</Form.Label>
+                              <InputGroup>
+                                <InputGroup.Text>
+                                  <FaUser />
+                                </InputGroup.Text>
+                                <Form.Control
+                                  type="text"
+                                  value={loginC_nombre}
+                                  onChange={(e) =>
+                                    loginC_setNombre(e.target.value)
+                                  }
+                                  placeholder="Tu nombre completo"
+                                  required
+                                />
+                              </InputGroup>
+                            </Form.Group>
+                          </Col>
+                          <Col md={6}>
+                            <Form.Group className="mb-3">
+                              <Form.Label>Teléfono</Form.Label>
+                              <InputGroup>
+                                <InputGroup.Text>
+                                  <FaPhone />
+                                </InputGroup.Text>
+                                <Form.Control
+                                  type="tel"
+                                  value={loginC_telefono}
+                                  onChange={(e) =>
+                                    loginC_setTelefono(e.target.value)
+                                  }
+                                  placeholder="+56 9 xxxx xxxx"
+                                  required
+                                />
+                              </InputGroup>
+                            </Form.Group>
+                          </Col>
+                        </Row>
 
                         <Form.Group className="mb-3">
                           <Form.Label>Correo</Form.Label>
                           <InputGroup>
-                            <InputGroup.Text><FaEnvelope /></InputGroup.Text>
+                            <InputGroup.Text>
+                              <FaEnvelope />
+                            </InputGroup.Text>
                             <Form.Control
                               type="email"
-                              value={correo}
-                              onChange={(e) => setCorreo(e.target.value)}
+                              value={loginC_correo}
+                              onChange={(e) => loginC_setCorreo(e.target.value)}
                               placeholder="tucorreo@dominio.com"
                               required
                             />
@@ -353,70 +468,137 @@ export default function Login() {
                         <Form.Group className="mb-1">
                           <Form.Label>Contraseña</Form.Label>
                           <InputGroup>
-                            <InputGroup.Text><FaLock /></InputGroup.Text>
+                            <InputGroup.Text>
+                              <FaLock />
+                            </InputGroup.Text>
                             <Form.Control
-                              type={showPwd ? "text" : "password"}
-                              value={password}
-                              onChange={(e) => setPassword(e.target.value)}
+                              type={loginC_showPwd ? "text" : "password"}
+                              value={loginC_password}
+                              onChange={(e) =>
+                                loginC_setPassword(e.target.value)
+                              }
                               placeholder="Mínimo 8 caracteres"
                               required
                             />
                             <Button
                               variant="outline-secondary"
-                              onClick={() => setShowPwd((v) => !v)}
+                              onClick={() => loginC_setShowPwd((v) => !v)}
                             >
-                              {showPwd ? <FaEyeSlash /> : <FaEye />}
+                              {loginC_showPwd ? <FaEyeSlash /> : <FaEye />}
                             </Button>
                           </InputGroup>
                         </Form.Group>
 
-                        <div className="pwd-strength mb-3">
+                        <div className="loginC-pwd-strength mb-2">
                           {Array.from({ length: 5 }).map((_, i) => (
-                            <span key={i} className={i < getStrength(password) ? "on" : ""} />
+                            <span
+                              key={i}
+                              className={
+                                i < loginC_getStrength(loginC_password)
+                                  ? "on"
+                                  : ""
+                              }
+                            />
                           ))}
                           <small className="ms-2">
-                            {["Muy débil","Débil","Media","Buena","Fuerte"][Math.max(0, getStrength(password)-1)] || ""}
+                            {["Muy débil", "Débil", "Media", "Buena", "Fuerte"][
+                              Math.max(
+                                0,
+                                loginC_getStrength(loginC_password) - 1
+                              )
+                            ] || ""}
                           </small>
                         </div>
+                        <p className="loginC-hint">
+                          Usa mayúsculas, minúsculas y números. Mejor si agregas
+                          un símbolo.
+                        </p>
 
-                        <div className="form-actions">
-                          <Button className="login-button w-100" type="submit" disabled={loading}>
-                            {loading ? <Spinner size="sm" animation="border" /> : "Crear cuenta"}
+                        <div className="loginC-form-actions">
+                          <Button
+                            className="loginC-button w-100"
+                            type="submit"
+                            disabled={loginC_loading}
+                          >
+                            {loginC_loading ? (
+                              <Spinner size="sm" animation="border" />
+                            ) : (
+                              "Crear cuenta"
+                            )}
+                          </Button>
+
+                          <div className="loginC-divider">
+                            <span>o</span>
+                          </div>
+
+                          <Button
+                            className="loginC-button loginC-button--alt w-100"
+                            type="button"
+                            onClick={loginC_handleGoogleSignIn}
+                            disabled={loginC_loading}
+                          >
+                            <FaGoogle /> <span>Registrarme con Google</span>
                           </Button>
 
                           <div className="text-center">
-                            <Button variant="link" onClick={() => setTab("login")}>
-                              ¿Ya tienes cuenta? Inicia sesión
+                            <Button
+                              variant="link"
+                              onClick={() => loginC_setTab("login")}
+                            >
+                              ¿Ya tienes cuenta?{" "}
+                              <span className="loginC-link-strong">
+                                Inicia sesión
+                              </span>
                             </Button>
                           </div>
                         </div>
                       </Form>
                     </Tab>
 
-                    {/* -------- RECUPERAR (solo correo) -------- */}
+                    {/* -------- RECUPERAR -------- */}
                     <Tab eventKey="reset" title="Recuperar">
-                      <Form onSubmit={handlePasswordReset} className="form-stretch pt-3">
+                      <Form
+                        onSubmit={loginC_handlePasswordReset}
+                        className="loginC-form-stretch pt-3"
+                      >
                         <Form.Group className="mb-4">
                           <Form.Label>Correo</Form.Label>
                           <InputGroup>
-                            <InputGroup.Text><FaEnvelope /></InputGroup.Text>
+                            <InputGroup.Text>
+                              <FaEnvelope />
+                            </InputGroup.Text>
                             <Form.Control
                               type="email"
-                              value={correo}
-                              onChange={(e) => setCorreo(e.target.value)}
+                              value={loginC_correo}
+                              onChange={(e) => loginC_setCorreo(e.target.value)}
                               placeholder="tucorreo@dominio.com"
                               required
                             />
                           </InputGroup>
+                          <p className="loginC-hint mt-2">
+                            Te enviaremos un enlace para restablecer tu
+                            contraseña.
+                          </p>
                         </Form.Group>
 
-                        <div className="form-actions">
-                          <Button className="login-button w-100" type="submit" disabled={loading}>
-                            {loading ? <Spinner size="sm" animation="border" /> : "Enviar correo de recuperación"}
+                        <div className="loginC-form-actions">
+                          <Button
+                            className="loginC-button w-100"
+                            type="submit"
+                            disabled={loginC_loading}
+                          >
+                            {loginC_loading ? (
+                              <Spinner size="sm" animation="border" />
+                            ) : (
+                              "Enviar correo de recuperación"
+                            )}
                           </Button>
 
                           <div className="text-center">
-                            <Button variant="link" onClick={() => setTab("login")}>
+                            <Button
+                              variant="link"
+                              onClick={() => loginC_setTab("login")}
+                            >
                               Volver a iniciar sesión
                             </Button>
                           </div>
@@ -425,8 +607,30 @@ export default function Login() {
                     </Tab>
                   </Tabs>
 
-                  {messages.error && <p className="login-error-message">{messages.error}</p>}
-                  {messages.success && <p className="login-success-message">{messages.success}</p>}
+                  {loginC_messages.error && (
+                    <p className="loginC-error-message">
+                      {loginC_messages.error}
+                    </p>
+                  )}
+                  {loginC_messages.success && (
+                    <p className="loginC-success-message">
+                      {loginC_messages.success}
+                    </p>
+                  )}
+
+                  <div className="loginC-footer">
+                    <small>
+                      Al continuar aceptas nuestros{" "}
+                      <a href="#" className="loginC-link-strong">
+                        Términos
+                      </a>{" "}
+                      y{" "}
+                      <a href="#" className="loginC-link-strong">
+                        Privacidad
+                      </a>
+                      .
+                    </small>
+                  </div>
                 </Col>
               </Row>
             </div>
