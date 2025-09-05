@@ -192,7 +192,7 @@ const Home = () => {
       src: homeStudio2,
       alt: "Home Studio - Sillón de trabajo y luminaria",
       caption: {
-        title: "Bienvenida a CataaNails",
+        title: "Bienvenides a CataaNails",
         text: "Agenda tu atención personalizada para manos y pies.",
         cta: { label: "Reservar ahora", onClick: () => navigate("/reservas") },
       },
