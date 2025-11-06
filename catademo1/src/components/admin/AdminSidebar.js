@@ -21,11 +21,12 @@ import {
   faSearch,
   faEllipsisV,
   faPalette,
+  faUpload,
 } from "@fortawesome/free-solid-svg-icons";
 import { faChartBar } from "@fortawesome/free-solid-svg-icons";
 import { getAuth } from "firebase/auth";
 
-const LOCAL_KEY = "adminSidebarPrefs_v1";
+const LOCAL_KEY = "adminSidebarPrefs_v2";
 
 const AdminSidebar = ({
   defaultPosition = "left", // "left" | "right"
@@ -34,13 +35,15 @@ const AdminSidebar = ({
   defaultSidebarBg = "#0f172a",
   defaultSidebarFg = "#e2e8f0",
   defaultAccent = "#ff3b7b",
-  headerOffset = 72, // altura del header
+  headerOffset = 72, // altura del header fijo
 }) => {
-  const [isSidebarVisible, setIsSidebarVisible] = useState(window.innerWidth > 768);
+  const [isSidebarVisible, setIsSidebarVisible] = useState(
+    window.innerWidth > 768
+  );
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState(new Set());
   const [searchQuery, setSearchQuery] = useState("");
-  const [notifications] = useState(3);
+  const [notifications] = useState();
 
   const [prefsLoaded, setPrefsLoaded] = useState(false);
 
@@ -53,6 +56,7 @@ const AdminSidebar = ({
   const [accentColor, setAccentColor] = useState(defaultAccent);
   const [showQuickSettings, setShowQuickSettings] = useState(false);
   const [itemPadding, setItemPadding] = useState(8); // densidad vertical
+  const [fontScale, setFontScale] = useState(1);     // <<--- NUEVO: escala de fuente
 
   // Estado móvil
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -73,6 +77,10 @@ const AdminSidebar = ({
         if (saved.sidebarFg) setSidebarFg(saved.sidebarFg);
         if (saved.accentColor) setAccentColor(saved.accentColor);
         if (saved.itemPadding) setItemPadding(saved.itemPadding);
+        if (typeof saved.isCollapsed === "boolean")
+          setIsCollapsed(saved.isCollapsed);
+        if (typeof saved.fontScale === "number")               // <<--- carga scale
+          setFontScale(saved.fontScale);
       }
     } catch {}
     setPrefsLoaded(true);
@@ -89,9 +97,22 @@ const AdminSidebar = ({
       sidebarFg,
       accentColor,
       itemPadding,
+      isCollapsed,
+      fontScale,                    // <<--- guarda scale
     };
     localStorage.setItem(LOCAL_KEY, JSON.stringify(prefs));
-  }, [prefsLoaded, sidebarPosition, isFixed, sidebarWidth, sidebarBg, sidebarFg, accentColor, itemPadding]);
+  }, [
+    prefsLoaded,
+    sidebarPosition,
+    isFixed,
+    sidebarWidth,
+    sidebarBg,
+    sidebarFg,
+    accentColor,
+    itemPadding,
+    isCollapsed,
+    fontScale, // <<---
+  ]);
 
   // detectar cambio de tamaño (para modo móvil/desktop)
   useEffect(() => {
@@ -107,7 +128,12 @@ const AdminSidebar = ({
   // Cerrar por click afuera en móvil
   useEffect(() => {
     const handleOutsideClick = (event) => {
-      if (sidebarRef.current && !sidebarRef.current.contains(event.target) && isMobile && isSidebarVisible) {
+      if (
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target) &&
+        isMobile &&
+        isSidebarVisible
+      ) {
         setIsSidebarVisible(false);
       }
     };
@@ -124,26 +150,161 @@ const AdminSidebar = ({
     };
   }, [isSidebarVisible, isMobile]);
 
+  useEffect(() => {
+    const collapsedWidth = 72;
+
+    const applyBodyOffset = () => {
+      const b = document.body;
+
+      b.style.paddingLeft = "";
+      b.style.paddingRight = "";
+      b.classList.remove("has-admin-sidebar");
+      delete b.dataset.sidebarPosition;
+
+      // solo empujar en DESKTOP, con sidebar fijo y visible
+      const shouldOffset = isFixed && !isMobile && isSidebarVisible;
+      if (!shouldOffset) return;
+
+      const effectiveWidth = isCollapsed ? collapsedWidth : sidebarWidth;
+      b.dataset.sidebarPosition = sidebarPosition;
+
+      if (sidebarPosition === "left") {
+        b.style.paddingLeft = `${effectiveWidth}px`;
+      } else {
+        b.style.paddingRight = `${effectiveWidth}px`;
+      }
+      b.classList.add("has-admin-sidebar");
+    };
+
+    applyBodyOffset();
+
+    // también re-aplicar al cambiar orientación o tamaño
+    const onResize = () => applyBodyOffset();
+    window.addEventListener("orientationchange", onResize);
+    window.addEventListener("resize", onResize);
+
+    return () => {
+      window.removeEventListener("orientationchange", onResize);
+      window.removeEventListener("resize", onResize);
+      const b = document.body;
+      b.style.paddingLeft = "";
+      b.style.paddingRight = "";
+      b.classList.remove("has-admin-sidebar");
+      delete b.dataset.sidebarPosition;
+    };
+  }, [
+    isFixed,
+    isMobile,
+    isSidebarVisible,
+    isCollapsed,
+    sidebarWidth,
+    sidebarPosition,
+  ]);
+
   // Menú
   const menuItems = useMemo(
     () => [
-      { id: "dashboard", title: "Panel de Control", icon: faTachometerAlt, path: "/admin/dashboard", group: "main" },
-      { id: "appointments", title: "Gestión de Citas", icon: faCalendarCheck, path: "/admin/appointments", badge: notifications > 0 ? notifications : null, group: "booking" },
-      { id: "workdays", title: "Calendario", icon: faCalendarDay, path: "/admin/workdays", group: "booking" },
-      { id: "bank-balance", title: "Ingresos Totales", icon: faDollarSign, path: "/admin/bank-balance", group: "finance" },
-      { id: "services", title: "Servicios", icon: faBriefcase, path: "/admin/services", group: "content" },
-      { id: "gallery", title: "Trabajos Realizados", icon: faImages, path: "/admin/trabajos-realizados", group: "content" },
-      { id: "reviews", title: "Reseñas", icon: faStar, path: "/admin/reviews", group: "feedback" },
-      { id: "comments", title: "Comentarios", icon: faComments, path: "/admin/contact-comments", group: "feedback" },
-      { id: "users", title: "Gestión de Usuarios", icon: faUsers, path: "/admin/users", group: "management" },
-      { id: "reports", title: "Reportes", icon: faChartBar, path: "/admin/reports", group: "reports" },
+      {
+        id: "dashboard",
+        title: "Panel de Control",
+        icon: faTachometerAlt,
+        path: "/admin/dashboard",
+        group: "main",
+      },
+      {
+        id: "appointments",
+        title: "Gestión de Citas",
+        icon: faCalendarCheck,
+        path: "/admin/appointments",
+        badge: notifications > 0 ? notifications : null,
+        group: "booking",
+      },
+      {
+        id: "workdays",
+        title: "Calendario",
+        icon: faCalendarDay,
+        path: "/admin/workdays",
+        group: "booking",
+      },
+
+      {
+        id: "bank-balance",
+        title: "Ingresos Totales",
+        icon: faDollarSign,
+        path: "/admin/bank-balance",
+        group: "finance",
+      },
+
+      {
+        id: "services",
+        title: "Servicios",
+        icon: faBriefcase,
+        path: "/admin/services",
+        group: "content",
+      },
+      {
+        id: "gallery",
+        title: "Trabajos Realizados",
+        icon: faImages,
+        path: "/admin/trabajos-realizados",
+        group: "content",
+      },
+
+      // === NUEVA SECCIÓN: Innovación & Estilo ===
+      {
+        id: "try-on",
+        title: "Try-On de Uñas",
+        icon: faUpload,
+        path: "/admin/try-on",
+        group: "innovation",
+      },
+      {
+        id: "skin-analyzer",
+        title: "Recomendaciones de Color",
+        icon: faPalette,
+        path: "/admin/skin-analyzer",
+        group: "innovation",
+      },
+
+      {
+        id: "reviews",
+        title: "Reseñas",
+        icon: faStar,
+        path: "/admin/reviews",
+        group: "feedback",
+      },
+      {
+        id: "comments",
+        title: "Comentarios",
+        icon: faComments,
+        path: "/admin/contact-comments",
+        group: "feedback",
+      },
+
+      {
+        id: "users",
+        title: "Gestión de Usuarios",
+        icon: faUsers,
+        path: "/admin/users",
+        group: "management",
+      },
+
+      {
+        id: "reports",
+        title: "Reportes",
+        icon: faChartBar,
+        path: "/admin/reports",
+        group: "reports",
+      },
     ],
     [notifications]
   );
 
   // Expandir grupo activo
   useEffect(() => {
-    const activeItem = menuItems.find((item) => location.pathname === item.path);
+    const activeItem = menuItems.find(
+      (item) => location.pathname === item.path
+    );
     if (activeItem && !expandedGroups.has(activeItem.group)) {
       setExpandedGroups((prev) => new Set([...prev, activeItem.group]));
     }
@@ -156,20 +317,25 @@ const AdminSidebar = ({
     finance: { title: "Finanzas", icon: faDollarSign },
     reports: { title: "Reportes", icon: faChartBar },
     content: { title: "Contenido", icon: faImages },
+    innovation: { title: "Innovación & Estilo", icon: faPalette }, // nuevo grupo
     feedback: { title: "Feedback", icon: faStar },
     management: { title: "Gestión", icon: faUsers },
+    misc: { title: "Otros", icon: faBars },
   };
 
   const filteredItems = useMemo(() => {
     if (!searchQuery) return menuItems;
-    return menuItems.filter((item) => item.title.toLowerCase().includes(searchQuery.toLowerCase()));
+    return menuItems.filter((item) =>
+      item.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
   }, [menuItems, searchQuery]);
 
   const groupedItems = useMemo(() => {
     const grouped = {};
     filteredItems.forEach((item) => {
-      if (!grouped[item.group]) grouped[item.group] = [];
-      grouped[item.group].push(item);
+      const g = item.group || "misc";
+      if (!grouped[g]) grouped[g] = [];
+      grouped[g].push(item);
     });
     return grouped;
   }, [filteredItems]);
@@ -199,7 +365,7 @@ const AdminSidebar = ({
     }
   };
 
-  // Variables CSS
+  // Variables CSS (incluye --font-scale)
   const cssVars = {
     "--sidebar-width": `${sidebarWidth}px`,
     "--sidebar-bg": sidebarBg,
@@ -209,16 +375,31 @@ const AdminSidebar = ({
     "--accent-color": accentColor,
     "--sidebar-top": `${headerOffset}px`,
     "--item-vpad": `${itemPadding}px`,
+    "--font-scale": fontScale, // <<--- aplica escala global
   };
 
   return createPortal(
     <>
+      {/* CSS mínimo para que la escala funcione aunque no toques el archivo .css */}
+      <style>{`
+        .admin-sidebar { font-size: calc(14px * var(--font-scale, 1)); }
+        .admin-sidebar .group-header,
+        .admin-sidebar .nav-title,
+        .admin-sidebar .footer-item,
+        .admin-sidebar .profile-name,
+        .admin-sidebar .profile-role,
+        .admin-sidebar .qs-value { font-size: calc(1em * var(--font-scale, 1)); }
+      `}</style>
+
       {/* Overlay solo en móvil */}
       {isSidebarVisible && isMobile && (
-        <div className="sidebar-overlay" onClick={() => setIsSidebarVisible(false)} />
+        <div
+          className="sidebar-overlay"
+          onClick={() => setIsSidebarVisible(false)}
+        />
       )}
 
-      {/* Botón flotante cuando el sidebar está cerrado (móvil y desktop) */}
+      {/* Botón flotante cuando el sidebar está cerrado */}
       {!isSidebarVisible && (
         <button
           className="sidebar-toggle-button"
@@ -234,7 +415,9 @@ const AdminSidebar = ({
       {/* Sidebar */}
       <div
         ref={sidebarRef}
-        className={`admin-sidebar ${isSidebarVisible ? "visible" : "hidden"} ${isCollapsed ? "collapsed" : ""}`}
+        className={`admin-sidebar ${isSidebarVisible ? "visible" : "hidden"} ${
+          isCollapsed ? "collapsed" : ""
+        }`}
         role="navigation"
         aria-label="Admin navigation"
         data-position={sidebarPosition}
@@ -243,7 +426,6 @@ const AdminSidebar = ({
       >
         {/* Header */}
         <div className="sidebar-header">
-          {/* En modo colapsado ocultamos el perfil para dejar espacio al botón de expandir */}
           {!isCollapsed && (
             <div className="admin-profile">
               <div className="profile-image-container">
@@ -264,7 +446,6 @@ const AdminSidebar = ({
 
           <div className="sidebar-controls">
             {isCollapsed ? (
-              // SOLO botón de expandir cuando está colapsado (se ve claro)
               <button
                 className="control-btn"
                 onClick={toggleCollapse}
@@ -275,7 +456,6 @@ const AdminSidebar = ({
               </button>
             ) : (
               <>
-                {/* X SIEMPRE visible */}
                 <button
                   className="control-btn close-btn"
                   onClick={() => setIsSidebarVisible(false)}
@@ -297,6 +477,7 @@ const AdminSidebar = ({
                   className="control-btn"
                   onClick={toggleCollapse}
                   title="Colapsar sidebar"
+                  aria-expanded={!isCollapsed}
                 >
                   <FontAwesomeIcon icon={faChevronDown} />
                 </button>
@@ -310,15 +491,27 @@ const AdminSidebar = ({
           <div className="quick-settings">
             <div className="qs-row">
               <label>Fondo</label>
-              <input type="color" value={sidebarBg} onChange={(e) => setSidebarBg(e.target.value)} />
+              <input
+                type="color"
+                value={sidebarBg}
+                onChange={(e) => setSidebarBg(e.target.value)}
+              />
             </div>
             <div className="qs-row">
               <label>Texto</label>
-              <input type="color" value={sidebarFg} onChange={(e) => setSidebarFg(e.target.value)} />
+              <input
+                type="color"
+                value={sidebarFg}
+                onChange={(e) => setSidebarFg(e.target.value)}
+              />
             </div>
             <div className="qs-row">
               <label>Acento</label>
-              <input type="color" value={accentColor} onChange={(e) => setAccentColor(e.target.value)} />
+              <input
+                type="color"
+                value={accentColor}
+                onChange={(e) => setAccentColor(e.target.value)}
+              />
             </div>
             <div className="qs-row">
               <label>Ancho</label>
@@ -342,6 +535,22 @@ const AdminSidebar = ({
               />
               <span className="qs-value">{itemPadding}px</span>
             </div>
+
+            {/* >>> NUEVO control de tamaño de texto <<< */}
+            <div className="qs-row">
+              <label>Tamaño texto</label>
+              <input
+                type="range"
+                min="0.9"
+                max="1.2"
+                step="0.05"
+                value={fontScale}
+                onChange={(e) => setFontScale(parseFloat(e.target.value))}
+                aria-label="Tamaño de texto del sidebar"
+              />
+              <span className="qs-value">{Math.round(fontScale * 100)}%</span>
+            </div>
+
             <div className="qs-row">
               <label>Posición</label>
               <div className="qs-seg">
@@ -362,7 +571,11 @@ const AdminSidebar = ({
             <div className="qs-row">
               <label>Fijo</label>
               <label className="qs-switch">
-                <input type="checkbox" checked={isFixed} onChange={(e) => setIsFixed(e.target.checked)} />
+                <input
+                  type="checkbox"
+                  checked={isFixed}
+                  onChange={(e) => setIsFixed(e.target.checked)}
+                />
                 <span>Siempre visible</span>
               </label>
             </div>
@@ -388,7 +601,7 @@ const AdminSidebar = ({
         {/* Navegación */}
         <nav className="sidebar-nav">
           {Object.entries(groupedItems).map(([groupId, items]) => {
-            const group = groups[groupId];
+            const group = groups[groupId] || groups.misc;
             const isExpanded = expandedGroups.has(groupId) || isCollapsed;
 
             return (
@@ -400,38 +613,56 @@ const AdminSidebar = ({
                     aria-expanded={isExpanded}
                   >
                     <div className="group-info">
-                      <FontAwesomeIcon icon={group.icon} className="group-icon" />
+                      <FontAwesomeIcon
+                        icon={group.icon}
+                        className="group-icon"
+                      />
                       <span className="group-title">{group.title}</span>
                     </div>
-                    <FontAwesomeIcon icon={faChevronDown} className={`group-chevron ${isExpanded ? "rotated" : ""}`} />
+                    <FontAwesomeIcon
+                      icon={faChevronDown}
+                      className={`group-chevron ${isExpanded ? "rotated" : ""}`}
+                    />
                   </button>
                 )}
 
-                <div className={`nav-items ${isExpanded ? "expanded" : "collapsed"}`}>
+                <div
+                  className={`nav-items ${isExpanded ? "expanded" : "collapsed"}`}
+                >
                   {items.map((item) => (
                     <NavLink
                       key={item.id}
                       to={item.path}
                       className={({ isActive }) =>
-                        `nav-item ${isActive ? "active" : ""} ${isCollapsed ? "collapsed-item" : ""}`
+                        `nav-item ${isActive ? "active" : ""} ${
+                          isCollapsed ? "collapsed-item" : ""
+                        }`
                       }
                       onClick={handleNavLinkClick}
-                      title={isCollapsed ? item.title : undefined}
+                      title={item.title}
                     >
                       <div className="nav-content">
-                        <FontAwesomeIcon icon={item.icon} className="nav-icon" />
+                        <FontAwesomeIcon
+                          icon={item.icon}
+                          className="nav-icon"
+                        />
                         {!isCollapsed && (
                           <>
                             <span className="nav-title">{item.title}</span>
                             {item.badge && (
-                              <span className="nav-badge" aria-label={`${item.badge} notificaciones`}>
+                              <span
+                                className="nav-badge"
+                                aria-label={`${item.badge} notificaciones`}
+                              >
                                 {item.badge}
                               </span>
                             )}
                           </>
                         )}
                       </div>
-                      {isCollapsed && item.badge && <span className="collapsed-badge">{item.badge}</span>}
+                      {isCollapsed && item.badge && (
+                        <span className="collapsed-badge">{item.badge}</span>
+                      )}
                     </NavLink>
                   ))}
                 </div>

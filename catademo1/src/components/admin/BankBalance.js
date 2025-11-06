@@ -45,6 +45,17 @@ const DEFAULT_UI = {
   },
 };
 
+/* === helper para saber si estamos en pantalla angosta === */
+function useIsNarrow(bp = 640) {
+  const [isNarrow, setIsNarrow] = React.useState(() => window.innerWidth <= bp);
+  React.useEffect(() => {
+    const onResize = () => setIsNarrow(window.innerWidth <= bp);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [bp]);
+  return isNarrow;
+}
+
 const BankBalance = () => {
   const [amount, setAmount] = useState("");
   const [method, setMethod] = useState("Efectivo");
@@ -70,18 +81,19 @@ const BankBalance = () => {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [filteredTransactions, setFilteredTransactions] = useState([]);
 
-  // Persistir UI
+  const isNarrow = useIsNarrow(640);
+
+  /* Persist UI */
   useEffect(() => {
     localStorage.setItem(UI_STORE_KEY, JSON.stringify(ui));
   }, [ui]);
 
-  // Live fetch con cleanup correcto
+  /* Firestore live */
   useEffect(() => {
     const ingresosRef = collection(db, "ingresos");
     const unsubscribe = onSnapshot(ingresosRef, (snapshot) => {
       const list = [];
       let total = 0;
-
       snapshot.forEach((d) => {
         const data = d.data();
         const transactionDate =
@@ -90,19 +102,12 @@ const BankBalance = () => {
             : new Date(data.date);
         const amt = Number(data.amount) || 0;
         total += amt;
-        list.push({
-          id: d.id,
-          ...data,
-          amount: amt,
-          date: transactionDate,
-        });
+        list.push({ id: d.id, ...data, amount: amt, date: transactionDate });
       });
-
       list.sort((a, b) => b.date - a.date);
       setTransactions(list);
       setTotalIncome(total);
     });
-
     return () => unsubscribe();
   }, []);
 
@@ -121,7 +126,6 @@ const BankBalance = () => {
       return onlyDate === date;
     });
     setFilteredTransactions(filtered);
-
     const daySum = filtered.reduce((acc, t) => acc + t.amount, 0);
     setDailyTotal(daySum);
   };
@@ -158,10 +162,9 @@ const BankBalance = () => {
     }
     const amountNum = parseFloat(amount);
     const nowInChile = toZonedTime(new Date(), CHILE_TZ);
-
     await addDoc(collection(db, "ingresos"), {
       amount: amountNum,
-      method, // <-- importante para "Transferencias"
+      method,
       date: Timestamp.fromDate(nowInChile),
     });
     setAmount("");
@@ -173,7 +176,6 @@ const BankBalance = () => {
     calculateTotals(transactions);
   };
 
-  // Reset de filtros a hoy / mes y año actuales
   const handleResetFilters = () => {
     const now = new Date();
     const today = format(now, "yyyy-MM-dd", { timeZone: CHILE_TZ });
@@ -188,7 +190,7 @@ const BankBalance = () => {
     timeZone: CHILE_TZ,
   });
 
-  // ====== DATASETS PARA GRÁFICOS ======
+  /* ====== DATASETS ====== */
   const last14DaysData = useMemo(() => {
     const map = new Map();
     for (let i = 13; i >= 0; i--) {
@@ -226,19 +228,14 @@ const BankBalance = () => {
     return arr;
   }, [transactions, selectedYear]);
 
-  // Total de transferencias del MES seleccionado
-  // Total y contador de transferencias del MES seleccionado
   const { amount: transfersMonthly, count: transfersCountMonthly } =
     useMemo(() => {
-      let amount = 0;
-      let count = 0;
-
+      let amountT = 0;
+      let countT = 0;
       transactions.forEach((t) => {
         const d = toZonedTime(t.date, CHILE_TZ);
         const isMonth =
           d.getFullYear() === selectedYear && d.getMonth() === selectedMonth;
-
-        // Detecta transferencias por method/paymentMethod/type/service o flag isTransfer
         const hint = (t.method || t.paymentMethod || t.type || t.service || "")
           .toString()
           .toLowerCase();
@@ -246,14 +243,12 @@ const BankBalance = () => {
           hint.includes("transfer") ||
           hint.includes("banco") ||
           t.isTransfer === true;
-
         if (isMonth && isTransfer) {
-          amount += Number(t.amount) || 0;
-          count += 1;
+          amountT += Number(t.amount) || 0;
+          countT += 1;
         }
       });
-
-      return { amount, count };
+      return { amount: amountT, count: countT };
     }, [transactions, selectedYear, selectedMonth]);
 
   const serviceDistribution = useMemo(() => {
@@ -290,7 +285,6 @@ const BankBalance = () => {
           </button>
         </div>
 
-        {/* Panel de personalización */}
         {showCustomizer && (
           <div className="ui-customizer">
             <div className="ui-grid">
@@ -308,7 +302,6 @@ const BankBalance = () => {
                   }
                 />
               </div>
-
               <div>
                 <label>KPI Día</label>
                 <input
@@ -374,7 +367,6 @@ const BankBalance = () => {
                   }
                 />
               </div>
-
               <div>
                 <label>Bar Chart</label>
                 <input
@@ -389,7 +381,6 @@ const BankBalance = () => {
                 />
               </div>
             </div>
-
             <div className="ui-actions">
               <button
                 className="money-reset-btn"
@@ -534,7 +525,7 @@ const BankBalance = () => {
 
         {/* ====== ANALYTICS ====== */}
         <div className="analytics-grid">
-          <div className="chart-card">
+          <div className="chart-card span-4">
             <div className="chart-title">Ingresos últimos 14 días</div>
             <ResponsiveContainer width="100%" height={280}>
               <AreaChart
@@ -572,7 +563,7 @@ const BankBalance = () => {
             </ResponsiveContainer>
           </div>
 
-          <div className="chart-card">
+          <div className="chart-card span-4">
             <div className="chart-title">Ingresos por mes ({selectedYear})</div>
             <ResponsiveContainer width="100%" height={280}>
               <BarChart
@@ -592,24 +583,36 @@ const BankBalance = () => {
             </ResponsiveContainer>
           </div>
 
-          <div className="chart-card">
+          <div className="chart-card pie span-4">
             <div className="chart-title">Distribución por servicio</div>
-            <ResponsiveContainer width="100%" height={280}>
+            <ResponsiveContainer width="100%" height={isNarrow ? 300 : 280}>
               <PieChart>
                 <Pie
                   data={serviceDistribution}
                   dataKey="value"
                   nameKey="name"
                   cx="50%"
-                  cy="50%"
-                  outerRadius={90}
-                  label={({ name, value }) => `${name} (${fmtCLP(value)})`}
+                  cy="45%"
+                  innerRadius={isNarrow ? 55 : 60}
+                  outerRadius={isNarrow ? 90 : 95}
+                  label={
+                    isNarrow
+                      ? false
+                      : ({ name, value }) => `${name} (${fmtCLP(value)})`
+                  }
+                  labelLine={!isNarrow}
+                  isAnimationActive={false}
                 >
                   {(ui.charts.pie || DEFAULT_UI.charts.pie).map((c, idx) => (
                     <Cell key={`cell-${idx}`} fill={c} />
                   ))}
                 </Pie>
-                <Legend />
+                <Legend
+                  layout="horizontal"
+                  verticalAlign="bottom"
+                  align="center"
+                  wrapperStyle={{ paddingTop: 8 }}
+                />
                 <Tooltip formatter={(val, name) => [`$${fmtCLP(val)}`, name]} />
               </PieChart>
             </ResponsiveContainer>
@@ -617,7 +620,7 @@ const BankBalance = () => {
         </div>
 
         {/* ====== HISTORIAL ====== */}
-        <h4 className="mt-4">Historial de Transacciones</h4>
+        <h4 className="transactions-title mt-4">Historial de Transacciones</h4>
         <ul className="money-transaction-list mt-3">
           {filteredTransactions.length > 0 ? (
             filteredTransactions.slice(0, 8).map((transaction) => {
@@ -628,7 +631,6 @@ const BankBalance = () => {
               const formattedTime = format(transactionDate, "HH:mm:ss", {
                 timeZone: CHILE_TZ,
               });
-
               return (
                 <li key={transaction.id} className="money-list-group-item">
                   Monto: ${fmtCLP(transaction.amount)} —{" "}

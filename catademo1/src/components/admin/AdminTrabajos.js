@@ -17,9 +17,12 @@ import {
 import "../../styles/adminS/trabajosrealizados.css";
 import { Button, Form, ProgressBar, Modal, Toast } from "react-bootstrap";
 
+const SECTION_OPTIONS = ["manicure", "pedicure", "alisados"];
+
 const AdminTrabajos = () => {
   const [image, setImage] = useState(null);
   const [title, setTitle] = useState("");
+  const [section, setSection] = useState("");
   const [progress, setProgress] = useState(0);
   const [trabajos, setTrabajos] = useState([]);
   const [showModalDelete, setShowModalDelete] = useState(false);
@@ -40,30 +43,26 @@ const AdminTrabajos = () => {
   const totalPages = Math.ceil(trabajos.length / trabajosPorPagina);
 
   const handleImageChange = (e) => {
-    if (e.target.files[0]) {
-      setImage(e.target.files[0]);
-    }
+    if (e.target.files[0]) setImage(e.target.files[0]);
   };
 
   const handleUpload = () => {
-    if (!image || !title) {
-      setToastMessage("Por favor selecciona una imagen y escribe un título.");
+    if (!image || !title || !section) {
+      setToastMessage("Selecciona imagen, título y sección.");
       setShowToast(true);
       return;
     }
-
-    const storageRef = ref(storage, `trabajos/${image.name}`);
+    const storageRef = ref(storage, `trabajos/${Date.now()}_${image.name}`);
     const uploadTask = uploadBytesResumable(storageRef, image);
-
     uploadTask.on(
       "state_changed",
       (snapshot) => {
-        const progress = Math.round(
+        const p = Math.round(
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100
         );
-        setProgress(progress);
+        setProgress(p);
       },
-      (error) => {
+      () => {
         setToastMessage("Error al subir la imagen.");
         setShowToast(true);
       },
@@ -72,12 +71,14 @@ const AdminTrabajos = () => {
           addDoc(collection(db, "trabajos"), {
             title: title,
             imgSrc: url,
+            section: section,
           }).then(() => {
             setProgress(0);
             setTitle("");
+            setSection("");
             setImage(null);
             fetchTrabajos();
-            setToastMessage("Imagen subida exitosamente!");
+            setToastMessage("Trabajo subido exitosamente!");
             setShowToast(true);
           });
         });
@@ -113,7 +114,8 @@ const AdminTrabajos = () => {
 
   const handleUpdate = (trabajo) => {
     setSelectedTrabajo(trabajo);
-    setTitle(trabajo.title);
+    setTitle(trabajo.title || "");
+    setSection(trabajo.section || "");
     setShowModalUpdate(true);
   };
 
@@ -123,19 +125,17 @@ const AdminTrabajos = () => {
       setShowToast(true);
       return;
     }
-
-    const storageRef = ref(storage, `trabajos/${image.name}`);
+    const storageRef = ref(storage, `trabajos/${Date.now()}_${image.name}`);
     const uploadTask = uploadBytesResumable(storageRef, image);
-
     uploadTask.on(
       "state_changed",
       (snapshot) => {
-        const progress = Math.round(
+        const p = Math.round(
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100
         );
-        setProgress(progress);
+        setProgress(p);
       },
-      (error) => {
+      () => {
         setToastMessage("Error al subir la imagen.");
         setShowToast(true);
       },
@@ -144,9 +144,10 @@ const AdminTrabajos = () => {
         await updateDoc(doc(db, "trabajos", selectedTrabajo.id), {
           title: title,
           imgSrc: url,
+          section: section || null,
         });
         fetchTrabajos();
-        setToastMessage("Imagen actualizada exitosamente!");
+        setToastMessage("Trabajo actualizado exitosamente!");
         setShowToast(true);
         setShowModalUpdate(false);
         setSelectedTrabajo(null);
@@ -160,80 +161,146 @@ const AdminTrabajos = () => {
     fetchTrabajos();
   }, []);
 
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
+  const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
-    <div className="admin-trabajos-container">
-      <h2 className="text-center">Subir Nuevo Trabajo</h2>
-      <div className="upload-section">
-        <Form>
-          <Form.Group controlId="formTitle">
-            <Form.Control
-              type="text"
-              placeholder="Ingresa el título"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group controlId="formFile">
-            <Form.Control type="file" onChange={handleImageChange} />
-          </Form.Group>
-          <Button
-            className="btn-subir"
-            variant="secondary"
-            onClick={handleUpload}
-            disabled={progress > 0 && progress < 100}
-          >
-            Subir
-          </Button>
-          {progress > 0 && (
-            <ProgressBar now={progress} label={`${progress}%`} />
-          )}
-        </Form>
+    <div className="Tadmin_container">
+      <div className="Tadmin_header">
+        <h2 className="Tadmin_title">Portafolio – Administrar Trabajos</h2>
+        <p className="Tadmin_subtitle">
+          Sube, edita o elimina trabajos y asigna su sección.
+        </p>
       </div>
 
-      <div className="trabajos-list mt-5">
-        <h3 className="text-center">Trabajos Subidos</h3>
-        <div className="trabajos-grid">
-          {currentTrabajos.map((trabajo) => (
-            <div className="trabajo-item" key={trabajo.id}>
+      {/* Card de carga */}
+      <div className="Tadmin_card">
+        <div className="Tadmin_cardHeader">Nuevo trabajo</div>
+        <div className="Tadmin_cardBody">
+          <Form>
+            <Form.Group controlId="formTitle" className="Tadmin_field">
+              <Form.Label className="Tadmin_label">Título</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Ingresa el título"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="Tadmin_input"
+              />
+            </Form.Group>
+
+            <Form.Group controlId="formSection" className="Tadmin_field">
+              <Form.Label className="Tadmin_label">Sección</Form.Label>
+              <Form.Select
+                value={section}
+                onChange={(e) => setSection(e.target.value)}
+                className="Tadmin_select"
+              >
+                <option value="">Selecciona sección…</option>
+                {SECTION_OPTIONS.map((opt) => (
+                  <option key={opt} value={opt}>
+                    {opt}
+                  </option>
+                ))}
+              </Form.Select>
+            </Form.Group>
+
+            <Form.Group controlId="formFile" className="Tadmin_field">
+              <Form.Label className="Tadmin_label">Imagen</Form.Label>
+              <Form.Control
+                type="file"
+                onChange={handleImageChange}
+                className="Tadmin_inputFile"
+              />
+              {image && (
+                <div className="Tadmin_preview">
+                  <img
+                    src={URL.createObjectURL(image)}
+                    alt="preview"
+                    className="Tadmin_previewImg"
+                  />
+                </div>
+              )}
+            </Form.Group>
+
+            <Button
+              className="Tadmin_btnPrimary"
+              variant="secondary"
+              onClick={handleUpload}
+              disabled={progress > 0 && progress < 100}
+            >
+              Subir
+            </Button>
+            {progress > 0 && (
+              <ProgressBar
+                now={progress}
+                label={`${progress}%`}
+                className="Tadmin_progress"
+              />
+            )}
+          </Form>
+        </div>
+      </div>
+
+      {/* Listado */}
+      <div className="Tadmin_listHeader">
+        <h3 className="Tadmin_listTitle">Trabajos subidos</h3>
+      </div>
+
+      <div className="Tadmin_grid">
+        {currentTrabajos.map((trabajo) => (
+          <div className="Tadmin_item" key={trabajo.id}>
+            <div className="Tadmin_thumb">
               <img
                 src={trabajo.imgSrc}
                 alt={trabajo.title}
-                className="trabajo-img"
+                className="Tadmin_img"
               />
-              <div className="trabajo-title">{trabajo.title}</div>
-              <div className="trabajo-actions">
-                <Button variant="warning" onClick={() => handleUpdate(trabajo)}>
+            </div>
+            <div className="Tadmin_itemBody">
+              <div className="Tadmin_itemTitle" title={trabajo.title}>
+                {trabajo.title || "Sin título"}
+                {trabajo.section ? (
+                  <span className="Tadmin_tag">{trabajo.section}</span>
+                ) : null}
+              </div>
+              <div className="Tadmin_actions">
+                <Button
+                  variant="warning"
+                  onClick={() => handleUpdate(trabajo)}
+                  className="Tadmin_btnGhost"
+                >
                   Actualizar
                 </Button>
                 <Button
                   variant="danger"
                   onClick={() => handleDelete(trabajo.id, trabajo.imgSrc)}
+                  className="Tadmin_btnGhostDanger"
                 >
                   Eliminar
                 </Button>
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
 
-      <div className="pagination mt-4">
+      {/* Paginación */}
+      <div className="Tadmin_pagination">
         {Array.from({ length: totalPages }, (_, index) => (
           <Button
             key={index + 1}
             variant={currentPage === index + 1 ? "primary" : "light"}
             onClick={() => handlePageChange(index + 1)}
-            className="mx-1"
+            className={`Tadmin_pageBtn ${
+              currentPage === index + 1 ? "is-active" : ""
+            }`}
           >
             {index + 1}
           </Button>
         ))}
       </div>
 
+      {/* Modal eliminar */}
       <Modal show={showModalDelete} onHide={() => setShowModalDelete(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Confirmar Eliminación</Modal.Title>
@@ -251,21 +318,46 @@ const AdminTrabajos = () => {
         </Modal.Footer>
       </Modal>
 
+      {/* Modal actualizar */}
       <Modal show={showModalUpdate} onHide={() => setShowModalUpdate(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Actualizar Trabajo</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form.Group controlId="formUpdateTitle">
+          <Form.Group controlId="formUpdateTitle" className="Tadmin_field">
+            <Form.Label className="Tadmin_label">Título</Form.Label>
             <Form.Control
               type="text"
               placeholder="Ingresa nuevo título"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              className="Tadmin_input"
             />
           </Form.Group>
-          <Form.Group controlId="formUpdateFile">
-            <Form.Control type="file" onChange={handleImageChange} />
+
+          <Form.Group controlId="formUpdateSection" className="Tadmin_field">
+            <Form.Label className="Tadmin_label">Sección</Form.Label>
+            <Form.Select
+              value={section}
+              onChange={(e) => setSection(e.target.value)}
+              className="Tadmin_select"
+            >
+              <option value="">Selecciona sección…</option>
+              {SECTION_OPTIONS.map((opt) => (
+                <option key={opt} value={opt}>
+                  {opt}
+                </option>
+              ))}
+            </Form.Select>
+          </Form.Group>
+
+          <Form.Group controlId="formUpdateFile" className="Tadmin_field">
+            <Form.Label className="Tadmin_label">Nueva imagen</Form.Label>
+            <Form.Control
+              type="file"
+              onChange={handleImageChange}
+              className="Tadmin_inputFile"
+            />
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
@@ -278,11 +370,13 @@ const AdminTrabajos = () => {
         </Modal.Footer>
       </Modal>
 
+      {/* Toast */}
       <Toast
         onClose={() => setShowToast(false)}
         show={showToast}
         delay={3000}
         autohide
+        className="Tadmin_toast"
       >
         <Toast.Body>{toastMessage}</Toast.Body>
       </Toast>

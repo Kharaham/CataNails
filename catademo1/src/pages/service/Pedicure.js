@@ -3,26 +3,50 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { collection, getDocs } from "firebase/firestore";
-import { Card, Container, Row, Col, Button } from "react-bootstrap";
+import { Card, Container, Row, Col } from "react-bootstrap";
 import { db } from "../../firebase/firebaseServicios";
+
+const currencyCL = new Intl.NumberFormat("es-CL", {
+  style: "currency",
+  currency: "CLP",
+  maximumFractionDigits: 0,
+});
+
+const SafeImg = ({ src, alt }) => {
+  const [ok, setOk] = useState(true);
+  if (!src || !ok) {
+    return <div className="service-card-image placeholder shimmer" aria-hidden="true" />;
+  }
+  return (
+    <Card.Img
+      variant="top"
+      src={src}
+      alt={alt}
+      className="service-card-image"
+      loading="lazy"
+      onError={() => setOk(false)}
+    />
+  );
+};
+
+const Badge = ({ children, tone = "rose" }) => (
+  <span className={`pill pill--${tone}`} role="note">{children}</span>
+);
 
 const Pedicure = () => {
   const navigate = useNavigate();
   const [services, setServices] = useState([]);
   const [selectedServiceId, setSelectedServiceId] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error,   setError]   = useState("");
 
   useEffect(() => {
     const fetchServices = async () => {
       try {
         const servicesCollection = collection(db, "pedicure");
-        const servicesSnapshot = await getDocs(servicesCollection);
-        const servicesList = servicesSnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setServices(servicesList);
+        const snap = await getDocs(servicesCollection);
+        const list = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+        setServices(list);
       } catch (err) {
         console.error("Error fetching services:", err);
         setError("No pudimos cargar los servicios. Intenta nuevamente.");
@@ -34,29 +58,36 @@ const Pedicure = () => {
   }, []);
 
   const goToForm = (service) => {
-    navigate(`/agendar-cita?serviceId=${encodeURIComponent(service.id)}`, {
-      state: { service },
-    });
+    const serviceName  = service.Nombre || service.name || service.service || "";
+    const servicePrice = service.Precio ?? service.price ?? "";
+    navigate(
+      `/agendar-cita?serviceId=${encodeURIComponent(service.id)}&serviceName=${encodeURIComponent(serviceName)}&servicePrice=${encodeURIComponent(servicePrice)}`,
+      { state: { service }, replace: false }
+    );
   };
 
   const handleSelectService = (service) => {
     setSelectedServiceId(service.id);
-    goToForm(service); // navega al formulario con el servicio seleccionado
-  };
-
-  const handleAgendarClick = () => {
-    const service = services.find((s) => s.id === selectedServiceId);
-    if (!service) {
-      alert("Selecciona un servicio para continuar 🙌");
-      return;
-    }
-    goToForm(service);
+    goToForm(service); // navega directo con el servicio seleccionado
   };
 
   if (loading) {
     return (
       <Container className="service-container mt-5">
-        <p className="text-center text-muted">Cargando servicios…</p>
+        <Row className="justify-content-center mt-4">
+          {[...Array(6)].map((_, i) => (
+            <Col key={i} xs={12} sm={6} md={4} lg={3} className="mb-4 d-flex justify-content-center">
+              <div className="service-card service-card--loading">
+                <div className="service-card-image placeholder shimmer" />
+                <div className="card-body">
+                  <div className="sk-line w-75" />
+                  <div className="sk-pill w-50" />
+                  <div className="sk-line w-50" />
+                </div>
+              </div>
+            </Col>
+          ))}
+        </Row>
       </Container>
     );
   }
@@ -73,17 +104,29 @@ const Pedicure = () => {
     <Container className="service-container mt-5">
       <Row className="text-center mt-4">
         <Col>
-          <h2 className="display-4 title">Pedicure</h2>
-          <p className="lead text-muted">
-            Cuida de tus pies con nuestros servicios especiales. Desde pedicuras
-            tradicionales hasta tratamientos completos.
-          </p>
+          <div className="services-header">
+            <h1 className="services-title">Pedicure</h1>
+            <p className="services-subtitle">
+              Cuidado y estética para pies suaves y saludables: limpieza profunda,
+              retiro de durezas, cuidado de cutículas y uñas, más esmaltado clásico
+              o con diseño. Tratamientos hidratantes para una experiencia relajante
+              y resultados duraderos.
+            </p>
+            <div className="services-divider" aria-hidden="true" />
+          </div>
         </Col>
       </Row>
 
       <Row className="justify-content-center mt-4">
         {services.map((service) => {
           const isSelected = selectedServiceId === service.id;
+          const name       = service.Nombre || "Servicio";
+          const tipo       = service.Tipo || "No especificado";
+          const priceNum   = service.Precio ?? service.price ?? null;
+          const priceTxt   = priceNum !== null ? currencyCL.format(priceNum) : "—";
+          const isPromo    = Boolean(service.Promo || service.promo);
+          const isNew      = Boolean(service.Nuevo || service.nuevo);
+
           return (
             <Col
               key={service.id}
@@ -94,35 +137,31 @@ const Pedicure = () => {
               className="mb-4 d-flex justify-content-center"
             >
               <Card
-                className={`service-card shadow-sm ${
-                  isSelected ? "service-card--selected" : ""
-                }`}
+                className={`service-card ${isSelected ? "service-card--selected" : ""}`}
                 role="button"
                 tabIndex={0}
                 onClick={() => handleSelectService(service)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ")
-                    handleSelectService(service);
-                }}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") handleSelectService(service); }}
+                aria-pressed={isSelected}
               >
-                {service.ImagenUrl && (
-                  <Card.Img
-                    variant="top"
-                    src={service.ImagenUrl}
-                    alt={service.Nombre}
-                    className="service-card-image"
-                  />
-                )}
-                <Card.Body className="d-flex flex-column justify-content-between">
-                  <Card.Title className="text-center">
-                    {service.Nombre}
-                  </Card.Title>
-                  <Card.Subtitle className="mb-2 text-muted text-center">
-                    {service.Tipo || "No especificado"}
-                  </Card.Subtitle>
-                  <Card.Text className="text-center">
-                    <strong>Precio:</strong> ${service.Precio}
-                  </Card.Text>
+                <div className="ribbon-wrap">
+                  {isPromo && <div className="ribbon">Promo</div>}
+                </div>
+
+                <SafeImg src={service.ImagenUrl} alt={name} />
+
+                <Card.Body className="d-flex flex-column">
+                  <Card.Title className="text-center">{name}</Card.Title>
+
+                  <div className="text-center mb-2">
+                    <Badge tone="rose">{tipo}</Badge>
+                    {isNew && <Badge tone="violet">Nuevo</Badge>}
+                  </div>
+
+                  <div className="service-card-price text-center" aria-label={`Precio ${priceTxt}`}>
+                    <span className="price-label">Desde</span>
+                    <span className="price-amount">{priceTxt}</span>
+                  </div>
                 </Card.Body>
               </Card>
             </Col>

@@ -14,7 +14,6 @@ import About from "./pages/home/about";
 import "./App.css";
 import "font-awesome/css/font-awesome.min.css";
 
-
 import {
   BrowserRouter as Router,
   Route,
@@ -38,6 +37,9 @@ import AdminTrabajos from "./components/admin/AdminTrabajos";
 import BankBalance from "./components/admin/BankBalance";
 import AdminContactComments from "./components/admin/AdminContactComments";
 import ReportsView from "./components/admin/ReportsView";
+import BookNow from "./components/agenda/BookNow";
+import TryOnNailsPhoto from "./components/TryOnNailsPhoto";
+import SkinToneAnalyzer from "./components/SkinToneAnalyzer";
 
 const auth = getAuth(firebaseApp);
 const firestore = getFirestore(firebaseApp);
@@ -105,6 +107,7 @@ function App() {
           <Route path="/botox-capilar" element={<BotoxCapilar />} />
           <Route path="/agendar-cita" element={<ScheduleAppointmentView />} />
           <Route path="/perfil" element={<Profile user={user} />} />
+          <Route path="/reservar" element={<BookNow />} />
 
           {user?.rol === "admin" && (
             <Route
@@ -118,6 +121,7 @@ function App() {
                 </div>
               }
             >
+              {/* RUTAS HIJAS RELATIVAS */}
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="users" element={<UserManagement />} />
               <Route path="appointments" element={<CitaList />} />
@@ -126,11 +130,12 @@ function App() {
               <Route path="reviews" element={<ReviewManagement />} />
               <Route path="trabajos-realizados" element={<AdminTrabajos />} />
               <Route path="bank-balance" element={<BankBalance />} />
-              <Route path="/admin/reports" element={<ReportsView />} />
-              <Route
-                path="contact-comments"
-                element={<AdminContactComments />}
-              />
+              <Route path="reports" element={<ReportsView />} />
+              <Route path="try-on" element={<TryOnNailsPhoto />} />
+              <Route path="skin-analyzer" element={<SkinToneAnalyzer />} />
+              <Route path="contact-comments" element={<AdminContactComments />} />
+              {/* Opcional: ruta índice para /admin */}
+              <Route index element={<Navigate to="dashboard" replace />} />
             </Route>
           )}
 
@@ -140,9 +145,9 @@ function App() {
             path="*"
             element={
               user?.rol === "admin" ? (
-                <Navigate to="/admin/dashboard" />
+                <Navigate to="/admin/dashboard" replace />
               ) : (
-                <Navigate to="/" />
+                <Navigate to="/" replace />
               )
             }
           />

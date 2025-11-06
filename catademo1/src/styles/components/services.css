@@ -1,50 +1,307 @@
-.serviciosCN_container { max-width: 1100px; }
+/* ====== Variables & base ====== */
+:root {
+  --rose-50: #fff1f5;
+  --rose-500: #e11d48;
+  --rose-700: #9f1239;
+  --ink-900: #111827;
+  --ink-700: #374151;
+  --ink-600: #4b5563;
+  --surface: #ffffff;
+  --line: #eef2f7;
+  --line-soft: #f3f4f6;
 
-/* grid */
-.serviciosCN_grid {
-  /* si no usas las columnas de Bootstrap, puedes usar: display: grid; grid-template-columns: repeat(auto-fill, minmax(250px,1fr)); gap: 16px; */
+  --radius: 16px;
+  --shadow: 0 10px 24px rgba(17, 24, 39, 0.07);
+  --shadow-hover: 0 14px 32px rgba(17, 24, 39, 0.12);
 }
 
-/* card */
-.serviciosCN_card {
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
+/* ====== Layout ====== */
+.service-container {
+  max-width: 1140px;
+}
+
+/* Gutters más pequeños para compactar el grid */
+.service-container .row {
+  --bs-gutter-x: 0.75rem;
+  --bs-gutter-y: 0.75rem;
+}
+.service-container .mb-4 {
+  margin-bottom: 0.25rem !important;
+}
+
+/* ====== Header ====== */
+.services-header {
+  max-width: 860px;
+  margin: 0 auto 1.6rem;
+  padding: 0 1rem;
+}
+.services-title {
+  font-family: "Poppins", sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.8rem, 3.6vw, 2.3rem);
+  letter-spacing: -0.4px;
+  margin-bottom: 0.6rem;
+  background: linear-gradient(90deg, var(--rose-500), var(--rose-700));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.services-subtitle {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-size: 1.02rem;
+  color: var(--ink-600);
+  line-height: 1.6;
+  margin: 0 auto 1rem;
+  max-width: 720px;
+  letter-spacing: 0.15px;
+  text-align: center;
+}
+.services-divider {
+  width: 64px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--rose-500), var(--rose-700));
+  border-radius: 999px;
+  margin: 0.2rem auto 0;
+}
+
+/* ====== Cards (compactas) ====== */
+.service-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
   overflow: hidden;
-  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
-}
-.serviciosCN_card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 24px rgba(0,0,0,.08);
-  border-color: #f3accd;
-}
-.serviciosCN_cardSelected {
-  outline: 2px solid #f3accd;
-  box-shadow: 0 12px 26px rgba(233,30,99,.12);
-}
-
-.serviciosCN_cardImage {
-  width: 100%;
-  height: 160px;
-  object-fit: cover;
-}
-
-.serviciosCN_cardBody { padding: 12px; }
-.serviciosCN_cardTitle { font-size: 1.1rem; }
-.serviciosCN_cardSubtitle { font-size: .95rem; }
-.serviciosCN_cardPrice { font-weight: 500; }
-
-.serviciosCN_btnPrimary {
-  background: linear-gradient(90deg, #e91e63, #ff79c6);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 12px;
-  font-weight: 700;
+  transition: transform 0.16s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   cursor: pointer;
+  will-change: transform;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 320px; /* 🔥 antes 420px */
+  box-shadow: var(--shadow);
 }
-.serviciosCN_btnPrimary:hover {
+.service-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+  border-color: #ead7e9;
+}
+.service-card--selected {
+  outline: 2px solid #f3accd;
+  box-shadow: 0 18px 40px rgba(233, 30, 99, 0.14);
+}
+
+/* Ribbon (promo) */
+.ribbon-wrap {
+  position: relative;
+}
+.ribbon {
+  position: absolute;
+  top: 8px;
+  left: -8px;
+  z-index: 2;
+  background: linear-gradient(90deg, var(--rose-500), var(--rose-700));
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.72rem;
+  padding: 0.3rem 0.6rem;
+  border-top-right-radius: 999px;
+  border-bottom-right-radius: 999px;
+  box-shadow: 0 6px 18px rgba(225, 29, 72, 0.2);
+}
+
+/* Imagen más “bajita” para compactar */
+.service-card-image {
+  width: 100%;
+  aspect-ratio: 16/9; /* 🔥 más corta que 16/10 o 4/3 */
+  object-fit: cover;
+  display: block;
+  transition: transform 0.45s ease;
+  border-bottom: 1px solid var(--line-soft);
+}
+.service-card:hover .service-card-image {
+  transform: scale(1.02);
+}
+
+/* Placeholder */
+.service-card-image.placeholder {
+  background: linear-gradient(135deg, #fff8fb, #ffe9f0);
+}
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.55),
+    transparent
+  );
+  transform: translateX(-100%);
+  animation: shimmer 1.4s infinite;
+}
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* ====== Cuerpo en GRID (alineación perfecta y compacta) ====== */
+.service-card .card-body {
+  padding: 0.75rem 0.9rem 0.9rem;
+  display: grid !important; /* 🔥 fuerza sobre .d-flex de Bootstrap */
+  grid-template-rows: 40px 25px 1fr 10px; /* 🔥 Título / Tipo / flex / Precio */
+  row-gap: 0.25rem;
+}
+
+/* Título (2 líneas máx) */
+.service-card .card-title {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-size: 1.02rem;
+  color: var(--ink-900);
+  margin: 0;
+  text-align: center;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.22;
+}
+
+/* Fila “Tipo” (pills o subtitle) */
+.service-card .card-subtitle {
+  margin: 0;
+  color: #9f1239;
+  opacity: 0.92;
+  font-size: 0.86rem;
+}
+.service-card .card-body > .text-center.mb-2,
+.service-card .card-body > .card-subtitle,
+.service-card .pill {
+  min-height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+
+/* Pills */
+.pill {
+  display: inline-flex;
+  padding: 0.22rem 0.54rem;
+  border-radius: 999px;
+  background: var(--rose-50);
+  color: var(--rose-700);
+  font-weight: 700;
+  font-size: 0.78rem;
+  line-height: 1;
+  border: 1px solid #ffd0dc;
+}
+.pill--violet {
+  background: #f5f3ff;
+  color: #5b21b6;
+  border-color: #e9e5ff;
+}
+
+/* Precio (abajo siempre) */
+.service-card-price {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-top: auto;
+  min-height: 32px;
+}
+.price-label {
+  color: #6b7280;
+  font-weight: 700;
+  font-size: 0.88rem;
+  margin: 0;
+}
+.price-amount {
+  font-weight: 800;
+  letter-spacing: 0.18px;
+  margin: 0;
+  background: linear-gradient(90deg, var(--rose-500), var(--rose-700));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 1.04rem;
+}
+
+/* Footer (por si vuelves a usar botones) */
+.service-card-footer {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+}
+.btn-ghost {
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink-900);
+  border-radius: 999px;
+  padding: 0.45rem 0.8rem;
+  font-weight: 700;
+}
+.btn-ghost:hover {
+  border-color: #e9d5e8;
+  background: #fff7fb;
+}
+.btn-book {
+  border: none;
+  border-radius: 999px;
+  padding: 0.46rem 0.9rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, var(--rose-500), var(--rose-700));
+}
+.btn-book:hover {
   filter: brightness(1.05);
 }
 
-.serviciosCN_title { color: #222; }
+/* Focus accesible */
+.service-card:focus-visible {
+  outline: 3px solid #f3accd;
+  outline-offset: 2px;
+}
+
+/* Skeleton (loading) */
+.service-card--loading {
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  box-shadow: none;
+  transform: none;
+  cursor: default;
+}
+.sk-line {
+  height: 12px;
+  background: #f1f5f9;
+  border-radius: 8px;
+  margin: 0.4rem 0;
+}
+.sk-pill {
+  height: 22px;
+  background: #f1f5f9;
+  border-radius: 999px;
+  margin: 0.4rem 0;
+}
+.sk-btn {
+  height: 34px;
+  background: #f1f5f9;
+  border-radius: 999px;
+  margin-top: 0.5rem;
+}
+
+/* Responsive */
+@media (max-width: 576px) {
+  .service-card .card-title {
+    font-size: 0.98rem;
+  }
+  .service-card-image {
+    aspect-ratio: 16/10;
+  } /* un pelín más alta en móvil */
+}

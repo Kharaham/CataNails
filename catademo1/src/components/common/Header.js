@@ -29,8 +29,7 @@ const Header = ({ user }) => {
     if (window.innerWidth <= 768) setHeaderC_isCollapsed(true);
   };
 
-  const headerC_toggle = () =>
-    setHeaderC_isCollapsed((v) => !v);
+  const headerC_toggle = () => setHeaderC_isCollapsed((v) => !v);
 
   return (
     <header className="headerC_root" role="banner">

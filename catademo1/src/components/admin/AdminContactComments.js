@@ -95,7 +95,6 @@ const AdminContactComments = () => {
         }
       );
   };
-
   return (
     <div className="contact-comments-container">
       <ToastContainer />

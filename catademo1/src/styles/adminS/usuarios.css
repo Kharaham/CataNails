@@ -1,144 +1,181 @@
+/* src/styles/adminS/usuarios.css */
+
+/* Layout general */
 .user-management-container {
-  width: 90%;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  --radius: 16px;
+  --shadow: 0 6px 24px rgba(0,0,0,0.06);
+  --soft: #f7f8fa;
+  --line: #e9edf3;
+  --muted: #6c757d;
+  --primary-soft: #eef4ff;
 }
 
-.user-management-table {
+.user-management-title {
+  font-weight: 700;
+}
+
+.user-management-kpis .badge {
+  padding: 0.5rem 0.75rem;
+  border-radius: 999px;
+}
+
+.bg-primary-soft {
+  background: var(--primary-soft);
+  color: #3b5bdb;
+}
+
+.user-management-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.user-management-card .card-header {
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+}
+
+/* Tabla */
+.user-management-table-wrapper {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0 8px;
-  font-size: 0.9rem;
-  background-color: transparent;
 }
 
-.user-management-table th {
-  background-color: #e91e63;
-  color: #fff;
-  padding: 12px;
-  text-align: center;
+.user-management-table thead th {
+  background: #fafbff;
   font-weight: 600;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+  border-bottom: 1px solid var(--line);
 }
 
-.user-management-table td {
-  background-color: #ffffff;
-  padding: 12px;
-  text-align: center;
-  border: none;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+.user-management-table tbody tr + tr td {
+  border-top: 1px solid #f2f4f8;
 }
 
-.user-management-table tr:hover {
-  transform: scale(1.01);
+.user-management-table td,
+.user-management-table th {
+  vertical-align: middle;
 }
 
-.btn-increment {
-  background-color: #28a745;
-  color: #ffffff;
-  border: none;
-  padding: 6px 12px;
-  font-size: 0.8rem;
-  font-weight: bold;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: background-color 0.3s, transform 0.2s;
-  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+.user-management-table .row-active {
+  background: #f6faff;
 }
 
-.btn-increment:hover {
-  background-color: #218838;
-  transform: scale(1.05);
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+.user-management-table .btn {
+  min-width: 92px;
 }
 
-.btn-increment:active {
-  background-color: #1e7e34;
-  transform: scale(0.95);
+/* Skeletons */
+.user-skeleton-row .skl {
+  height: 12px;
+  background: linear-gradient(90deg, #eceff4 0%, #f7f9fc 50%, #eceff4 100%);
+  background-size: 200% 100%;
+  animation: skl 1.2s ease-in-out infinite;
+  border-radius: 6px;
+}
+@keyframes skl {
+  0% { background-position: 0% 0; }
+  100% { background-position: 200% 0; }
 }
 
-.btn-delete {
-  background-color: #dc3545;
-  color: #fff;
-  border: none;
-  padding: 6px 12px;
-  font-size: 0.8rem;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
+/* Badges suaves (compatibles con Bootstrap 5.3) */
+.bg-success-subtle { background: #eaf7ef !important; color: #1e7e34 !important; }
+.bg-warning-subtle { background: #fff6e6 !important; color: #ad6800 !important; }
+.bg-info-subtle    { background: #e8f6ff !important; color: #0c63e4 !important; }
+.bg-primary-subtle { background: #eef4ff !important; color: #3b5bdb !important; }
+.bg-secondary-subtle { background: #f1f3f5 !important; color: #495057 !important; }
+
+/* Controles de lista */
+.user-list-root .user-list-controls {
+  border-bottom: 1px solid var(--line);
+  background: #fff;
 }
 
-.btn-delete:hover {
-  background-color: #c82333;
+/* Tabs perfil */
+.user-tabs {
+  display: inline-flex;
+  background: var(--soft);
+  padding: 6px;
+  border-radius: 12px;
+  gap: 6px;
+}
+.user-tab {
+  border: 0;
+  background: transparent;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-weight: 600;
+  color: #495057;
+}
+.user-tab.active {
+  background: #fff;
+  box-shadow: var(--shadow);
 }
 
-.user-management-table tr:nth-child(even) td {
-  background-color: #f2f6fc;
+/* Cards de perfil */
+.user-card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 12px;
 }
-
-@media (max-width: 768px) {
-  .user-management-container {
-    padding: 15px;
-    width: 100%;
-  }
-
-  .user-management-table {
-    font-size: 0.8rem;
-  }
-
-  .user-management-table th,
-  .user-management-table td {
-    padding: 8px;
-  }
-}
-
 @media (max-width: 576px) {
-  .user-management-container {
-    padding: 10px;
-    width: 100%;
-  }
+  .user-card-grid { grid-template-columns: 1fr; }
+}
 
-  .user-management-table,
-  .user-management-table thead,
-  .user-management-table tbody,
-  .user-management-table th,
-  .user-management-table td,
-  .user-management-table tr {
-    display: block;
-    width: 100%;
-  }
+.user-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+}
+.user-card-label {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.user-card-value {
+  font-weight: 600;
+}
 
-  .user-management-table tr {
-    margin-bottom: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  }
+/* Citas */
+.user-appointments .user-appointments-list {
+  border-radius: 12px;
+  overflow: hidden;
+}
 
-  .user-management-table th {
-    display: none;
-  }
+.appt-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.appt-item.upcoming {
+  border-left: 4px solid #3b5bdb;
+}
+.appt-item.past {
+  border-left: 4px solid #adb5bd;
+}
 
-  .user-management-table td {
-    text-align: left;
-    padding: 10px;
-    position: relative;
-  }
+.appt-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-weight: 600;
+}
+.appt-when {
+  color: #495057;
+  font-weight: 500;
+}
+.appt-sub {
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+.appt-notes {
+  color: #6c757d;
+}
 
-  .user-management-table td:before {
-    content: attr(data-label);
-    font-weight: bold;
-    width: 50%;
-    display: inline-block;
-    color: #6c757d;
-  }
-
-  .btn-delete {
-    width: 100%;
-    padding: 8px;
-    margin-top: 8px;
-    font-size: 0.9rem;
-  }
+/* Estados vacíos */
+.empty-profile {
+  background: linear-gradient(180deg, #fff, #fafbff);
+  border: 1px dashed var(--line);
+  border-radius: 12px;
 }

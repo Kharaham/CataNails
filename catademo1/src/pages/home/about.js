@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { FaBullseye, FaEye, FaHandsHelping, FaHeart } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
 import { db, auth } from "../../firebase/firebase";
 import {
   addDoc,
@@ -53,11 +52,6 @@ const About = () => {
     return () => unsub();
   }, []);
 
-  const remaining = useMemo(
-    () => Math.max(0, MAX_MSG - (formData.message?.length || 0)),
-    [formData.message]
-  );
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "message" && value.length > MAX_MSG) return;
@@ -99,7 +93,7 @@ const About = () => {
         type: "success",
         text: "¡Mensaje enviado! Te responderemos pronto.",
       });
-      setFormData((p) => ({ ...p, message: "", botField: "" })); // mantenemos name/email prellenados
+      setFormData((p) => ({ ...p, message: "", botField: "" })); // mantenemos name/email
     } catch (err) {
       console.error("Error guardando el mensaje en Firestore:", err);
       setStatus({
@@ -123,10 +117,7 @@ const About = () => {
             studio pensado para realzar tu estilo.
           </p>
           <div className="hero-cta">
-            <a href="/#agenda" className="btn-primary">
-              Agendar ahora
-            </a>
-            <a href="/trabajos-realizados" className="btn-ghost">
+            <a href="/trabajos-realizados" className="btn-primary">
               Ver trabajos
             </a>
           </div>
@@ -138,7 +129,7 @@ const About = () => {
       <section className="feature-rows container">
         {/* FILA 1: 2 cards + foto */}
         <div className="feature-row">
-          <article className="feature-card">
+          <article className="feature-card tidy feature-card--centered">
             <div className="card-icon">📌</div>
             <h3>Nuestra Misión</h3>
             <p>
@@ -147,7 +138,7 @@ const About = () => {
             </p>
           </article>
 
-          <article className="feature-card">
+          <article className="feature-card tidy feature-card--centered">
             <div className="card-icon">👁️</div>
             <h3>Nuestra Visión</h3>
             <p>
@@ -156,7 +147,7 @@ const About = () => {
             </p>
           </article>
 
-          <figure className="feature-photo">
+          <figure className="feature-photo tidy">
             <img src={manos1} alt="CataaNails estudio" />
             <figcaption>Espacio cómodo y seguro</figcaption>
           </figure>
@@ -169,31 +160,26 @@ const About = () => {
             <figcaption>Materiales de primera</figcaption>
           </figure>
 
-<article className="feature-card">
-  <div className="card-icon">🤝</div>
-  <h3>Valores</h3>
-  <ul className="values-list clean">
-    <li>
-      <span className="hi-icon">✓</span>
-      <strong>Calidad:</strong> excelencia en cada servicio.
-    </li>
-    <li>
-      <span className="hi-icon">✓</span>
-      <strong>Confianza:</strong> relaciones a largo plazo.
-    </li>
-    <li>
-      <span className="hi-icon">✓</span>
-      <strong>Innovación:</strong> técnicas actuales.
-    </li>
-    <li>
-      <span className="hi-icon">✓</span>
-      <strong>Sostenibilidad:</strong> prácticas responsables.
-    </li>
-  </ul>
-</article>
+          <article className="feature-card tidy feature-card--centered">
+            <div className="card-icon">🤝</div>
+            <h3>Valores</h3>
+            <ul className="values-list">
+              <li>
+                <strong>Calidad:</strong> excelencia en cada servicio.
+              </li>
+              <li>
+                <strong>Confianza:</strong> relaciones a largo plazo.
+              </li>
+              <li>
+                <strong>Innovación:</strong> técnicas actuales.
+              </li>
+              <li>
+                <strong>Sostenibilidad:</strong> prácticas responsables.
+              </li>
+            </ul>
+          </article>
 
-
-          <article className="feature-card">
+          <article className="feature-card tidy">
             <div className="card-icon">💗</div>
             <h3>Conócenos</h3>
             <p>
@@ -204,7 +190,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* MÉTRICAS (ejemplos) */}
+      {/* MÉTRICAS */}
       <div className="container metrics">
         <div className="metric">
           <span className="metric-value">+450</span>
@@ -236,7 +222,6 @@ const About = () => {
               capilares y tendencias modernas.
             </p>
 
-            {/* Highlights sin puntos, tipo “chip/check” */}
             <ul className="highlights clean">
               <li>
                 <span className="hi-icon">✓</span>
@@ -271,6 +256,17 @@ const About = () => {
           )}
 
           <form onSubmit={handleSubmit} className="contact-form" noValidate>
+            {/* Honeypot real para bots */}
+            <input
+              type="text"
+              name="botField"
+              value={formData.botField}
+              onChange={handleChange}
+              className="hp"
+              tabIndex="-1"
+              autoComplete="off"
+            />
+
             <div className="form-row">
               <input
                 type="text"

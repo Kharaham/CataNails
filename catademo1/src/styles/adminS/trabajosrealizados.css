@@ -1,136 +1,245 @@
-.admin-trabajos-container {
+/* ====== Tema base admin ====== */
+:root {
+  --ta-bg: #ffffff;
+  --ta-border: #e5e7eb;
+  --ta-ink: #111827;
+  --ta-muted: #6b7280;
+  --ta-primary: #e11d48;
+  --ta-primary-weak: #fde7ef;
+  --ta-radius: 14px;
+  --ta-gap: 14px;
+  --ta-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+  --ta-shadow-lg: 0 16px 36px rgba(0, 0, 0, 0.1);
+}
+
+/* ====== Layout general ====== */
+.Tadmin_container {
   width: 100%;
   padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 0;
-  box-shadow: none;
+  background: #f7f7f8;
 }
 
-h2,
-h3 {
-  color: #333;
-  font-weight: 600;
-}
-
-.upload-section {
-  margin-bottom: 30px;
-}
-
-.upload-section .form-control {
-  margin-bottom: 15px;
-}
-
-.upload-section button {
-  width: 100%;
-}
-
-.trabajos-list {
-  margin-top: 30px;
-}
-
-.trabajos-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
-}
-
-.trabajo-item {
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 10px;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.trabajo-item:hover {
-  transform: scale(1.02);
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-}
-
-.trabajo-title {
-  font-size: 16px;
+.Tadmin_header {
+  max-width: 980px;
+  margin: 0 auto 16px;
   text-align: center;
-  color: #333;
-  margin: 10px 0;
+}
+.Tadmin_title {
+  font-weight: 800;
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+  margin: 0;
+  color: var(--ta-ink);
+}
+.Tadmin_subtitle {
+  margin: 6px 0 0;
+  color: var(--ta-muted);
 }
 
-.trabajo-actions {
-  display: flex;
-  justify-content: space-between;
+/* ====== Card de carga ====== */
+.Tadmin_card {
+  max-width: 980px;
+  margin: 0 auto 18px;
+  background: var(--ta-bg);
+  border: 1px solid var(--ta-border);
+  border-radius: var(--ta-radius);
+  box-shadow: var(--ta-shadow);
+  overflow: hidden;
+}
+.Tadmin_cardHeader {
+  padding: 12px 16px;
+  font-weight: 700;
+  color: var(--ta-ink);
+  border-bottom: 1px solid var(--ta-border);
+  background: linear-gradient(180deg, #fff, #fafafa);
+}
+.Tadmin_cardBody {
+  padding: 16px;
 }
 
-.progress {
+/* ====== Campos ====== */
+.Tadmin_field {
+  margin-bottom: 12px;
+}
+.Tadmin_label {
+  font-weight: 600;
+  color: var(--ta-ink);
+  margin-bottom: 6px;
+  display: inline-block;
+}
+.Tadmin_input,
+.Tadmin_select,
+.Tadmin_inputFile {
+  border-radius: 10px !important;
+  border: 1px solid var(--ta-border) !important;
+  box-shadow: none !important;
+}
+.Tadmin_input:focus,
+.Tadmin_select:focus,
+.Tadmin_inputFile:focus {
+  border-color: #f7c8d5 !important;
+  box-shadow: 0 0 0 3px rgba(225, 17, 72, 0.15) !important;
+}
+
+/* Preview de imagen */
+.Tadmin_preview {
   margin-top: 10px;
+  border: 1px dashed var(--ta-border);
+  border-radius: 12px;
+  padding: 8px;
+  background: #fafafa;
 }
-
-.trabajo-img {
+.Tadmin_previewImg {
   width: 100%;
-  height: 120px;
+  max-height: 240px;
   object-fit: cover;
-  margin-bottom: 10px;
+  border-radius: 8px;
 }
 
-.pagination {
+/* Botón principal subir */
+.Tadmin_btnPrimary {
+  background-color: var(--ta-primary) !important;
+  border: none !important;
+  width: 100%;
+  font-weight: 700;
+}
+.Tadmin_btnPrimary:hover {
+  filter: brightness(0.95);
+}
+.Tadmin_progress {
+  margin-top: 8px;
+}
+
+/* ====== Listado ====== */
+.Tadmin_listHeader {
+  max-width: 980px;
+  margin: 18px auto 8px;
+}
+.Tadmin_listTitle {
+  font-weight: 800;
+  color: var(--ta-ink);
+  margin: 0;
+}
+
+/* Grid responsivo */
+.Tadmin_grid {
+  max-width: 980px;
+  margin: 0 auto;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+@media (max-width: 1100px) {
+  .Tadmin_grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 720px) {
+  .Tadmin_grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 520px) {
+  .Tadmin_grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Tarjeta */
+.Tadmin_item {
+  background: var(--ta-bg);
+  border: 1px solid var(--ta-border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+.Tadmin_item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--ta-shadow);
+}
+
+/* Imagen */
+.Tadmin_thumb {
+  aspect-ratio: 4 / 3;
+  background: #f3f4f6;
+}
+.Tadmin_img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Cuerpo tarjeta */
+.Tadmin_itemBody {
+  padding: 10px;
+}
+.Tadmin_itemTitle {
+  font-weight: 700;
+  color: var(--ta-ink);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.Tadmin_tag {
+  background: var(--ta-primary-weak);
+  color: #9f1239;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+/* Acciones */
+.Tadmin_actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+.Tadmin_btnGhost {
+  background: #ffffff !important;
+  border: 1px solid var(--ta-border) !important;
+  color: #6b7280 !important;
+  font-weight: 700 !important;
+}
+.Tadmin_btnGhost:hover {
+  background: #f7f7f9 !important;
+}
+.Tadmin_btnGhostDanger {
+  background: #fff5f5 !important;
+  border: 1px solid #fecaca !important;
+  color: #b91c1c !important;
+  font-weight: 700 !important;
+}
+.Tadmin_btnGhostDanger:hover {
+  background: #fee2e2 !important;
+}
+
+/* Paginación */
+.Tadmin_pagination {
+  max-width: 980px;
+  margin: 14px auto 0;
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  gap: 6px;
+}
+.Tadmin_pageBtn.is-active {
+  background: var(--ta-ink) !important;
+  color: #fff !important;
+  border-color: var(--ta-ink) !important;
 }
 
-.pagination .btn {
-  margin: 0 5px;
-}
-
-.btn-subir {
-  background-color: #e91e63;
-}
-
-.btn-subir:hover {
-  transform: scale(1.02);
-  background-color: #e91e63;
-  border-bottom-color: 1px white;
-  color: white;
-}
-
-@media (max-width: 768px) {
-  .trabajos-grid {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 15px;
-  }
-
-  .trabajo-title {
-    font-size: 14px;
-  }
-
-  .trabajo-img {
-    height: 100px;
-  }
-}
-
-@media (max-width: 576px) {
-  .trabajos-grid {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-
-  .trabajo-item {
-    padding: 8px;
-  }
-
-  .trabajo-title {
-    font-size: 13px;
-  }
-
-  .trabajo-img {
-    height: 80px;
-  }
-
-  .btn-subir {
-    width: 100%;
-    padding: 8px;
-    font-size: 0.9rem;
-  }
+/* Toast */
+.Tadmin_toast {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 9999;
+  box-shadow: var(--ta-shadow);
 }
