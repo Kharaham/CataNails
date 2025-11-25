@@ -13,6 +13,7 @@ import Profile from "./components/client/Profile";
 import About from "./pages/home/about";
 import "./App.css";
 import "font-awesome/css/font-awesome.min.css";
+import ChatBot from 'react-chatbotify'
 
 import {
   BrowserRouter as Router,
@@ -94,6 +95,7 @@ function App() {
 
   return (
     <Router>
+    <ChatBot/>
       <div className="App">
         <Header user={user} />
 

@@ -445,7 +445,7 @@
 /* Acciones siempre al final */
 .citaAd_cardActions {
   margin-top: auto; /* 🔑 empuja acciones al fondo de la tarjeta */
-  display: grid;
+  display: block;
   grid-template-columns: 1fr auto auto auto;
   gap: 8px;
   align-items: end;
