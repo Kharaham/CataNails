@@ -13,7 +13,7 @@ import Profile from "./components/client/Profile";
 import About from "./pages/home/about";
 import "./App.css";
 import "font-awesome/css/font-awesome.min.css";
-import ChatBot from 'react-chatbotify'
+import ChatBotify from "react-chatbotify";
 
 import {
   BrowserRouter as Router,
@@ -46,6 +46,66 @@ const auth = getAuth(firebaseApp);
 const firestore = getFirestore(firebaseApp);
 
 function App() {
+	const formRef = React.useRef({});
+
+const flow = {
+  start: {
+    message: "¡Hola! 😊 Bienvenida/o a CataNails. ¿Qué servicio te interesa hoy?",
+    options: ["Manicure", "Pedicure", "Alisado Permanente", "Botox Capilar"],
+    chatDisabled: true,
+    clearOptions: true, // <-- evitar duplicado
+    path: "service_info"
+  },
+
+  service_info: {
+    message: (params) => {
+      const service = params.userInput;
+
+      const descriptions = {
+        "Manicure": "La manicure incluye limpieza, limado, cuidado de cutículas y esmaltado. Ideal para lucir manos prolijas y elegantes.",
+        "Pedicure": "La pedicure trabaja pies y uñas: limpieza profunda, remoción de durezas, hidratación y esmaltado.",
+        "Alisado Permanente": "Tratamiento capilar que elimina el frizz y deja tu cabello liso y suave por meses.",
+        "Botox Capilar": "Reparación profunda para devolver brillo, suavidad y salud al cabello dañado."
+      };
+
+      return `${descriptions[service]}\n\nHaz clic abajo para ver más 👇`;
+    },
+
+    component: (params) => {
+      const service = params.userInput;
+
+      const links = {
+        "Manicure": "/manicure",
+        "Pedicure": "/pedicure",
+        "Alisado Permanente": "/alisado-permanente",
+        "Botox Capilar": "/botox-capilar"
+      };
+
+      return (
+        <a
+          href={links[service]}
+          target="_self"
+          style={{
+            marginTop: "10px",
+            padding: "10px 14px",
+            backgroundColor: "#e65fa0",
+            color: "white",
+            borderRadius: "6px",
+            display: "inline-block",
+            textDecoration: "none"
+          }}
+        >
+          Ir a {service}
+        </a>
+      );
+    },
+
+    options: ["Elegir otro servicio"],
+    chatDisabled: true,
+    clearOptions: true, // <-- evitar duplicado
+    path: "start"
+  }
+};
   const [user, setUser] = useState(null);
 
   async function getUserData(uid) {
@@ -95,7 +155,6 @@ function App() {
 
   return (
     <Router>
-    <ChatBot/>
       <div className="App">
         <Header user={user} />
 
@@ -156,6 +215,7 @@ function App() {
         </Routes>
 
         <Footer />
+        <ChatBotify flow={flow} />
       </div>
     </Router>
   );
