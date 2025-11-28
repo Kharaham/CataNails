@@ -637,7 +637,7 @@
   display: flex;
   align-items: center;                 /* centra verticalmente el texto */
   min-height: 44px;                    /* altura cómoda */
-  padding: 8px 8px 8px 44px;           /* espacio para el check */
+  padding: 4px 5px 5px 44px;          /* espacio para el check */
   line-height: 1.6;
   font-size: 0.98rem;
   letter-spacing: .1px;
@@ -647,6 +647,7 @@
   border-radius: 12px;
   box-shadow: 0 6px 12px rgba(0,0,0,.03);
   color: var(--ink-700);
+  flex-direction: column;
 }
 
 /* Check a la izquierda, centrado */
@@ -670,4 +671,9 @@
   color: var(--ink-900);
   font-weight: 800;
   margin-right: 4px;
+}
+.about .feature-card.tidy .values-list strong {
+    color: var(--ink-900);
+    font-weight: 800;
+    margin-left: -42px;
 }
