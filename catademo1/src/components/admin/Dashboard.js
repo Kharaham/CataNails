@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState, useRef } from "react";
 import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
+import { Link } from 'react-router-dom';
 
 import {
   ResponsiveContainer,
@@ -305,31 +306,37 @@ const DashAdmin = () => {
   };
 
   return (
-    <div className="dashC_wrap" data-theme={dashC_theme}>
-      <header className="dashC_header">
-        <div>
-          <h2 className="dashC_title">Panel de Control</h2>
-          <p className="dashC_sub">Resumen de negocio y agenda</p>
-        </div>
-        <div className="dashC_actions">
-          <button
-            className="dashC_btnGhost dashC_themeBtn"
-            onClick={() =>
-              setDashC_theme((t) => (t === "light" ? "dark" : "light"))
-            }
-            title="Cambiar tema"
-          >
-            <FontAwesomeIcon icon={dashC_theme === "dark" ? faSun : faMoon} />
-          </button>
+      <div className="dashC_wrap" data-theme={dashC_theme}>
+        <header className="dashC_header">
+          <div>
+            <h2 className="dashC_title">Panel de Control</h2>
+            <p className="dashC_sub">Resumen de negocio y agenda</p>
+          </div>
 
-          <a href="/#agenda" className="dashC_btnPrimary">
-            Nueva cita
-          </a>
-          <a href="/admin/reports" className="dashC_btnGhost">
-            Ver reportes
-          </a>
-        </div>
-      </header>
+          <div className="dashC_actions">
+            <button
+              className="dashC_btnGhost dashC_themeBtn"
+              onClick={() =>
+                setDashC_theme((t) => (t === "light" ? "dark" : "light"))
+              }
+              title="Cambiar tema"
+            >
+              <FontAwesomeIcon icon={dashC_theme === "dark" ? faSun : faMoon} />
+            </button>
+
+            <Link to="/admin/try-on" className="dashC_btnPrimary">
+              Try-On
+            </Link>
+
+            <Link to="/agendar-cita" className="dashC_btnPrimary">
+              Nueva cita
+            </Link>
+
+            <Link to="/admin/reports" className="dashC_btnGhost">
+              Ver reportes
+            </Link>
+          </div>
+        </header>
 
       {/* KPIs — 8 tarjetas compactas */}
       <section className="dashC_stats">

@@ -15,6 +15,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import { getDownloadURL, ref } from "firebase/storage";
 import { storage } from "../../firebase/firebase";
+import { Link } from "react-router-dom";
 
 const CitasList = () => {
   const [citas, setCitas] = useState([]);
@@ -278,6 +279,13 @@ const CitasList = () => {
               onChange={(e) => handleAmountChange(e, cita.id)}
             />
           </div>
+
+        <Link
+          to={`/admin/try-on?citaId=${cita.id}`}
+          className="btn btn-primary citaAd_btn citaAd_btn--tryon"
+        >
+          Try-On
+        </Link>
 
           <Button
             variant="success"

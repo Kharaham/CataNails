@@ -13,6 +13,7 @@ import Profile from "./components/client/Profile";
 import About from "./pages/home/about";
 import "./App.css";
 import "font-awesome/css/font-awesome.min.css";
+import ChatBotify from "react-chatbotify";
 
 import {
   BrowserRouter as Router,
@@ -45,6 +46,138 @@ const auth = getAuth(firebaseApp);
 const firestore = getFirestore(firebaseApp);
 
 function App() {
+	const formRef = React.useRef({});
+
+const flow = {
+  start: {
+    message: "¡Hola! 😊 Bienvenid@ a CataNails. ¿En qué necesitas ayuda hoy?",
+    options: ["Conoce Nuestros Servicios", "Revisa nuestro Portafolio", "Aprende sobre Nosotros"],
+    chatDisabled: true,
+    clearOptions: true,
+    path: (params) => {
+      const answer = params.userInput;
+
+      if (answer === "Conoce Nuestros Servicios") return "servicios_ver";
+      if (answer === "Revisa nuestro Portafolio") return "portafolio_show";
+      if (answer === "Aprende sobre Nosotros") return "about_show";
+
+      return "start";
+    }
+  },
+
+  servicios_ver: {
+    message: "¿Qué servicio te interesa hoy?",
+    options: ["Manicure", "Pedicure", "Alisado Permanente", "Botox Capilar"],
+    chatDisabled: true,
+    clearOptions: true,
+    path: "service_info"
+  },
+
+  service_info: {
+    message: (params) => {
+      const service = params.userInput;
+
+      const descriptions = {
+        "Manicure": "En nuestro servicio de manicure cuidamos cada detalle de tus manos para que luzcan impecables y saludables. Limpieza de uñas y cutículas, limado y esmaltado con diseños personalizados, más tratamientos que fortalecen tus uñas. Relájate y luce un estilo que refleje tu personalidad.",
+        "Pedicure": "Cuidado y estética para pies suaves y saludables: limpieza profunda, retiro de durezas, cuidado de cutículas y uñas, más esmaltado clásico o con diseño. Tratamientos hidratantes para una experiencia relajante y resultados duraderos.",
+        "Alisado Permanente": "Tratamiento profesional para un cabello liso, suave y brillante por más tiempo. Reduce volumen y frizz para un look sedoso y fácil de peinar, sin calor constante.",
+        "Botox Capilar": "Tratamiento intensivo que repara y nutre el cabello, reduce frizz, sella puntas y devuelve brillo y suavidad. Ideal para cabellos dañados por químicos o calor."
+      };
+
+      return `${descriptions[service]}\n\nHaz clic abajo para ver más 👇`;
+    },
+
+    component: (params) => {
+      const service = params.userInput;
+
+      const links = {
+        "Manicure": "/manicure",
+        "Pedicure": "/pedicure",
+        "Alisado Permanente": "/alisado-permanente",
+        "Botox Capilar": "/botox-capilar"
+      };
+
+      return (
+        <a
+          href={links[service]}
+          target="_self"
+          style={{
+            marginInline: "20px",
+            marginTop: "10px",
+            padding: "10px 14px",
+            backgroundColor: "#e65fa0",
+            color: "white",
+            borderRadius: "6px",
+            display: "inline-block",
+            textDecoration: "none"
+          }}
+        >
+          Ir a {service}
+        </a>
+      );
+    },
+
+    options: ["Volver al Inicio"],
+    chatDisabled: true,
+    clearOptions: true,
+    path: "start"
+  },
+
+  portafolio_show: {
+    message: "¡Perfecto! Aquí puedes ver mis trabajos realizados 👇",
+    component: () => (
+      <a
+        href="/trabajos-realizados"
+        target="_self"
+        style={{
+          marginInline: "20px",
+          marginTop: "10px",
+          padding: "10px 14px",
+          backgroundColor: "#e65fa0",
+          color: "white",
+          borderRadius: "6px",
+          display: "inline-block",
+          textDecoration: "none"
+        }}
+      >
+        Ver Portafolio
+      </a>
+    ),
+    options: ["Volver al Inicio"],
+    chatDisabled: true,
+    clearOptions: true,
+    path: "start"
+  },
+
+  about_show: {
+    message:
+      "Mi misión es ofrecer servicios profesionales con una experiencia de bienestar memorable, usando productos de alta calidad y técnicas seguras. 💗",
+    
+    component: () => (
+      <a
+        href="/about"
+        target="_self"
+        style={{
+          marginInline: "20px",
+          marginTop: "10px",
+          padding: "10px 14px",
+          backgroundColor: "#e65fa0",
+          color: "white",
+          borderRadius: "6px",
+          display: "inline-block",
+          textDecoration: "none"
+        }}
+      >
+        Conocer más sobre mí
+      </a>
+    ),
+
+    options: ["Volver al Inicio"],
+    chatDisabled: true,
+    clearOptions: true,
+    path: "start"
+  }
+};
   const [user, setUser] = useState(null);
 
   async function getUserData(uid) {
@@ -154,6 +287,15 @@ function App() {
         </Routes>
 
         <Footer />
+        <ChatBotify
+  flow={flow}
+settings={{
+  tooltip: {
+    text: "¿En qué te ayudo?"
+  }
+}}
+/>
+
       </div>
     </Router>
   );
