@@ -195,7 +195,8 @@ const UserManagement = () => {
               const list2 = snap2.docs.map((d) => ({ id: d.id, ...d.data() }));
               setSelectedUserAppointments(sortClient(list2));
             },
-            (err2) => console.error("onSnapshot(appointments plain) error:", err2)
+            (err2) =>
+              console.error("onSnapshot(appointments plain) error:", err2)
           );
           appointmentsUnsubsRef.current.push(unsubPlain);
         }
@@ -225,6 +226,20 @@ const UserManagement = () => {
   useEffect(() => {
     fetchUsers();
   }, []);
+  const [userToDelete, setUserToDelete] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const handleAskDelete = (user) => {
+    setUserToDelete(user);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!userToDelete) return;
+    await deleteUser(userToDelete.id);
+    setShowDeleteModal(false);
+    setUserToDelete(null);
+  };
 
   return (
     <div className="user-management-container container-fluid py-3">
@@ -264,7 +279,7 @@ const UserManagement = () => {
                     u.correo || u.email || ""
                   )
                 }
-                onDelete={(u) => deleteUser(u.id)}
+                onDelete={(u) => handleAskDelete(u)}
               />
             </div>
           </div>
@@ -272,7 +287,7 @@ const UserManagement = () => {
 
         {/* Perfil */}
         <div className="col-12 col-lg-5">
-          <div className="card user-management-card h-100">
+          <div className="card user-management-card profile-card h-100">
             <div className="card-header d-flex align-items-center justify-content-between">
               <h6 className="m-0">Perfil de Usuario</h6>
               {selectedUserId && (
@@ -285,11 +300,40 @@ const UserManagement = () => {
               )}
             </div>
             <div className="card-body">
-              <UserForm usuario={selectedUser} citas={selectedUserAppointments} />
+              <UserForm
+                usuario={selectedUser}
+                citas={selectedUserAppointments}
+              />
             </div>
           </div>
         </div>
       </div>
+      {/* MODAL ELIMINAR */}
+      {showDeleteModal && (
+        <div className="modal-backdrop-custom">
+          <div className="modal-custom">
+            <h5 className="modal-title">¿Eliminar usuario?</h5>
+            <p className="modal-text">
+              ¿Estás segura/o que deseas eliminar a{" "}
+              <strong>{userToDelete?.nombre}</strong>? Esta acción no se puede
+              deshacer.
+            </p>
+
+            <div className="modal-actions">
+              <button
+                className="btn btn-secondary"
+                onClick={() => setShowDeleteModal(false)}
+              >
+                Cancelar
+              </button>
+
+              <button className="btn btn-danger" onClick={confirmDelete}>
+                Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

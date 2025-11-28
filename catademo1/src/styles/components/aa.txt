@@ -1,3 +1,4 @@
+/* ================== Tokens / Tema ================== */
 :root {
   --accent: #e11d48;
   --accent-900: #9f1239;
@@ -20,6 +21,8 @@
   --soft: #0f141a;
   --glass: rgba(17, 24, 39, 0.32);
 }
+/* ================== Ampliar ancho general ================== */
+
 .focusIA.v2,
 .ex2-section,
 .servicesX,
@@ -29,6 +32,8 @@
 .foot {
   max-width: 1280px !important;
 }
+/* ======== Centrar el hero-carousel al ampliar el ancho ======== */
+
 html,
 body {
   background: var(--bg);
@@ -606,6 +611,8 @@ body {
     order: 1;
   }
 }
+
+/* ================== Mini carrusel Try-On ================== */
 /* ================== Mini carrusel Try-On ================== */
 .miniC {
   position: absolute;
@@ -976,15 +983,16 @@ body {
     border-color 0.35s ease;
 }
 
+/* Hover premium */
 .sx-card.sx-advanced:hover {
-  transform: none;
-  background: radial-gradient(
-    circle at 30% 20%,
-    color-mix(in srgb, var(--accent) 8%, transparent),
+  transform: translateY(-5px);
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--border) 60%);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--accent) 10%, transparent),
     color-mix(in srgb, var(--soft) 95%, transparent)
   );
-  border-color: color-mix(in srgb, var(--accent) 25%, var(--border) 75%);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
 /* ===== Badge ===== */
@@ -1028,9 +1036,8 @@ body {
   transition: transform 0.5s ease;
 }
 
-/* Sin hover en imagen */
 .sx-card:hover .sx-mini-img img {
-  transform: none;
+  transform: scale(1.08);
 }
 
 /* ===== Icono animado ===== */
@@ -1077,14 +1084,17 @@ body {
 .sx-card.sx-advanced:hover .sx-btn {
   background: color-mix(in srgb, var(--accent) 12%, var(--soft) 80%);
 }
+/* Cards sin botón — ajuste de espaciado */
 .sx-card.sx-advanced {
   padding-bottom: 1.6rem;
 }
 
+/* Más aire debajo del texto */
 .sx-card.sx-advanced p {
   margin-bottom: 0.2rem;
 }
 
+/* Remover estilos del botón si quedara alguno */
 .sx-card .sx-btn {
   display: none !important;
 }
@@ -1219,6 +1229,8 @@ body {
   transform: translateY(-2px);
   box-shadow: 0 12px 28px rgba(17, 24, 39, 0.08);
 }
+
+/* ================== Footer ================== */
 .foot {
   max-width: 1100px;
   margin: 0 auto 2rem;
@@ -1251,6 +1263,7 @@ body {
     grid-template-columns: 1fr;
   }
 }
+/* === FocusIA: limitar tamaño del carrusel (más compacto) === */
 .focusIA.v2 {
   /* tamaño máximo del recuadro de la imagen */
   --mediaSize: clamp(240px, 34vw, 380px); /* puedes subir/bajar 380px */
@@ -1290,6 +1303,7 @@ body {
     aspect-ratio: 1 / 1;
   }
 }
+/* ====== Forzar que todas las imágenes tengan el mismo tamaño ====== */
 
 .ex2-media {
   position: relative;
@@ -1316,7 +1330,9 @@ body {
   display: block;
   transition: transform 0.5s ease;
 }
-
+/* ---------------------------------------------------------
+   MINI PORTAFOLIO
+--------------------------------------------------------- */
 .miniportfolio {
   max-width: 1100px;
   margin: 2rem auto;
@@ -1488,54 +1504,6 @@ body {
   .mp-masonry {
     column-count: 1;
   }
-}
-/* ==========================================================
-   CARRUSEL PRO – Últimos trabajos
-   ========================================================== */
-
-@media (min-width: 768px) {
-  .mp-masonry {
-    display: none !important;
-  }
-}
-
-/* CARRUSEL */
-.mp-carousel {
-  width: 100%;
-  overflow-x: auto;
-  padding-bottom: 10px;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-}
-
-.mp-track {
-  display: flex;
-  gap: 16px;
-  padding: 4px 4px 10px 4px;
-}
-
-.mp-slide {
-  min-width: 78%;
-  max-width: 78%;
-  scroll-snap-align: center;
-  border-radius: 16px;
-  overflow: hidden;
-  position: relative;
-  cursor: pointer;
-  flex-shrink: 0;
-  background: #fff;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  transition: transform 0.25s ease;
-}
-
-.mp-slide:hover {
-  transform: translateY(-4px);
-}
-
-.mp-slide img {
-  width: 100%;
-  height: auto;
-  display: block;
 }
 
 /* ---------------------------------------------------------
@@ -1721,167 +1689,4 @@ body {
   .trust-item span {
     font-size: 0.85rem;
   }
-}
-/* Oculta la galería original en móvil */
-@media (max-width: 767px) {
-  .mp-masonry {
-    display: none !important;
-  }
-}
-/* ============================
-   CARRUSEL MUCHO MÁS PEQUEÑO EN DESKTOP
-   ============================ */
-@media (min-width: 1024px) {
-  .mp-carousel {
-    max-width: 650px; /* ancho total reducido */
-    margin: 0 auto; /* centrar */
-    padding-bottom: 12px;
-  }
-
-  .mp-track {
-    gap: 12px;
-  }
-
-  .mp-slide {
-    min-width: 42%; /* tamaño de cada tarjeta */
-    max-width: 42%;
-    border-radius: 14px;
-  }
-
-  .mp-slide img {
-    height: 260px; /* altura uniforme como las demás imágenes */
-    object-fit: cover; /* recorte limpio */
-  }
-}
-/* ============================================
-   DESKTOP — Carrusel más largo y multi-slides
-   ============================================ */
-@media (min-width: 1024px) {
-  /* Contenedor más largo */
-  .mp-carousel {
-    max-width: 900px; /* antes 650px */
-    margin: 0 auto;
-    padding-bottom: 14px;
-    overflow-x: auto;
-  }
-
-  /* Slides más pequeños para que entren varios */
-  .mp-slide {
-    min-width: 28%; /* antes 42% */
-    max-width: 28%;
-    border-radius: 14px;
-  }
-
-  /* Ajuste visual uniforme */
-  .mp-slide img {
-    height: 240px;
-    object-fit: cover;
-    border-radius: 14px;
-  }
-
-  .mp-track {
-    gap: 14px;
-  }
-}
-
-/* Móvil → se muestra */
-@media (max-width: 767px) {
-  .mp-carousel {
-    display: block !important;
-  }
-}
-
-/* Escritorio → ocultar completamente */
-@media (min-width: 768px) {
-  .mp-carousel,
-  .mp-masonry,
-  .miniportfolio {
-    display: none !important;
-  }
-}
-/* ============================================
-   COLORES — FORMATO 1:1 PERFECTO
-============================================ */
-.csm-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 1rem;
-}
-
-.csm-item {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 0.9rem;
-  padding: 0.6rem;
-  cursor: pointer;
-  text-align: center;
-  transition: transform 0.2s ease, box-shadow 0.25s ease;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* 🔥 CUADRADO PERFECTO 1:1 */
-.csm-img-wrap {
-  width: 100%;
-  aspect-ratio: 1 / 1; /* 👈 clave mágica */
-  overflow: hidden;
-  border-radius: 0.8rem;
-  border: 1px solid var(--border);
-  background: #fff;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* La imagen se ajusta sin deformarse */
-.csm-img-wrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* 👈 TODAS IGUALES */
-  display: block;
-}
-
-.csm-item:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.08);
-}
-
-.csm-name {
-  margin-top: 0.45rem;
-  font-weight: 700;
-  font-size: 0.9rem;
-  color: var(--text);
-}
-
-/* ---------------- Responsivo ---------------- */
-@media (max-width: 900px) {
-  .csm-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (max-width: 600px) {
-  .csm-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-/* --- Mantener todas las imágenes iguales en el carrusel móvil --- */
-.mp-img-wrap {
-  width: 100%;
-  aspect-ratio: 3 / 4; /* 👈 Cambia a 1/1 si quieres cuadradas */
-  border-radius: 14px;
-  overflow: hidden;
-  background: #fff;
-}
-
-.mp-img-wrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* 👈 TODAS SE VEN IGUAL */
-  object-position: center;
-  display: block;
 }

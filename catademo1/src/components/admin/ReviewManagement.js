@@ -44,11 +44,10 @@ const ReviewManagement = () => {
       isVisible: true,
     };
 
-    await addDoc(reviewsCollectionRef, newReviewObj);
-    setReviews((prevReviews) => [
-      ...prevReviews,
-      { ...newReviewObj, id: doc.id },
-    ]);
+    const docRef = await addDoc(reviewsCollectionRef, newReviewObj);
+
+    setReviews((prev) => [...prev, { ...newReviewObj, id: docRef.id }]);
+
     setNewReview("");
     setAuthor("");
     setRating(5);

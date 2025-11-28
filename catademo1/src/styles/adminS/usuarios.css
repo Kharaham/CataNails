@@ -1,158 +1,249 @@
-/* src/styles/adminS/usuarios.css */
-
-/* Layout general */
 .user-management-container {
   --radius: 16px;
-  --shadow: 0 6px 24px rgba(0,0,0,0.06);
-  --soft: #f7f8fa;
-  --line: #e9edf3;
+  --shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
+  --soft: #f9fafc;
+  --line: #eceef3;
   --muted: #6c757d;
-  --primary-soft: #eef4ff;
+
+  /* Paleta rosada CataaNails */
+  --primary: var(--rep-primary, #e91e63);
+  --primary-600: var(--rep-primary-600, #d81b60);
+  --primary-soft: #ffe3ea;
+  --accent: #ffb6c6;
 }
 
 .user-management-title {
   font-weight: 700;
+  color: #3c3c3c;
 }
 
 .user-management-kpis .badge {
   padding: 0.5rem 0.75rem;
   border-radius: 999px;
-}
-
-.bg-primary-soft {
-  background: var(--primary-soft);
-  color: #3b5bdb;
+  background: #f0f2f7;
+  color: #4d4d4d;
 }
 
 .user-management-card {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
+  background: #ffffff;
   overflow: hidden;
+  transition: 0.2s;
+  .user-management-card.h-100 .card-body {
+    height: calc(100vh - 200px); /* Altura ajustable */
+    overflow-y: auto;
+    padding-right: 12px; /* Para que el scroll no tape contenido */
+  }
+}
+
+.user-management-card:hover {
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
 }
 
 .user-management-card .card-header {
-  background: #fff;
+  background: #ffffff;
   border-bottom: 1px solid var(--line);
+  padding: 14px 18px;
 }
 
-/* Tabla */
+/* ------------------------------------------
+   TABLA USUARIOS
+------------------------------------------- */
 .user-management-table-wrapper {
   width: 100%;
 }
 
 .user-management-table thead th {
-  background: #fafbff;
-  font-weight: 600;
+  background: var(--primary-soft);
+  font-weight: 700;
   border-bottom: 1px solid var(--line);
+  color: #4a4a4a;
 }
 
-.user-management-table tbody tr + tr td {
-  border-top: 1px solid #f2f4f8;
+.user-management-table tbody tr {
+  transition: background 0.15s ease;
 }
 
-.user-management-table td,
-.user-management-table th {
-  vertical-align: middle;
+.user-management-table tbody tr:hover {
+  background: #faf7ff;
 }
 
-.user-management-table .row-active {
-  background: #f6faff;
+.user-management-table tbody tr.row-active {
+  background: #f2e8ff !important;
+  border-left: 4px solid var(--primary);
 }
 
 .user-management-table .btn {
   min-width: 92px;
 }
 
-/* Skeletons */
-.user-skeleton-row .skl {
-  height: 12px;
-  background: linear-gradient(90deg, #eceff4 0%, #f7f9fc 50%, #eceff4 100%);
-  background-size: 200% 100%;
-  animation: skl 1.2s ease-in-out infinite;
-  border-radius: 6px;
+/* ------------------------------------------
+   BOTONES
+------------------------------------------- */
+.btn-outline-primary {
+  border-color: var(--primary) !important;
+  color: var(--primary) !important;
 }
-@keyframes skl {
-  0% { background-position: 0% 0; }
-  100% { background-position: 200% 0; }
+.btn-outline-primary:hover {
+  background: var(--primary) !important;
+  color: white !important;
 }
 
-/* Badges suaves (compatibles con Bootstrap 5.3) */
-.bg-success-subtle { background: #eaf7ef !important; color: #1e7e34 !important; }
-.bg-warning-subtle { background: #fff6e6 !important; color: #ad6800 !important; }
-.bg-info-subtle    { background: #e8f6ff !important; color: #0c63e4 !important; }
-.bg-primary-subtle { background: #eef4ff !important; color: #3b5bdb !important; }
-.bg-secondary-subtle { background: #f1f3f5 !important; color: #495057 !important; }
+.btn-outline-success {
+  border-color: #74d79a !important;
+  color: #1e8b4d !important;
+}
+.btn-outline-success:hover {
+  background: #1e8b4d !important;
+  color: white !important;
+}
 
-/* Controles de lista */
+.btn-outline-danger {
+  border-color: #ffa4a4 !important;
+  color: #ca2b2b !important;
+}
+.btn-outline-danger:hover {
+  background: #ca2b2b !important;
+  color: white !important;
+}
+
+/* ------------------------------------------
+   BADGES (puntos)
+------------------------------------------- */
+.bg-success-subtle {
+  background: #e9fff0 !important;
+  color: #1a7c3c !important;
+}
+.bg-warning-subtle {
+  background: #fff6d9 !important;
+  color: #ad6c00 !important;
+}
+.bg-light.text-muted {
+  background: #f4f4f4 !important;
+  color: #a1a1a1 !important;
+}
+
+/* ------------------------------------------
+   CONTROLES BUSCADOR / FILTROS
+------------------------------------------- */
 .user-list-root .user-list-controls {
   border-bottom: 1px solid var(--line);
-  background: #fff;
+  background: #ffffff;
 }
 
-/* Tabs perfil */
+/* Inputs más suaves */
+.user-list-root input,
+.user-list-root select {
+  border-radius: 12px !important;
+  border: 1px solid #dadde3 !important;
+}
+
+/* ------------------------------------------
+   PERFIL - TABS
+------------------------------------------- */
 .user-tabs {
   display: inline-flex;
   background: var(--soft);
   padding: 6px;
-  border-radius: 12px;
+  border-radius: 14px;
   gap: 6px;
 }
+
 .user-tab {
   border: 0;
   background: transparent;
-  padding: 8px 14px;
-  border-radius: 10px;
+  padding: 8px 16px;
+  border-radius: 12px;
   font-weight: 600;
-  color: #495057;
+  color: #5f6368;
+  transition: 0.2s;
 }
+
 .user-tab.active {
-  background: #fff;
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 4px 10px rgba(180, 140, 216, 0.4);
+  transform: translateY(-1px);
+}
+
+/* Hover suave */
+.user-tab:not(.active):hover {
+  background: #ffffff;
   box-shadow: var(--shadow);
 }
 
-/* Cards de perfil */
+/* ------------------------------------------
+   PERFIL - CARDS DE DATOS
+------------------------------------------- */
 .user-card-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0,1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
 @media (max-width: 576px) {
-  .user-card-grid { grid-template-columns: 1fr; }
+  .user-card-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .user-card {
   background: #fff;
   border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  transition: 0.2s;
 }
+
+.user-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
 .user-card-label {
   font-size: 12px;
   color: var(--muted);
   margin-bottom: 4px;
 }
 .user-card-value {
-  font-weight: 600;
+  font-weight: 700;
+  color: #383838;
 }
 
-/* Citas */
+/* ------------------------------------------
+   LISTA DE CITAS
+------------------------------------------- */
 .user-appointments .user-appointments-list {
   border-radius: 12px;
   overflow: hidden;
+  margin-top: 12px;
 }
 
 .appt-item {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  background: #ffffff;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  margin-bottom: 8px;
+  transition: 0.2s;
 }
+
+.appt-item:hover {
+  background: #fbf7ff;
+  transform: translateY(-2px);
+}
+
 .appt-item.upcoming {
-  border-left: 4px solid #3b5bdb;
+  border-left: 4px solid var(--primary);
 }
 .appt-item.past {
   border-left: 4px solid #adb5bd;
+  opacity: 0.8;
 }
 
 .appt-line {
@@ -161,21 +252,125 @@
   gap: 12px;
   font-weight: 600;
 }
+
 .appt-when {
-  color: #495057;
+  color: #555;
   font-weight: 500;
 }
+
 .appt-sub {
   font-size: 0.9rem;
   color: #6c757d;
 }
+
 .appt-notes {
-  color: #6c757d;
+  color: #7d8590;
 }
 
-/* Estados vacíos */
+/* ------------------------------------------
+   ESTADOS VACÍOS
+------------------------------------------- */
 .empty-profile {
-  background: linear-gradient(180deg, #fff, #fafbff);
+  background: linear-gradient(180deg, #ffffff, #fafbff);
   border: 1px dashed var(--line);
   border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  color: #9c9c9c;
+}
+
+/* ------------------------------------------
+   ANIMACIONES SUAVES
+------------------------------------------- */
+@keyframes skl {
+  0% {
+    background-position: 0% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.user-profile,
+.user-management-card {
+  animation: fadeIn 0.25s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* ──────────────────────────────────────────────
+   PANEL DERECHO - SCROLL INTERNO
+─────────────────────────────────────────────── */
+.user-management-card.profile-card .card-body {
+  height: calc(100vh - 210px); /* Ajusta según tu header */
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 10px;
+}
+.profile-card .card-header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: #fff;
+}
+/* Backdrop */
+.modal-backdrop-custom {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+/* Caja del modal */
+.modal-custom {
+  background: white;
+  padding: 24px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 380px;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.15);
+  animation: modalIn 0.25s ease;
+}
+
+.modal-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.modal-text {
+  color: #555;
+  margin-bottom: 20px;
+}
+
+/* Botones */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Animación */
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

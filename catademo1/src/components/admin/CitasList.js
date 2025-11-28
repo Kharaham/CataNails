@@ -148,7 +148,9 @@ const CitasList = () => {
           : null;
 
       if (finalAmount === null || Number.isNaN(finalAmount)) {
-        setFeedbackMessage("Introduce el precio antes de marcar como realizada.");
+        setFeedbackMessage(
+          "Introduce el precio antes de marcar como realizada."
+        );
         return;
       }
 
@@ -312,7 +314,11 @@ const CitasList = () => {
         : cita.servicePrice ?? "";
 
     return (
-      <Card className={`citaAd_card ${cita.mode === "Domicilio" ? "citaAd_card--home" : ""}`}>
+      <Card
+        className={`citaAd_card ${
+          cita.mode === "Domicilio" ? "citaAd_card--home" : ""
+        }`}
+      >
         <EstadoRibbon estado={estado} />
 
         {cita.photoURL && (
@@ -356,19 +362,20 @@ const CitasList = () => {
             {cita.mode === "Domicilio" && (
               <div className="citaAd_rowSpan">
                 <span className="citaAd_label">Dirección</span>
-                <span className="citaAd_value">{cita.address || "No proporcionada"}</span>
+                <span className="citaAd_value">
+                  {cita.address || "No proporcionada"}
+                </span>
               </div>
             )}
             <div className="citaAd_rowSpan">
               <span className="citaAd_label">Comentario</span>
-              <span className="citaAd_value">{cita.comment || "Sin comentario"}</span>
+              <span className="citaAd_value">
+                {cita.comment || "Sin comentario"}
+              </span>
             </div>
           </div>
 
-          <CardFooterAcciones
-            cita={cita}
-            isPending={estado === "pendiente"}
-          />
+          <CardFooterAcciones cita={cita} isPending={estado === "pendiente"} />
         </Card.Body>
       </Card>
     );
@@ -430,7 +437,10 @@ const CitasList = () => {
 
       <div className="citaAd_toolbar">
         <Form className="citaAd_filter">
-          <Form.Group controlId="citaAd_filterDate" className="citaAd_filterGroup">
+          <Form.Group
+            controlId="citaAd_filterDate"
+            className="citaAd_filterGroup"
+          >
             <Form.Label>Filtrar por fecha</Form.Label>
             <Form.Control
               type="date"
@@ -476,7 +486,9 @@ const CitasList = () => {
           <Modal.Title>Cancelar cita</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>¿Quieres cancelar esta cita? Se notificará por correo a la clienta.</p>
+          <p>
+            ¿Quieres cancelar esta cita? Se notificará por correo a la clienta.
+          </p>
           <Form.Group controlId="cancelMessage">
             <Form.Label>Motivo de la cancelación</Form.Label>
             <Form.Control

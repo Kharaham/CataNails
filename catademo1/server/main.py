@@ -164,20 +164,32 @@ def _clip_box(x1, y1, x2, y2, w, h):
     if y2 < y1: y1, y2 = y2, y1
     return x1, y1, x2, y2
 
-def _rect_from_two_points(p1: np.ndarray, p2: np.ndarray,
-                          width_scale: float=0.70, length_scale: float=0.60):
+def _rect_from_two_points(p1: np.ndarray,
+                          p2: np.ndarray,
+                          width_scale: float=0.70,
+                          length_scale: float=0.60):
+    """
+    Rectángulo adaptativo según ángulo y tamaño real de la uña.
+    Mucho más preciso que la versión fija.
+    """
     v = p2 - p1
     L = np.linalg.norm(v) + 1e-6
     u = v / L
     n = np.array([-u[1], u[0]])
-    center = p1 + u * (L * 0.90)       # distal
-    half_w = L * width_scale * 0.5
-    half_l = L * length_scale
-    pA = center - u*half_l - n*half_w
-    pB = center - u*half_l + n*half_w
-    pC = center + u*half_l + n*half_w
-    pD = center + u*half_l - n*half_w
+
+    # 🔥 Ajustes dinámicos según la uña detectada
+    dynamic_width = np.clip(L * 0.45, 6, 32)
+    dynamic_length = np.clip(L * 0.65, 12, 52)
+
+    center = p1 + u * (L * 0.90)
+
+    pA = center - u*dynamic_length - n*dynamic_width
+    pB = center - u*dynamic_length + n*dynamic_width
+    pC = center + u*dynamic_length + n*dynamic_width
+    pD = center + u*dynamic_length - n*dynamic_width
     return np.stack([pA, pB, pC, pD], axis=0)
+
+
 
 def _poly_to_bbox(poly: np.ndarray, pad: float=0.22, w: int=0, h: int=0) -> Tuple[int,int,int,int]:
     x = poly[:,0]; y = poly[:,1]
@@ -280,41 +292,46 @@ def _grabcut_refine(crop_bgr: np.ndarray, init_mask_bool: np.ndarray, iters: int
 def _place_points_for_prompts(poly_local: np.ndarray,
                               tip_local: Tuple[int,int],
                               along: Tuple[float,float,int],
-                              across: Tuple[float,float,int]) -> Dict[str, np.ndarray]:
+                              across: Tuple[float,float,int]):
     """
-    Rejilla densa direccionada a distal.
-    along: (start, end, steps) a lo largo del eje de la uña
-    across: (start, end, steps) transversal
+    Prompts mejorados: bordes internos + puntos negativos lejanos.
+    SAM queda mucho más estable y preciso.
     """
     rect = cv2.minAreaRect(poly_local.astype(np.float32))
     box = cv2.boxPoints(rect).astype(np.float32)
     center = box.mean(axis=0)
+
     vecs = box - center
     lens = np.linalg.norm(vecs, axis=1)
-    long_edge_idx = np.argsort(lens)[-2:]
-    v_long = vecs[long_edge_idx[0]]
-    v_long = v_long / (np.linalg.norm(v_long) + 1e-6)
-    v_orth = np.array([-v_long[1], v_long[0]])
+    long_edge = vecs[np.argmax(lens)]
+    long_edge = long_edge / (np.linalg.norm(long_edge)+1e-6)
+    ortho = np.array([-long_edge[1], long_edge[0]])
 
-    startA, endA, stepsA = along
-    startB, endB, stepsB = across
+    # 🔥 Bordes internos de la uña
+    border_pts = []
+    for v in poly_local:
+        d = v - center
+        d = d / (np.linalg.norm(d)+1e-6)
+        border_pts.append(v - d*4)
+    border_pts = np.array(border_pts, np.float32)
 
-    pos_pts = []
-    for i in np.linspace(startA, endA, stepsA):
-        for j in np.linspace(startB, endB, stepsB):
-            p = tip_local - v_long * (50*i) + v_orth * (48*j)
-            pos_pts.append(p)
-    pos_pts = np.array(pos_pts, dtype=np.float32)
+    # Puntos positivos = borde interno
+    pos = border_pts
 
-    neg_pts = []
-    for k in [0.25, 0.45, 0.65, 0.85]:
-        q = tip_local + v_long * (62*k)  # proximal/ piel
-        neg_pts.append(q)
-    for ang in np.linspace(0, 2*np.pi, 8, endpoint=False):
-        neg_pts.append(center + 72*np.array([np.cos(ang), np.sin(ang)], dtype=np.float32))
-    neg_pts = np.array(neg_pts, dtype=np.float32)
+    # Puntos negativos más inteligentes
+    neg = []
+    for k in [0.3, 0.5, 0.9]:
+        neg.append(tip_local + long_edge * (75*k))
 
-    return {"pos": pos_pts, "neg": neg_pts}
+    for ang in np.linspace(0, 2*np.pi, 12, endpoint=False):
+        neg.append(center + 85*np.array([np.cos(ang), np.sin(ang)], np.float32))
+
+    return {
+        "pos": np.array(pos, np.float32),
+        "neg": np.array(neg, np.float32)
+    }
+
+
 
 # =================== SAM por crop =========================
 def _sam_predict_on_crop(crop_bgr: np.ndarray,
@@ -432,6 +449,99 @@ def _ensure_rgb_and_downscale(raw: bytes) -> np.ndarray:
         log.info("Downscale de %dx%d a %dx%d (MAX_PIXELS=%d)", w, h, new_w, new_h, MAX_PIXELS)
     return _pil_to_cv2(img)
 
+def _shape_arc_regularization(poly, strength=0.22):
+    """
+    Ajusta ligeramente el polígono hacia una forma de arco natural.
+    Evita puntas raras o bordes quebrados.
+    """
+    poly = np.array(poly, np.float32)
+    cx = poly[:,0].mean()
+    cy = poly[:,1].mean()
+
+    dx = poly[:,0] - cx
+    dy = poly[:,1] - cy
+    r = np.sqrt(dx*dx + dy*dy)
+    mean_r = r.mean()
+
+    # suavizar hacia un arco
+    new_x = cx + dx * (1 - strength) + (dx/r)*mean_r*strength
+    new_y = cy + dy * (1 - strength) + (dy/r)*mean_r*strength
+
+    return np.stack([new_x, new_y], axis=1).astype(int)
+
+
+def _nail_color_separation_score(crop_bgr, mask):
+    hsv = cv2.cvtColor(crop_bgr, cv2.COLOR_BGR2HSV)
+    H, S, V = cv2.split(hsv)
+
+    nail_h = H[mask].mean()
+    skin_h = H[~mask].mean()
+
+    diff = abs(nail_h - skin_h)
+
+    return float(np.clip(diff / 22.0, 0.0, 1.0))
+
+
+
+# =================== AUTO-SMOOTH + AUTO-INSET ===================
+
+def _auto_needs_smoothing(poly: np.ndarray) -> bool:
+    """
+    Detecta si el polígono tiene quiebres bruscos o bordes irregulares.
+    """
+    poly = np.array(poly, np.float32)
+    # diferencias entre puntos
+    d = np.diff(poly, axis=0)
+    angles = []
+    for i in range(len(d)-1):
+        a = d[i]
+        b = d[i+1]
+        dot = np.dot(a, b) / (np.linalg.norm(a)*np.linalg.norm(b) + 1e-6)
+        angle = np.degrees(np.arccos(np.clip(dot, -1, 1)))
+        angles.append(angle)
+
+    # si hay demasiados ángulos bruscos → necesita suavizado
+    sharp_angles = [a for a in angles if a > 42]
+    return len(sharp_angles) >= 3
+
+
+def _auto_needs_inset(mask: np.ndarray) -> bool:
+    """
+    Mira si la máscara llega demasiado afuera de la piel (sobra).
+    Detecta 'rebalses' del borde.
+    """
+    if mask.sum() == 0:
+        return False
+    h, w = mask.shape
+    margin = int(max(4, min(w, h) * 0.03))
+    sideA = mask[:, :margin].any()
+    sideB = mask[:, w-margin:].any()
+    topC  = mask[:margin, :].any()
+    botD  = mask[h-margin:, :].any()
+    return sideA or sideB or topC or botD
+
+
+def _apply_shape_adjustments(poly: List[List[int]], mask_local: np.ndarray, crop_rgb: np.ndarray) -> List[List[int]]:
+    """
+    Aplica AUTO-SMOOTH y AUTO-INSET al polígono final.
+    """
+    poly_np = np.array(poly, np.int32)
+
+    # AUTO-SMOOTH (forma más curva y limpia)
+    if _auto_needs_smoothing(poly_np):
+        poly_np = _shape_arc_regularization(poly_np, strength=0.22)
+
+    # AUTO-INSET (recorta un poquito si se pasó)
+    if _auto_needs_inset(mask_local):
+        cx = mask_local.shape[1] // 2
+        cy = mask_local.shape[0] // 2
+        for i in range(len(poly_np)):
+            dx = poly_np[i,0] - cx
+            dy = poly_np[i,1] - cy
+            poly_np[i,0] -= int(dx * 0.05)
+            poly_np[i,1] -= int(dy * 0.05)
+
+    return poly_np.tolist()
 
 
 # =================== Núcleo del endpoint ==================
@@ -550,15 +660,35 @@ def _run_inference(
                 grab_iters=grab_iters
             )
             if mask_glob is None:
-                continue
+                    continue
+
             poly = _mask_to_polygon(mask_glob, min_area=80)
             if poly is None:
                 continue
+
+            # ========== AUTO-SMOOTH + AUTO-INSET ==========
+            # Recorte local para análisis
+            x1b, y1b, x2b, y2b = _poly_to_bbox(
+                np.array(poly, dtype=np.int32),
+                pad=0.10,
+                w=w,
+                h=h
+            )
+
+            crop_rgb_b = img_cv[y1b:y2b, x1b:x2b]
+            mask_local_b = mask_glob[y1b:y2b, x1b:x2b]
+
+            # Ajustes automáticos de forma
+            poly = _apply_shape_adjustments(poly, mask_local_b, crop_rgb_b)
+            
+            # ==============================================
+            poly = _shape_arc_regularization(np.array(poly, np.int32), strength=0.18).tolist()
             refined_out.append({
                 "polygon": poly,
                 "score": 0.88,
                 "source": "sam+grabcut"
             })
+
 
             if RETURN_ALPHA_PNG:
                 # alpha suave guiado

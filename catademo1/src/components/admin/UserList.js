@@ -7,6 +7,7 @@ const SafeText = ({ children }) => (
 
 export default function UserList({
   users = [],
+
   loading = false,
   selectedUserId,
   onSelect,
@@ -160,19 +161,23 @@ export default function UserList({
                         className="btn btn-sm btn-outline-primary"
                         onClick={() => onSelect && onSelect(u.id)}
                         aria-pressed={isActive}
-                        aria-label={`Abrir perfil de ${u.nombre || u.name || ""}`}
+                        aria-label={`Abrir perfil de ${
+                          u.nombre || u.name || ""
+                        }`}
                       >
                         {isActive ? "Viendo perfil" : "Perfil"}
                       </button>
                       <button
                         className="btn btn-sm btn-outline-success"
-                        onClick={() => onIncrementPoints && onIncrementPoints(u)}
+                        onClick={() =>
+                          onIncrementPoints && onIncrementPoints(u)
+                        }
                       >
                         +5 Puntos
                       </button>
                       <button
                         className="btn btn-sm btn-outline-danger"
-                        onClick={() => onDelete && onDelete(u)}
+                        onClick={() => onDelete(u)}
                       >
                         Eliminar
                       </button>

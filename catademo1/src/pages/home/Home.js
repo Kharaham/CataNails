@@ -23,18 +23,42 @@ import {
   BookmarkCheck,
 } from "lucide-react";
 import "../../styles/components/home.css";
+import { db } from "../../firebase/firebase";
+import { collection, getDocs } from "firebase/firestore";
 
 // Imágenes (usa rutas reales)
-import homeStudio1 from "../../assets/images/homev2/demo.png";
-import homeStudio2 from "../../assets/images/homev2/demo.png";
-import homeStudio4 from "../../assets/images/homev2/demo.png";
+import homeStudio1 from "../../assets/images/homev2/banner1.png";
+import homeStudio2 from "../../assets/images/homev2/banner2.png";
+import homeStudio4 from "../../assets/images/homev2/banner3.png";
 
-import polygelImg from "../../assets/images/homev2/fondooo.jpg";
-import builderImg from "../../assets/images/homev2/fondooo.jpg";
+import manicureH from "../../assets/images/home/v4.jpg";
+import pedicureH from "../../assets/images/home/pedicure.jpg";
+
+import alisadoH from "../../assets/images/home/botox.jpg";
+import spaH from "../../assets/images/home/spa.jpg";
+
 import try1 from "../../assets/images/homev2/TryonC.jpeg";
 import try2 from "../../assets/images/homev2/Try.png";
 import try3 from "../../assets/images/homev2/ss.png";
 
+import miniExpress from "../../assets/images/home/express.jpg";
+import miniArt from "../../assets/images/home/acrilica.jpg";
+import miniSpa from "../../assets/images/home/detox.jpg";
+import miniPedi from "../../assets/images/home/pedicure.jpg";
+
+import port1 from "../../assets/trabajos/trabajo1.jpeg";
+import port2 from "../../assets/trabajos/trabajo2.jpeg";
+import port3 from "../../assets/trabajos/trabajo3.jpeg";
+import port4 from "../../assets/trabajos/trabajo4.jpeg";
+import port5 from "../../assets/trabajos/trabajo5.jpeg";
+import port6 from "../../assets/trabajos/trabajo6.jpeg";
+
+import tone1 from "../../assets/images/homev2/color1.jpg";
+import tone2 from "../../assets/images/homev2/color2.jpg";
+import tone3 from "../../assets/images/homev2/color3.jpg";
+import tone4 from "../../assets/images/homev2/color5.jpg";
+import tone5 from "../../assets/images/homev2/color6.jpg";
+import tone6 from "../../assets/images/homev2/color7.jpg";
 /* ------------------- Helpers de animación ------------------- */
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 18 },
@@ -139,7 +163,6 @@ const Carousel = memo(function Carousel({
         }}
         onFocus={() => {
           focus.current = true;
-          clearTimeout(timerRef.current);
         }}
         onBlur={() => {
           focus.current = false;
@@ -322,65 +345,158 @@ const BrandMarquee = memo(function BrandMarquee() {
   );
 });
 
-/* ------------------- Servicios (compacto) ------------------- */
+/* ------------------- Servicios (HOME – versión mejorada) ------------------- */
+/* ------------------- Servicios (HOME – versión ULTRA) ------------------- */
 const ServicesShowcase = memo(function ServicesShowcase() {
   const navigate = useNavigate();
+
   const items = [
     {
-      k: "gelx",
-      title: "Soft Gel / Gel-X",
-      desc: "Extensiones livianas y resistentes.",
-      to: "/servicios#gelx",
-      icon: <Sparkles size={18} />,
+      k: "express",
+      badge: "Nuevo",
+      title: "Manicure Express",
+      desc: "Perfecta si tienes poco tiempo. Limpio, rápido y elegante.",
+      img: miniExpress, // <-- AQUÍ se usa la variable importada
+      to: "/manicure",
+      icon: <Sparkles size={20} />,
     },
     {
-      k: "polygel",
-      title: "Polygel",
-      desc: "Moldeo versátil, acabado natural.",
-      to: "/servicios#polygel",
-      icon: <Droplets size={18} />,
+      k: "art",
+      badge: "Top elección",
+      title: "Manicure Artística",
+      desc: "Diseños premium con efectos exclusivos y estilos modernos.",
+      img: miniArt,
+      to: "/manicure",
+      icon: <Palette size={20} />,
     },
     {
-      k: "builder",
-      title: "Builder Gels",
-      desc: "Refuerzo y nivelación automática.",
-      to: "/servicios#builder",
-      icon: <ShieldCheck size={18} />,
+      k: "handspa",
+      badge: "Popular",
+      title: "Spa Detox de Manos",
+      desc: "Tratamiento relajante con exfoliación y mascarilla nutritiva.",
+      img: miniSpa,
+      to: "/manicure",
+      icon: <Droplets size={20} />,
     },
     {
-      k: "spa",
-      title: "Spa manos/pies",
-      desc: "Exfoliación + masaje + hidratación.",
-      to: "/servicios#spa",
-      icon: <Sparkle size={18} />,
+      k: "pedideluxe",
+      badge: "Nuevo",
+      title: "Pedicure Deluxe",
+      desc: "Renueva tus pies con sales aromáticas e hidratación profunda.",
+      img: miniPedi,
+      to: "/pedicure",
+      icon: <Hand size={20} />,
     },
   ];
+
   return (
     <section className="servicesX">
       <div className="servicesX-head">
-        <h3 className="section-title emph">Nuestros servicios</h3>
-        <p>Profesionales, duraderos y pensados en tu cuidado.</p>
+        <h3 className="section-title emph">Servicios destacados</h3>
+        <p>Experiencias pensadas para tu estilo y bienestar.</p>
       </div>
+
       <div className="servicesX-grid">
         {items.map((it, idx) => (
           <motion.article
             {...fadeUp(idx * 0.05)}
             key={it.k}
-            className="sx-card"
+            className="sx-card sx-advanced"
             onClick={() => navigate(it.to)}
           >
-            <div className="sx-icon" aria-hidden>
-              {it.icon}
+            <span className="sx-badge">{it.badge}</span>
+
+            <div className="sx-mini-img">
+              <img src={it.img} alt={it.title} />
             </div>
+
+            <div className="sx-icon icon-animated">{it.icon}</div>
+
             <h4>{it.title}</h4>
             <p>{it.desc}</p>
-            <button className="sx-btn" aria-label={`Ver más de ${it.title}`}>
-              Ver más
-            </button>
           </motion.article>
         ))}
       </div>
     </section>
+  );
+});
+
+/* ------------------- Mini Portafolio (galería) ------------------- */
+/* ------------------- Mini Portafolio (galería + carrusel) ------------------- */
+const MiniPortfolio = memo(function MiniPortfolio() {
+  const [modalImg, setModalImg] = useState(null);
+
+  const images = [port1, port2, port3, port4, port5, port6];
+
+  return (
+    <motion.section className="miniportfolio" {...fadeUp(0.05)}>
+      <h3 className="section-title emph">Nuestros últimos trabajos</h3>
+
+      {/* === CARRUSEL SOLO MÓVIL === */}
+      <div className="mp-carousel">
+        <div className="mp-track">
+          {images.map((img, i) => (
+            <div key={i} className="mp-slide" onClick={() => setModalImg(img)}>
+              <div className="mp-img-wrap">
+                <img src={img} alt={`Trabajo ${i + 1}`} loading="lazy" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* === GRID ORIGINAL SOLO EN DESKTOP === */}
+      <div className="mp-masonry">
+        {images.map((img, i) => (
+          <div
+            key={i}
+            className="mp-masonry-item"
+            onClick={() => setModalImg(img)}
+          >
+            <img src={img} alt={`Trabajo ${i + 1}`} loading="lazy" />
+          </div>
+        ))}
+      </div>
+
+      {/* === MODAL === */}
+      {modalImg && (
+        <div className="mp-modal" onClick={() => setModalImg(null)}>
+          <div className="mp-modal-content">
+            <img src={modalImg} alt="Vista ampliada" />
+          </div>
+        </div>
+      )}
+    </motion.section>
+  );
+});
+
+/* ------------------- Colores del mes ------------------- */
+const ColorShowcase = memo(function ColorShowcase() {
+  const tones = [
+    { img: tone1, name: "Rosa Quartz" },
+    { img: tone2, name: "Rojo Burdeo" },
+    { img: tone3, name: "Verde Esmeralda" },
+    { img: tone4, name: "Negro Brillante" },
+    { img: tone5, name: "Azul" },
+    { img: tone6, name: "Amarrillo Mostaza" },
+  ];
+
+  return (
+    <motion.section className="colorShowcase" {...fadeUp(0.05)}>
+      <h3 className="section-title emph">Colores destacados del mes</h3>
+      <p className="csm-sub">Nuevos tonos listos para que los pruebes ✨</p>
+
+      <div className="csm-grid">
+        {tones.map((t, i) => (
+          <div key={i} className="csm-item">
+            <div className="csm-img-wrap">
+              <img src={t.img} alt={t.name} loading="lazy" />
+            </div>
+            <span className="csm-name">{t.name}</span>
+          </div>
+        ))}
+      </div>
+    </motion.section>
   );
 });
 
@@ -598,44 +714,73 @@ const TryOnMiniCarousel = memo(function TryOnMiniCarousel({
   );
 });
 
-/* ------------------- Explainer con fotos ------------------- */
+/* ------------------- Explainer con fotos V2 (mejorado) ------------------- */
 const ExplainerWithPhotos = memo(function ExplainerWithPhotos() {
   const navigate = useNavigate();
+
   const items = [
     {
-      key: "polygel",
-      title: "Polygel: versatilidad con acabado natural",
-      text: "Moldeo con moldes o sistema dual. Fortalece y corrige arquitectura.",
-      img: polygelImg,
-      alt: "Tubo de Polygel",
-      cta: () => navigate("/servicios#polygel"),
+      key: "manicure",
+      title: "Manicure profesional premium",
+      text: "Gel-X, Soft Gel, Polygel y diseños exclusivos hechos a mano. Acabado impecable, ultra resistente y adaptado a tu estilo. Vive uñas elegantes, modernas y listas para cualquier ocasión.",
+      img: manicureH,
+      alt: "Servicio de manicure profesional",
+      ctaLabel: "Abrir catálogo completo",
+      cta: () => navigate("/manicure"),
     },
     {
-      key: "builder",
-      title: "Builder gels: refuerzo y nivelación automática",
-      text: "Gel de baja temperatura y consistencia media que se nivela solo.",
-      img: builderImg,
-      alt: "Potes de builder gel",
-      cta: () => navigate("/servicios#builder"),
+      key: "pedicure",
+      title: "Pedicure spa de lujo",
+      text: "Relaja tus pies con un spa completo: exfoliación, hidratación profunda, masajes aromáticos y un acabado perfecto que se mantiene por semanas.",
+      img: pedicureH,
+      alt: "Servicio de pedicure y spa",
+      ctaLabel: "Explorar todos los estilos",
+      cta: () => navigate("/pedicure"),
+    },
+    {
+      key: "alisado",
+      title: "Alisado + Botox capilar profesional",
+      text: "Tratamientos certificados que dejan tu cabello suave, brillante y sin frizz desde la primera sesión. Resultados visibles, naturales y con efecto duradero.",
+      img: alisadoH,
+      alt: "Servicio de alisado capilar",
+      ctaLabel: "Ver catálogo",
+      cta: () => navigate("/alisado-permanente"),
+    },
+    {
+      key: "spa",
+      title: "Spa premium para manos y pies",
+      text: "Una experiencia relajante con masajes, mascarillas nutritivas y aromas terapéuticos. Dale a tu piel un reset completo y disfruta un momento de bienestar total.",
+      img: spaH,
+      alt: "Spa de manos y pies",
+      ctaLabel: "Agendar cita",
+      cta: () => navigate("/reservar"),
     },
   ];
 
   return (
     <section className="ex2-section">
-      {items.map((it, idx) => (
+      {items.map((item, idx) => (
         <motion.article
           {...fadeUp(idx * 0.05)}
           className={`ex2 ${idx % 2 ? "reverse" : ""}`}
-          key={it.key}
+          key={item.key}
         >
           <figure className="ex2-media">
-            <img src={it.img} alt={it.alt} loading="lazy" decoding="async" />
+            <img
+              src={item.img}
+              alt={item.alt}
+              loading="lazy"
+              decoding="async"
+            />
           </figure>
+
           <div className="ex2-copy">
-            <h3 className="ex2-title">{it.title}</h3>
-            <p className="ex2-text">{it.text}</p>
-            <button className="ex2-btn" onClick={it.cta}>
-              Colores disponibles
+            <h3 className="ex2-title">{item.title}</h3>
+
+            <p className="ex2-text">{item.text}</p>
+
+            <button className="ex2-btn" onClick={item.cta}>
+              {item.ctaLabel}
             </button>
           </div>
         </motion.article>
@@ -653,14 +798,30 @@ export default function Home() {
   const navigate = useNavigate();
   const goReserve = useCallback(() => navigate("/reservar"), [navigate]);
 
+  // === REVIEWS ===
+  const [reviews, setReviews] = useState([]);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      const ref = collection(db, "reviews");
+      const snap = await getDocs(ref);
+
+      const list = snap.docs
+        .map((doc) => ({ id: doc.id, ...doc.data() }))
+        .filter((r) => r.isVisible);
+
+      setReviews(list);
+    };
+
+    fetchReviews();
+  }, []);
+
   const slides = useMemo(
     () => [
       {
         src: homeStudio2,
         alt: "Materiales profesionales",
         caption: {
-          title: "Bienvenida a CataaNails",
-          text: "Atención personalizada para manos y pies.",
           cta: {
             label: "Reservar ahora",
             onClick: goReserve,
@@ -672,18 +833,13 @@ export default function Home() {
       {
         src: homeStudio4,
         alt: "Estudio higienizado",
-        caption: {
-          title: "Protocolos de higiene",
-          text: "Materiales esterilizados y seguridad.",
-        },
+        caption: {},
         badge: "Higiene",
       },
       {
         src: homeStudio1,
         alt: "Área de descanso",
         caption: {
-          title: "Promos del mes",
-          text: "Descubre descuentos y packs.",
           cta: { label: "Ver promociones", onClick: () => navigate("/promos") },
         },
         badge: "Promo",
@@ -708,26 +864,27 @@ export default function Home() {
       <ExplainerWithPhotos />
 
       <ServicesShowcase />
+      <MiniPortfolio />
+      <ColorShowcase />
 
       <motion.section className="testimonials" {...fadeUp(0.05)}>
         <h3 className="section-title emph">Lo que dicen nuestras clientas</h3>
-        <div className="t-carousel" role="region" aria-label="Testimonios">
-          {[
-            {
-              name: "Valentina",
-              txt: "Manicure impecable y el espacio muy limpio. 10/10.",
-            },
-            {
-              name: "Camila",
-              txt: "El spa de pies me salvó antes de un evento. Recomendado.",
-            },
-            { name: "Constanza", txt: "Elegí el tono perfecto con el Try-On." },
-          ].map((t, i) => (
-            <figure className="t-card" key={i}>
-              <blockquote>“{t.txt}”</blockquote>
-              <figcaption>— {t.name}</figcaption>
-            </figure>
-          ))}
+
+        <div className="t-carousel">
+          {reviews.length === 0 ? (
+            <p className="no-reviews">Aún no hay reseñas disponibles.</p>
+          ) : (
+            reviews.map((r) => (
+              <figure className="t-card" key={r.id}>
+                <blockquote>“{r.text}”</blockquote>
+                <figcaption>— {r.author}</figcaption>
+
+                <div className="review-stars">
+                  {"★".repeat(r.rating)} {"☆".repeat(5 - r.rating)}
+                </div>
+              </figure>
+            ))
+          )}
         </div>
       </motion.section>
 

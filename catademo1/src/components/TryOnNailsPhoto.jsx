@@ -173,6 +173,12 @@ export default function TryOnNailsPhoto() {
   const outCanvasRef = useRef(null);
   const rafRef = useRef(0);
 
+  // NUEVO: Control manual del recorte de diseño
+  const [cropX, setCropX] = useState(0);
+  const [cropY, setCropY] = useState(0);
+  const [cropScale, setCropScale] = useState(1);
+  const [cropRotate, setCropRotate] = useState(0);
+
   /* --------- Carga imagen --------- */
   const onPickFile = (e) => {
     const f = e.target.files?.[0];
@@ -216,6 +222,65 @@ export default function TryOnNailsPhoto() {
     };
     im.src = designURL;
   }, [designURL]);
+
+  {
+    /* 🖼 Ajuste manual del diseño (nuevo) */
+  }
+  <div className="RecU_section">
+    <div className="RecU_h3">Ajustar diseño manualmente</div>
+
+    <div className="RecU_row">
+      <span className="RecU_kv">Mover X</span>
+      <input
+        className="RecU_full"
+        type="range"
+        min="-300"
+        max="300"
+        step="1"
+        value={cropX}
+        onChange={(e) => setCropX(parseInt(e.target.value))}
+      />
+    </div>
+
+    <div className="RecU_row">
+      <span className="RecU_kv">Mover Y</span>
+      <input
+        className="RecU_full"
+        type="range"
+        min="-300"
+        max="300"
+        step="1"
+        value={cropY}
+        onChange={(e) => setCropY(parseInt(e.target.value))}
+      />
+    </div>
+
+    <div className="RecU_row">
+      <span className="RecU_kv">Zoom</span>
+      <input
+        className="RecU_full"
+        type="range"
+        min="0.3"
+        max="3"
+        step="0.02"
+        value={cropScale}
+        onChange={(e) => setCropScale(parseFloat(e.target.value))}
+      />
+    </div>
+
+    <div className="RecU_row">
+      <span className="RecU_kv">Rotación</span>
+      <input
+        className="RecU_full"
+        type="range"
+        min="-180"
+        max="180"
+        step="1"
+        value={cropRotate}
+        onChange={(e) => setCropRotate(parseFloat(e.target.value))}
+      />
+    </div>
+  </div>;
 
   /* --------- Canvas base --------- */
   function fitToImage(im) {
@@ -326,15 +391,37 @@ export default function TryOnNailsPhoto() {
           const s = designMode === "fit-cover" ? sCover : sContain;
 
           ctx.save();
-          ctx.translate(cx + (designOffsetX || 0), cy + (designOffsetY || 0));
-          ctx.rotate(((designRot || 0) * Math.PI) / 180);
-          ctx.scale(s, s);
+          // NUEVO: aplicar crop manual
+          ctx.translate(
+            cx + cropX + (designOffsetX || 0),
+            cy + cropY + (designOffsetY || 0)
+          );
+
+          ctx.rotate(((cropRotate + (designRot || 0)) * Math.PI) / 180);
+
+          // Escala combinada: cropScale controla zoom, designScale si lo usas
+          ctx.scale(s * cropScale, s * cropScale);
+
+          // Render del diseño con ajustes manuales
           ctx.drawImage(tile, -iw / 2, -ih / 2, iw, ih);
+
           ctx.restore();
         }
       } else {
+        // --- Color base con realismo ---
+        ctx.fillStyle = color;
+        ctx.globalAlpha = opacity * 0.85;
+        ctx.fillRect(0, 0, w, h);
+
+        // Luz suave estilo esmalte real
+        ctx.globalCompositeOperation = "soft-light";
+        ctx.globalAlpha = opacity * 0.35;
         ctx.fillStyle = color;
         ctx.fillRect(0, 0, w, h);
+
+        // Restablecer para evitar errores
+        ctx.globalCompositeOperation = "source-over";
+        ctx.globalAlpha = 1;
       }
     }
     ctx.restore();
@@ -578,6 +665,10 @@ export default function TryOnNailsPhoto() {
     undercoatAlpha,
     nails,
     step,
+    cropX,
+    cropY,
+    cropScale,
+    cropRotate,
   ]);
 
   /* --------- Handlers lista uñas --------- */
@@ -672,7 +763,6 @@ export default function TryOnNailsPhoto() {
                 <button className="RecU_btn RecU_btnGhost" onClick={resetAll}>
                   ↺ Reiniciar
                 </button>
-         
               </div>
               <div className="RecU_kv" style={{ marginTop: 8 }}>
                 Uñas detectadas:{" "}
@@ -867,11 +957,45 @@ export default function TryOnNailsPhoto() {
                     value={blend}
                     onChange={(e) => setBlend(e.target.value)}
                   >
-                    <option value="soft-light">soft-light</option>
-                    <option value="multiply">multiply</option>
-                    <option value="overlay">overlay</option>
-                    <option value="screen">screen</option>
-                    <option value="source-over">normal</option>
+                    {/* 🎨 Modos realistas */}
+                    <option value="color">Color (realista)</option>
+                    <option value="soft-light">Luz suave (natural)</option>
+                    <option value="overlay">Superponer (intenso)</option>
+                    <option value="multiply">
+                      Multiplicar (oscurecer esmalte)
+                    </option>
+                    <option value="screen">Pantalla (aclarar esmalte)</option>
+
+                    {/* 🌟 Modos estéticos avanzados */}
+                    <option value="hard-light">
+                      Luz fuerte (contraste alto)
+                    </option>
+                    <option value="lighter">Aclarar (extra suave)</option>
+                    <option value="darken">Oscurecer (suavizado)</option>
+
+                    {/* 🎯 Modos por tono y luz */}
+                    <option value="hue">Matiz (solo cambia color)</option>
+                    <option value="saturation">
+                      Saturación (más vibrante)
+                    </option>
+                    <option value="luminosity">
+                      Luminosidad (control de luz)
+                    </option>
+                    <option value="color-burn">
+                      Color burn (quemado de color)
+                    </option>
+                    <option value="color-dodge">
+                      Color dodge (iluminación)
+                    </option>
+
+                    {/* 🔮 Modos de excepción (experimentales) */}
+                    <option value="difference">
+                      Diferencia (efectos neon)
+                    </option>
+                    <option value="exclusion">Exclusión (suave)</option>
+
+                    {/* Normal */}
+                    <option value="source-over">Normal</option>
                   </select>
                 </div>
               </div>
@@ -917,56 +1041,116 @@ export default function TryOnNailsPhoto() {
                 </button>
 
                 {showMore && (
-                  <div className="RecU_section">
-                    <div className="RecU_row">
-                      <span className="RecU_kv">Borde suave</span>
-                      <input
-                        className="RecU_full"
-                        type="range"
-                        min="0"
-                        max="4"
-                        step="0.1"
-                        value={featherPx}
-                        onChange={(e) =>
-                          setFeatherPx(parseFloat(e.target.value))
-                        }
-                      />
-                    </div>
-                    <div className="RecU_row">
-                      <span className="RecU_kv">Gloss (poder)</span>
-                      <input
-                        className="RecU_full"
-                        type="range"
-                        min="0"
-                        max="1"
-                        step="0.01"
-                        value={glossPower}
-                        onChange={(e) =>
-                          setGlossPower(parseFloat(e.target.value))
-                        }
-                      />
-                    </div>
-                    <div className="RecU_row">
-                      <span className="RecU_kv">Gloss (tamaño)</span>
-                      <input
-                        className="RecU_full"
-                        type="range"
-                        min="0.2"
-                        max="1"
-                        step="0.01"
-                        value={glossSize}
-                        onChange={(e) =>
-                          setGlossSize(parseFloat(e.target.value))
-                        }
-                      />
+                  <div className="RecU_section RecU_advancedGrid">
+                    {/* === Columna 1: Forma === */}
+                    <div className="RecU_cardMini">
+                      <div className="RecU_h4">Forma</div>
+
+                      <div className="RecU_rowMini">
+                        <span className="RecU_kvMini">Suavizado</span>
+                        <input
+                          type="range"
+                          min="0"
+                          max="1"
+                          step="0.01"
+                          value={shapeSmooth}
+                          onChange={(e) =>
+                            setShapeSmooth(parseFloat(e.target.value))
+                          }
+                        />
+                      </div>
+
+                      <div className="RecU_rowMini">
+                        <span className="RecU_kvMini">Inset</span>
+                        <input
+                          type="range"
+                          min="0"
+                          max="3"
+                          step="0.1"
+                          value={shapeInset}
+                          onChange={(e) =>
+                            setShapeInset(parseFloat(e.target.value))
+                          }
+                        />
+                      </div>
+
+                      <button
+                        className="RecU_btnTinyGhost"
+                        onClick={() => {
+                          setShapeSmooth(0.65);
+                          setShapeInset(1.2);
+                        }}
+                      >
+                        Reset Forma
+                      </button>
                     </div>
 
+                    {/* === Columna 2: Gloss y Bordes === */}
+                    <div className="RecU_cardMini">
+                      <div className="RecU_h4">Luz + Borde</div>
+
+                      <div className="RecU_rowMini">
+                        <span className="RecU_kvMini">Borde suave</span>
+                        <input
+                          type="range"
+                          min="0"
+                          max="4"
+                          step="0.1"
+                          value={featherPx}
+                          onChange={(e) =>
+                            setFeatherPx(parseFloat(e.target.value))
+                          }
+                        />
+                      </div>
+
+                      <div className="RecU_rowMini">
+                        <span className="RecU_kvMini">Gloss (poder)</span>
+                        <input
+                          type="range"
+                          min="0"
+                          max="1"
+                          step="0.01"
+                          value={glossPower}
+                          onChange={(e) =>
+                            setGlossPower(parseFloat(e.target.value))
+                          }
+                        />
+                      </div>
+
+                      <div className="RecU_rowMini">
+                        <span className="RecU_kvMini">Gloss (tamaño)</span>
+                        <input
+                          type="range"
+                          min="0.2"
+                          max="1"
+                          step="0.01"
+                          value={glossSize}
+                          onChange={(e) =>
+                            setGlossSize(parseFloat(e.target.value))
+                          }
+                        />
+                      </div>
+
+                      <button
+                        className="RecU_btnTinyGhost"
+                        onClick={() => {
+                          setFeatherPx(1.1);
+                          setGlossPower(0.35);
+                          setGlossSize(0.55);
+                        }}
+                      >
+                        Reset Luz/Borde
+                      </button>
+                    </div>
+
+                    {/* === Columna 3: Ajuste del Diseño === */}
                     {designImg && (
-                      <>
-                        <div className="RecU_row">
-                          <span className="RecU_kv">Escala diseño</span>
+                      <div className="RecU_cardMini">
+                        <div className="RecU_h4">Diseño</div>
+
+                        <div className="RecU_rowMini">
+                          <span className="RecU_kvMini">Escala</span>
                           <input
-                            className="RecU_full"
                             type="range"
                             min="0.2"
                             max="4"
@@ -977,10 +1161,10 @@ export default function TryOnNailsPhoto() {
                             }
                           />
                         </div>
-                        <div className="RecU_row">
-                          <span className="RecU_kv">Rotación</span>
+
+                        <div className="RecU_rowMini">
+                          <span className="RecU_kvMini">Rotación</span>
                           <input
-                            className="RecU_full"
                             type="range"
                             min="-180"
                             max="180"
@@ -991,10 +1175,10 @@ export default function TryOnNailsPhoto() {
                             }
                           />
                         </div>
-                        <div className="RecU_row">
-                          <span className="RecU_kv">Offset X</span>
+
+                        <div className="RecU_rowMini">
+                          <span className="RecU_kvMini">Offset X</span>
                           <input
-                            className="RecU_full"
                             type="range"
                             min="-200"
                             max="200"
@@ -1005,10 +1189,10 @@ export default function TryOnNailsPhoto() {
                             }
                           />
                         </div>
-                        <div className="RecU_row">
-                          <span className="RecU_kv">Offset Y</span>
+
+                        <div className="RecU_rowMini">
+                          <span className="RecU_kvMini">Offset Y</span>
                           <input
-                            className="RecU_full"
                             type="range"
                             min="-200"
                             max="200"
@@ -1020,65 +1204,36 @@ export default function TryOnNailsPhoto() {
                           />
                         </div>
 
-                        <div className="RecU_row">
-                          <span className="RecU_kv">Intensidad del diseño</span>
+                        <div className="RecU_rowMini">
+                          <span className="RecU_kvMini">Zoom diseño</span>
                           <input
-                            className="RecU_full"
                             type="range"
-                            min="1"
+                            min="0.3"
                             max="3"
-                            step="0.1"
-                            value={designStrength}
-                            onChange={(e) =>
-                              setDesignStrength(parseFloat(e.target.value))
-                            }
-                          />
-                        </div>
-                        <div className="RecU_row">
-                          <span className="RecU_kv">Contraste</span>
-                          <input
-                            className="RecU_full"
-                            type="range"
-                            min="0.8"
-                            max="2"
-                            step="0.05"
-                            value={designContrast}
-                            onChange={(e) =>
-                              setDesignContrast(parseFloat(e.target.value))
-                            }
-                          />
-                        </div>
-                        <div className="RecU_row">
-                          <span className="RecU_kv">Saturación</span>
-                          <input
-                            className="RecU_full"
-                            type="range"
-                            min="0.8"
-                            max="2"
-                            step="0.05"
-                            value={designSaturation}
-                            onChange={(e) =>
-                              setDesignSaturation(parseFloat(e.target.value))
-                            }
-                          />
-                        </div>
-                        <div className="RecU_row">
-                          <span className="RecU_kv">
-                            Base blanca (undercoat)
-                          </span>
-                          <input
-                            className="RecU_full"
-                            type="range"
-                            min="0"
-                            max="0.6"
                             step="0.02"
-                            value={undercoatAlpha}
+                            value={cropScale}
                             onChange={(e) =>
-                              setUndercoatAlpha(parseFloat(e.target.value))
+                              setCropScale(parseFloat(e.target.value))
                             }
                           />
                         </div>
-                      </>
+
+                        <button
+                          className="RecU_btnTinyGhost"
+                          onClick={() => {
+                            setDesignScale(1);
+                            setDesignRot(0);
+                            setDesignOffsetX(0);
+                            setDesignOffsetY(0);
+                            setCropScale(1);
+                            setCropX(0);
+                            setCropY(0);
+                            setCropRotate(0);
+                          }}
+                        >
+                          Reset Diseño
+                        </button>
+                      </div>
                     )}
                   </div>
                 )}
@@ -1127,7 +1282,6 @@ export default function TryOnNailsPhoto() {
               <li>
                 Pulsa <b>↺ Reiniciar</b> para empezar de cero
               </li>
-            
             </ul>
           </div>
         </div>

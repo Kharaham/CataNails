@@ -542,7 +542,7 @@
     gap: 8px;
   }
   .dashC_title {
-    font-size: 1.25rem;       /* ~20px */
+    font-size: 1.25rem; /* ~20px */
     line-height: 1.25;
   }
   .dashC_sub {
@@ -554,8 +554,8 @@
   }
   .dashC_btnPrimary,
   .dashC_btnGhost {
-    flex: 1 1 auto;            /* que llenen ancho */
-    min-height: 42px;          /* target táctil cómodo */
+    flex: 1 1 auto; /* que llenen ancho */
+    min-height: 42px; /* target táctil cómodo */
   }
 
   /* KPIs a 1 columna */
@@ -568,8 +568,12 @@
     padding: 12px;
     gap: 10px;
   }
-  .dashC_statLabel { font-size: 0.88rem; }
-  .dashC_statValue { font-size: 1.02rem; }
+  .dashC_statLabel {
+    font-size: 0.88rem;
+  }
+  .dashC_statValue {
+    font-size: 1.02rem;
+  }
 
   /* Grids de tarjetas */
   .dashC_gridCharts,
@@ -577,9 +581,15 @@
     grid-template-columns: 1fr;
     gap: 12px;
   }
-  .dashC_card { padding: 12px; }
-  .dashC_cardHead { margin-bottom: 8px; }
-  .dashC_cardTitle { font-size: 1rem; }
+  .dashC_card {
+    padding: 12px;
+  }
+  .dashC_cardHead {
+    margin-bottom: 8px;
+  }
+  .dashC_cardTitle {
+    font-size: 1rem;
+  }
 
   /* Filtros/chips cómodos al tacto */
   .dashC_filterRow {
@@ -600,7 +610,9 @@
     grid-template-columns: 1fr;
     align-items: flex-start;
   }
-  .dashC_right { justify-self: flex-start; }
+  .dashC_right {
+    justify-self: flex-start;
+  }
 
   /* Botones pequeños: tacto cómodo */
   .dashC_btnSmall {
@@ -610,44 +622,61 @@
 
   /* Alturas de gráfico más bajas en móvil */
   .dashC_chartBox,
-  .dashC_skelChart { height: 200px; }
+  .dashC_skelChart {
+    height: 200px;
+  }
 }
 
 /* === Teléfonos pequeños (≤ 576px) === */
 @media (max-width: 576px) {
-  .dashC_title { font-size: 1.15rem; }
-  .dashC_sub   { font-size: 0.92rem; }
+  .dashC_title {
+    font-size: 1.15rem;
+  }
+  .dashC_sub {
+    font-size: 0.92rem;
+  }
 
   /* KPIs compactos */
   .dashC_statIcon {
-    width: 38px; height: 38px; font-size: 16px; border-radius: 10px;
+    width: 38px;
+    height: 38px;
+    font-size: 16px;
+    border-radius: 10px;
   }
 
   /* Tarjetas aún más compactas */
-  .dashC_card { padding: 10px; }
-  .dashC_cardTitle { font-size: 0.98rem; }
+  .dashC_card {
+    padding: 10px;
+  }
+  .dashC_cardTitle {
+    font-size: 0.98rem;
+  }
 
   /* Inputs de fecha/selector ocupan ancho completo */
-  .dashC_date { width: 100%; }
+  .dashC_date {
+    width: 100%;
+  }
 
   /* Skeletons más bajos */
-  .dashC_skelCal { height: 380px; }
+  .dashC_skelCal {
+    height: 380px;
+  }
 }
 
 /* === Calendario (FullCalendar) responsive === */
 .dashC_calendarBox {
-  overflow: hidden;            /* base */
+  overflow: hidden; /* base */
 }
 
 /* En móvil permitir scroll horizontal si la vista no cabe */
 @media (max-width: 768px) {
   .dashC_calendarBox {
-    overflow-x: auto;          /* scroll horizontal suave */
+    overflow-x: auto; /* scroll horizontal suave */
     -webkit-overflow-scrolling: touch;
   }
   /* Contenedor mínimo para que surja el scroll si es necesario */
   .dashC_calendarBox .fc {
-    min-width: 560px;          /* ajusta según tu vista (timeGrid suele necesitar ancho) */
+    min-width: 560px; /* ajusta según tu vista (timeGrid suele necesitar ancho) */
   }
 
   /* Toolbar compacta */
@@ -676,8 +705,12 @@
   }
 
   /* Eventos: mejor legibilidad y truncado limpio */
-  .dashC_eventTitle { font-size: 0.9rem; }
-  .dashC_eventSub   { font-size: 0.78rem; }
+  .dashC_eventTitle {
+    font-size: 0.9rem;
+  }
+  .dashC_eventSub {
+    font-size: 0.78rem;
+  }
   .dashC_event {
     white-space: nowrap;
     overflow: hidden;
@@ -694,5 +727,189 @@
   .dashC_btnSmall:focus {
     outline: 2px solid var(--dashC-blue);
     outline-offset: 2px;
+  }
+}
+/* ============================================================
+   🌸 C A T A N A I L S   —   F U L L C A L E N D A R   M A K E O V E R
+   ============================================================ */
+
+/* ============================================================
+   💗  C A T A N A I L S   —   C A L E N D A R   G L A M   V 2
+   Estilo Rosa Glam optimizado (sin repetidos)
+   ============================================================ */
+
+/* ===== TOOLBAR (Mes, Semana, Día, Prev/Next) ===== */
+.dashC_calendarBox .fc-toolbar {
+  background: linear-gradient(90deg, #ff7aa8, #d3215a);
+  padding: 14px 18px;
+  border-radius: 14px;
+  margin-bottom: 14px;
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(211, 33, 90, 0.35);
+}
+
+.dashC_calendarBox .fc-toolbar-title {
+  font-weight: 800;
+  font-size: 1.45rem;
+  color: #fff;
+  letter-spacing: -0.4px;
+}
+
+/* Botones */
+.dashC_calendarBox .fc-button {
+  border-radius: 10px !important;
+  border: none !important;
+  background: #ffffffdd !important;
+  color: #d3215a !important;
+  font-weight: 700 !important;
+  padding: 7px 13px !important;
+  box-shadow: 0 3px 10px rgba(255, 255, 255, 0.5);
+  transition: all 0.2s ease;
+}
+
+.dashC_calendarBox .fc-button:hover {
+  background: #ffe6ee !important;
+  transform: translateY(-2px);
+}
+
+.dashC_calendarBox .fc-button.fc-button-active {
+  background: #d3215a !important;
+  color: #fff !important;
+  box-shadow: 0 3px 12px rgba(211, 33, 90, 0.5);
+}
+
+/* ===== ENCABEZADO DE DÍAS ===== */
+.dashC_calendarBox .fc-col-header-cell {
+  background: #ffe5f0;
+  padding: 8px 0;
+  font-weight: 700;
+  color: #d3215a;
+  border: none;
+}
+
+.dashC_calendarBox .fc-col-header-cell-cushion {
+  font-size: 0.95rem;
+  text-transform: capitalize;
+}
+
+/* ===== CELDAS ===== */
+.dashC_calendarBox .fc-daygrid-day {
+  border: 1px solid #f5b9cd !important;
+  background: #fff;
+  transition: background 0.15s ease;
+}
+
+.dashC_calendarBox .fc-daygrid-day:hover {
+  background: #fff3f8;
+}
+
+/* Día actual */
+.dashC_calendarBox .fc-day-today {
+  background: #ffd8e7 !important;
+  border-color: #f097b5 !important;
+  box-shadow: inset 0 0 0 2px #d3215a55;
+}
+
+/* ===== EVENTOS (chips estilo glam) ===== */
+.dashC_calendarBox .fc-event {
+  border: none !important;
+  background: none !important;
+  padding: 0 !important;
+}
+
+.dashC_event {
+  background: #ffffff;
+  border: 1px solid #f5b6c9;
+  padding: 6px 8px;
+  border-radius: 10px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(210, 50, 90, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashC_event:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(210, 50, 90, 0.35);
+}
+
+/* Punto de color del evento */
+.dashC_eventDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+}
+
+/* Texto principal */
+.dashC_eventTitle {
+  font-weight: 700;
+  color: #c11557;
+  font-size: 0.92rem;
+}
+
+/* Hora */
+.dashC_eventSub {
+  margin-left: auto;
+  font-size: 0.78rem;
+  color: #8b3c63;
+}
+
+/* ===== ESTADOS DE EVENTO ===== */
+.dashC_fcEvent.is-done .dashC_event {
+  background: #e8faef;
+  border-color: #b5e2c7;
+}
+.dashC_fcEvent.is-pending .dashC_event {
+  background: #f7faff;
+  border-color: #cfe3ff;
+}
+.dashC_fcEvent.is-canceled .dashC_event {
+  background: #ffe8e8;
+  border-color: #f5b5b5;
+}
+
+/* ===== DÍA CON EVENTOS ===== */
+.dashC_calendarBox .fc-daygrid-day.fc-daygrid-day-with-events {
+  background: #fff6fa;
+}
+
+/* ===== POPOVER ===== */
+.dashC_calendarBox .fc-popover {
+  border-radius: 12px !important;
+  padding: 6px;
+  border: 1px solid #f7bdd0 !important;
+  box-shadow: 0 8px 20px rgba(211, 33, 90, 0.25) !important;
+}
+.dashC_calendarBox .fc-popover-header {
+  background: #ffcde0 !important;
+  color: #c2185b !important;
+  font-weight: 700;
+  padding: 6px 8px !important;
+  border-radius: 10px 10px 0 0 !important;
+}
+
+/* ===== SCROLLBAR ===== */
+.dashC_calendarBox {
+  scrollbar-width: thin;
+}
+.dashC_calendarBox::-webkit-scrollbar {
+  height: 8px;
+}
+.dashC_calendarBox::-webkit-scrollbar-thumb {
+  background: #f39abc;
+  border-radius: 20px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .dashC_calendarBox .fc-toolbar-title {
+    font-size: 1.1rem;
+  }
+  .dashC_eventTitle {
+    font-size: 0.85rem;
+  }
+  .dashC_eventSub {
+    font-size: 0.74rem;
   }
 }

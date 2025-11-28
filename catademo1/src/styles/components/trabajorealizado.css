@@ -1,3 +1,6 @@
+/* =========================================
+   TITULOS
+========================================= */
 .section-title {
   font-family: "Poppins", sans-serif;
   font-weight: 600;
@@ -14,51 +17,56 @@
   margin-bottom: 3rem;
 }
 
+/* =========================================
+   CONTENEDOR
+========================================= */
 .trabajos-realizados-container {
   max-width: 1200px;
   margin: auto;
   padding: 20px;
 }
 
-.trabajos-realizados-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
-}
-
+/* =========================================
+   TARJETAS (BASE)
+========================================= */
 .trabajo-realizado-item {
   position: relative;
   overflow: hidden;
-  border-radius: 10px;
-  transition: transform 0.2s ease-in-out;
-  height: 200px;
+  border-radius: 16px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  background: #f3f4f6;
 }
 
 .trabajo-realizado-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
+  border-radius: 16px;
   transition: transform 0.3s ease, opacity 0.3s ease;
-  border-radius: 10px;
 }
 
 .trabajo-realizado-item:hover .trabajo-realizado-img {
   transform: scale(1.05);
-  opacity: 0.9;
+  filter: saturate(1.08);
 }
 
+.trabajo-realizado-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.15);
+}
+
+/* Overlay */
 .trabajo-realizado-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6);
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
   display: flex;
   justify-content: center;
   align-items: center;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.25s ease;
+  border-radius: 16px;
 }
 
 .trabajo-realizado-item:hover .trabajo-realizado-overlay {
@@ -68,24 +76,53 @@
 .trabajo-realizado-title {
   font-family: "Poppins", sans-serif;
   font-weight: 500;
-  font-size: 1.3rem;
+  font-size: 1.35rem;
   color: white;
   text-align: center;
   padding: 0 10px;
 }
-/* ========== Skeleton Loader ========== */
+
+/* =========================================
+   GRID
+========================================= */
+.trabajos-realizados-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 10px;
+}
+
+/* Tablet */
+@media (max-width: 992px) {
+  .trabajos-realizados-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Móvil */
+@media (max-width: 600px) {
+  .trabajos-realizados-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    padding: 10px;
+  }
+}
+
+/* =========================================
+   SKELETON
+========================================= */
 .skeleton-card {
   position: relative;
   overflow: hidden;
-  border-radius: 10px;
-  height: 250px;
+  border-radius: 16px;
   background: #f2f3f5;
+  aspect-ratio: 1 / 1;
 }
 
 .skeleton-img {
   width: 100%;
   height: 100%;
-  border-radius: 10px;
+  border-radius: 16px;
   background: #e9ebee;
 }
 
@@ -96,7 +133,7 @@
   bottom: 0;
   padding: 12px;
   background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.25) 90%);
-  border-radius: 0 0 10px 10px;
+  border-radius: 0 0 16px 16px;
 }
 
 .skeleton-title {
@@ -107,7 +144,6 @@
   margin-inline: auto;
 }
 
-/* Shimmer anim */
 @keyframes shimmerAnim {
   0% {
     background-position: -200% 0;
@@ -116,6 +152,7 @@
     background-position: 200% 0;
   }
 }
+
 .shimmer {
   background: linear-gradient(
       90deg,
@@ -128,28 +165,34 @@
   animation: shimmerAnim 1.2s infinite linear;
 }
 
-/* Respeta accesibilidad: desactiva anim si el usuario lo pide */
 @media (prefers-reduced-motion: reduce) {
   .shimmer {
     animation: none;
   }
 }
-/* ========== Fade-in para imágenes cargadas ========== */
+
+/* =========================================
+   FADE-IN
+========================================= */
 .fade-in {
   opacity: 0;
   transform: scale(1.02);
   transition: opacity 0.6s ease, transform 0.6s ease;
 }
+
 .fade-in.loaded {
   opacity: 1;
   transform: scale(1);
 }
-/* ========== Reveal on-scroll (stagger) ========== */
+
+/* =========================================
+   REVEAL
+========================================= */
 .reveal {
   opacity: 0;
   transform: translateY(14px) scale(0.985);
-  will-change: opacity, transform;
 }
+
 .reveal.in-view {
   opacity: 1;
   transform: translateY(0) scale(1);
@@ -157,7 +200,6 @@
   transition-delay: var(--delay, 0ms);
 }
 
-/* Prefiere menos animación (accesibilidad) */
 @media (prefers-reduced-motion: reduce) {
   .reveal,
   .reveal.in-view {
@@ -167,143 +209,9 @@
   }
 }
 
-/* ========== Fade-in para imágenes cargadas ========== */
-.fade-in {
-  opacity: 0;
-  transform: scale(1.02);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-.fade-in.loaded {
-  opacity: 1;
-  transform: scale(1);
-}
-
-/* ========== Skeleton Loader (ya agregado antes) ========== */
-.skeleton-card {
-  position: relative;
-  overflow: hidden;
-  border-radius: 10px;
-  height: 250px;
-  background: #f2f3f5;
-}
-
-.skeleton-img {
-  width: 100%;
-  height: 100%;
-  border-radius: 10px;
-  background: #e9ebee;
-}
-
-.skeleton-overlay {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 12px;
-  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.25) 90%);
-  border-radius: 0 0 10px 10px;
-}
-
-.skeleton-title {
-  width: 60%;
-  height: 16px;
-  border-radius: 8px;
-  background: #dfe3e8;
-  margin-inline: auto;
-}
-
-/* Shimmer anim */
-@keyframes shimmerAnim {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-.shimmer {
-  background: linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(255, 255, 255, 0.6) 50%,
-      rgba(255, 255, 255, 0) 100%
-    ),
-    #e9ebee;
-  background-size: 200% 100%;
-  animation: shimmerAnim 1.2s infinite linear;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .shimmer {
-    animation: none;
-  }
-}
-/* ====== Grid 4-3-2 elegante ====== */
-.trabajos-realizados-grid {
-  --gap: 18px;
-  --radius: 14px;
-  display: grid;
-  gap: var(--gap);
-  grid-template-columns: repeat(4, minmax(0, 1fr)); /* 4 columnas desktop */
-}
-
-/* Tablet: 3 columnas */
-@media (max-width: 1200px) {
-  .trabajos-realizados-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-/* Móvil: 2 columnas */
-@media (max-width: 720px) {
-  .trabajos-realizados-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-/* Tarjeta con proporción fija (4:3). Quita la height fija anterior. */
-.trabajo-realizado-item {
-  position: relative;
-  overflow: hidden;
-  border-radius: var(--radius);
-  transition: transform 0.22s ease, box-shadow 0.22s ease;
-  aspect-ratio: 4 / 3; /* ⬅️ hace que todas se vean parejas */
-  background: #f3f4f6;
-}
-
-/* Imagen recortada y redondeada */
-.trabajo-realizado-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: var(--radius);
-  display: block;
-}
-
-/* Hover suave */
-.trabajo-realizado-item:hover .trabajo-realizado-img {
-  transform: scale(1.03);
-  filter: saturate(1.03);
-}
-.trabajo-realizado-item:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.08);
-}
-
-/* Overlay y título se adaptan al nuevo radius */
-.trabajo-realizado-overlay {
-  border-radius: var(--radius);
-}
-
-/* Skeleton y fade-in compatibles con el nuevo aspecto */
-.skeleton-card {
-  aspect-ratio: 4 / 3;
-  height: auto;
-  border-radius: var(--radius);
-}
-.skeleton-img {
-  border-radius: var(--radius);
-}
-/* ====== Encabezado de Portafolio ====== */
+/* =========================================
+   PORTAFOLIO HEADER
+========================================= */
 .trabajos-header {
   max-width: 860px;
   margin: 0 auto 2.5rem;
@@ -337,14 +245,16 @@
   border-radius: 999px;
   margin: 0.3rem auto 0;
 }
-/* ====== Barra de filtros bonita ====== */
+
+/* =========================================
+   FILTROS
+========================================= */
 .filters-bar {
   --radius: 14px;
   --gap: 10px;
   --ring: 0 0 0 2px rgba(233, 30, 99, 0.12);
   display: grid;
   grid-template-columns: 1fr auto;
-  align-items: center;
   gap: var(--gap);
   padding: 12px 14px;
   margin: 0 0 18px 0;
@@ -361,30 +271,30 @@
 }
 
 .chip {
-  --bg: #f3f4f6;
-  --fg: #374151;
-  --bd: #e5e7eb;
   display: inline-flex;
   align-items: center;
   gap: 8px;
   padding: 8px 12px;
   border-radius: 9999px;
-  background: var(--bg);
-  color: var(--fg);
-  border: 1px solid var(--bd);
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #e5e7eb;
   font-weight: 600;
   font-size: 0.92rem;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
+
 .chip:hover {
   transform: translateY(-1px);
   box-shadow: var(--ring);
 }
+
 .chip.active {
-  --bg: #fde7ef;
-  --fg: #9f1239;
-  --bd: #f8c7d7;
+  background: #fde7ef;
+  color: #9f1239;
+  border-color: #f8c7d7;
 }
+
 .chip-dot {
   width: 8px;
   height: 8px;
@@ -392,6 +302,7 @@
   background: currentColor;
   opacity: 0.6;
 }
+
 .chip-count {
   padding: 2px 8px;
   border-radius: 999px;
@@ -400,51 +311,11 @@
   font-size: 0.8rem;
 }
 
-/* Grupo de ordenación tipo "segmentado" */
-.sort-group {
-  display: inline-flex;
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  overflow: hidden;
-}
-.seg-btn {
-  appearance: none;
-  background: transparent;
-  border: none;
-  padding: 8px 12px;
-  font-weight: 600;
-  color: #374151;
-  cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease;
-}
-.seg-btn + .seg-btn {
-  border-left: 1px solid #e5e7eb;
-}
-.seg-btn:hover {
-  background: #f3f4f6;
-}
-.seg-btn.on {
-  background: #111827;
-  color: #fff;
-}
-.seg-icon {
-  margin-right: 6px;
-}
-
-/* Meta de resultados */
-.results-meta {
-  margin: 6px 2px 12px;
-  color: #6b7280;
-  font-size: 0.95rem;
-}
-
-/* Responsive */
-@media (max-width: 860px) {
-  .filters-bar {
-    grid-template-columns: 1fr;
-  }
-  .sort-group {
-    justify-self: start;
+/* =========================================
+   MÓVIL — TARJETAS GRANDES
+========================================= */
+@media (max-width: 600px) {
+  .trabajo-realizado-item {
+    aspect-ratio: 1 / 1;
   }
 }
