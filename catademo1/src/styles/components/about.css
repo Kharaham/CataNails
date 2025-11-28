@@ -638,7 +638,7 @@
   align-items: center;                 /* centra verticalmente el texto */
   min-height: 44px;                    /* altura cómoda */
   padding: 4px 5px 5px 44px;          /* espacio para el check */
-  line-height: 1.6;
+  line-height: 1.4;
   font-size: 0.98rem;
   letter-spacing: .1px;
 

@@ -450,6 +450,13 @@
   gap: 8px;
   align-items: end;
 }
+.citaAd_btn--tryon {
+  background-color: #6c63ff; /* ejemplo morado */
+  color: white;
+}
+.citaAd_btn--tryon:hover {
+  opacity: 0.8;
+}
 @media (max-width: 768px) {
   .citaAd_cardActions {
     grid-template-columns: 1fr 1fr;
