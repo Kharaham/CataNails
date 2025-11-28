@@ -74,8 +74,8 @@ function ServiceAutocomplete({ value, onSelect, services, loading }) {
     const t = debounced.trim().toLowerCase();
     return t
       ? services
-          .filter((s) => (s.name || "").toLowerCase().includes(t))
-          .slice(0, 12)
+        .filter((s) => (s.name || "").toLowerCase().includes(t))
+        .slice(0, 12)
       : services.slice(0, 12);
   }, [debounced, services]);
 
@@ -309,6 +309,8 @@ const ScheduleAppointmentView = ({ allowPrefill = true }) => {
 
   const [submitting, setSubmitting] = useState(false);
   const [loadingServices, setLoadingServices] = useState(true);
+
+
 
   const [bookedHours, setBookedHours] = useState([]);
   const [blockedDays, setBlockedDays] = useState([]); // ["YYYY-MM-DD"]
@@ -614,7 +616,113 @@ CataNails.`,
   };
 
   /* ---- Render ---- */
-  const priceRef = selectedService?.price ?? prefilledService?.price;
+  const [showPaypalModal, setShowPaypalModal] = useState(false);
+  const [paypalMode, setPaypalMode] = useState("abono");
+  const abrirPayPal = (mode) => {
+    setPaypalMode(mode);
+    setShowPaypalModal(true);
+  };
+  const priceRef = selectedService?.price ?? prefilledService?.price ?? 0;
+  const abono40 = Math.round(priceRef * 0.40);
+  /* ---- PayPal Render ---- */
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if (!showPaypalModal) return;
+
+    if (!window.paypal) {
+      console.error("PayPal SDK no cargado.");
+      toast.error("Error cargando PayPal.");
+      return;
+    }
+
+    // PayPal usa USD, convertimos CLP → USD aprox:
+
+    const montoCLP = paypalMode === "abono" ? abono40 : priceRef;
+    const amountUSD = (montoCLP / 1000).toFixed(2);
+
+
+    window.paypal.Buttons({
+      createOrder: function (data, actions) {
+        return actions.order.create({
+          purchase_units: [
+            {
+              amount: {
+                value: amountUSD,
+                currency_code: "USD",     // ⭐ agregado obligatorio
+              },
+              description:
+                paypalMode === "abono"
+                  ? `Abono 40% — ${formData.service}`
+                  : `Pago Completo — ${formData.service}`,
+            },
+          ],
+        });
+      },
+
+      onApprove: async function (data, actions) {
+        const details = await actions.order.capture();
+
+        try {
+          // 🔥 calcular monto según modo (abono o total)
+          const montoCLP = paypalMode === "abono" ? abono40 : priceRef;
+          const amountUSD = (montoCLP / 1000).toFixed(2);
+
+          // Guardar cita con estado de pago:
+          await addDoc(collection(db, "appointments"), {
+            ...formData,
+            mode,
+            address: mode === "Domicilio" ? address : "",
+            serviceId: selectedService?.id || prefilledService?.id || null,
+            servicePrice: priceRef,
+
+            // 🔥 monto dinámico
+            abonoCLP: montoCLP,
+            abonoUSD: amountUSD,
+
+            paypalOrderID: data.orderID,
+
+            // 🔥 estado dinámico por tipo de pago
+            paymentStatus: paypalMode === "abono" ? "paid_40" : "paid_full",
+
+            createdAt: new Date().toISOString(),
+          });
+
+          toast.success("Pago recibido y cita agendada 🎉");
+
+          setShowPaypalModal(false);
+
+          // Reset form:
+          setFormData({
+            name: "",
+            email: "",
+            date: "",
+            hour: "",
+            service: "",
+            comment: "",
+          });
+          setSelectedService(null);
+          setPrefilledService(null);
+          setImageFile(null);
+
+          // evitar glitch visual en la imagen
+          setTimeout(() => setImagePreview(null), 150);
+
+          setMode("");
+          setAddress("");
+          setSelectedDate("");
+          setBookedHours([]);
+        } catch (e) {
+          console.error("Error:", e);
+          toast.error("No se pudo guardar la cita.");
+        }
+      },
+
+      onError: function (err) {
+        console.error(err);
+        toast.error("Hubo un error durante el pago.");
+      },
+    }).render("#paypal-button-container");
+  }, [showPaypalModal, paypalMode]);
 
   return (
     <div className="agenC_page">
@@ -632,16 +740,14 @@ CataNails.`,
             Servicio
           </span>
           <span
-            className={`agenC_badge ${
-              formData.date && formData.hour ? "ok" : ""
-            }`}
+            className={`agenC_badge ${formData.date && formData.hour ? "ok" : ""
+              }`}
           >
             Fecha & hora
           </span>
           <span
-            className={`agenC_badge ${
-              formData.name && formData.email ? "ok" : ""
-            }`}
+            className={`agenC_badge ${formData.name && formData.email ? "ok" : ""
+              }`}
           >
             Datos
           </span>
@@ -724,9 +830,8 @@ CataNails.`,
                         <button
                           key={h}
                           type="button"
-                          className={`agenC_hour ${
-                            formData.hour === h ? "isActive" : ""
-                          }`}
+                          className={`agenC_hour ${formData.hour === h ? "isActive" : ""
+                            }`}
                           onClick={() =>
                             setFormData((p) => ({ ...p, hour: h }))
                           }
@@ -756,18 +861,16 @@ CataNails.`,
                 <div className="agenC_segmented">
                   <button
                     type="button"
-                    className={`agenC_seg ${
-                      mode === "Presencial" ? "active" : ""
-                    }`}
+                    className={`agenC_seg ${mode === "Presencial" ? "active" : ""
+                      }`}
                     onClick={() => setMode("Presencial")}
                   >
                     Presencial
                   </button>
                   <button
                     type="button"
-                    className={`agenC_seg ${
-                      mode === "Domicilio" ? "active" : ""
-                    }`}
+                    className={`agenC_seg ${mode === "Domicilio" ? "active" : ""
+                      }`}
                     onClick={() => setMode("Domicilio")}
                   >
                     Domicilio
@@ -954,6 +1057,8 @@ CataNails.`,
             )}
           </div>
           <div className="agenC_actionBarBtns">
+
+            {/* <-- Botón Revisar (igual que antes) --> */}
             <button
               type="button"
               className="agenC_ghost"
@@ -961,11 +1066,76 @@ CataNails.`,
             >
               Revisar
             </button>
-            <button type="submit" className="agenC_btn" disabled={submitting}>
-              {submitting ? "Agendando…" : "Agendar Cita"}
+
+            {/* ⭐ NUEVO BOTÓN — Abonar 40% */}
+            <button
+              type="button"
+              className="agenC_btn"
+              onClick={() => abrirPayPal("abono")}   // ⭐ nuevo handler
+              disabled={
+                !formData.name ||
+                !formData.email ||
+                !formData.date ||
+                !formData.hour ||
+                !formData.service
+              }
+            >
+              Abonar 40% y Agendar
             </button>
+
+            {/* ⭐ NUEVO BOTÓN — Pagar Completo */}
+            <button
+              type="button"
+              className="agenC_btn agenC_btnFull"     // ⭐ estilo extra opcional
+              onClick={() => abrirPayPal("full")}     // ⭐ nuevo handler
+              disabled={
+                !formData.name ||
+                !formData.email ||
+                !formData.date ||
+                !formData.hour ||
+                !formData.service
+              }
+            >
+              Pagar Completo y Agendar
+            </button>
+
           </div>
+
         </div>
+        {/* ---- Modal PayPal ---- */}
+        {showPaypalModal && (
+          <div className="paypalModal">
+            <div className="paypalModal-content">
+
+              {/* ⭐ TÍTULO DINÁMICO */}
+              <h3>
+                {paypalMode === "abono"
+                  ? "Pagar Abono 40%"
+                  : "Pagar Total"}
+              </h3>
+
+              <p>Monto a pagar:</p>
+
+              {/* ⭐ MONTO DINÁMICO */}
+              <h2>
+                {paypalMode === "abono"
+                  ? `$${fmtCLP(abono40)}`
+                  : `$${fmtCLP(priceRef)}`}
+              </h2>
+
+              <div id="paypal-button-container"></div>
+
+              <button
+                className="agenC_ghost"
+                onClick={() => setShowPaypalModal(false)}
+                style={{ marginTop: "12px" }}
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        )}
+
 
         <ToastContainer />
       </form>

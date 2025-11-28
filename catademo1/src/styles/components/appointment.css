@@ -635,3 +635,20 @@ textarea:focus {
     padding: 82px 12px 116px;
   }
 }
+.citaAd_priceValue {
+  background: #f4f4f4;
+  border-radius: 8px;
+  padding: 6px 10px;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.citaAd_priceValue.green {
+  background: rgba(0, 200, 100, 0.12);
+  color: #0a8040;
+}
+
+.citaAd_priceValue.red {
+  background: rgba(255, 0, 0, 0.12);
+  color: #b00020;
+}

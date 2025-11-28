@@ -145,8 +145,8 @@ const CitasList = () => {
         typedAmount !== undefined && typedAmount !== ""
           ? Number(typedAmount)
           : fallbackAmount !== undefined && fallbackAmount !== null
-          ? Number(fallbackAmount)
-          : null;
+            ? Number(fallbackAmount)
+            : null;
 
       if (finalAmount === null || Number.isNaN(finalAmount)) {
         setFeedbackMessage(
@@ -229,8 +229,8 @@ const CitasList = () => {
   const filteredByDate = (arr) =>
     filterDate
       ? arr.filter(
-          (c) => new Date(c.date).toISOString().split("T")[0] === filterDate
-        )
+        (c) => new Date(c.date).toISOString().split("T")[0] === filterDate
+      )
       : arr;
 
   const stats = useMemo(
@@ -263,22 +263,44 @@ const CitasList = () => {
     return <div className={`citaAd_ribbon citaAd_ribbon--${estado}`} />;
   };
 
-  const CardFooterAcciones = ({ cita, isPending }) => (
-    <div className="citaAd_cardActions">
-      {isPending && (
-        <>
-          <div className="citaAd_priceGroup">
-            <label htmlFor={`amount-${cita.id}`}>Precio</label>
-            <input
-              id={`amount-${cita.id}`}
-              type="number"
-              inputMode="numeric"
-              className="citaAd_input"
-              placeholder="Ej: 12000"
-              value={amounts[cita.id] ?? cita.servicePrice ?? ""}
-              onChange={(e) => handleAmountChange(e, cita.id)}
-            />
-          </div>
+const CardFooterAcciones = ({ cita, isPending }) => (
+  <div className="citaAd_cardActions">
+    {isPending && (
+      <>
+        <div className="citaAd_priceGroup">
+          <label>Precio Total</label>
+          <div className="citaAd_priceValue">${cita.servicePrice}</div>
+
+          {/* ---- Pago con abono 40% ---- */}
+          {cita.paymentStatus === "paid_40" && (
+            <>
+              <label>Abono pagado (40%)</label>
+              <div className="citaAd_priceValue green">
+                ${cita.abonoCLP}
+              </div>
+
+              <label>Saldo pendiente</label>
+              <div className="citaAd_priceValue red">
+                ${cita.servicePrice - cita.abonoCLP}
+              </div>
+            </>
+          )}
+
+          {/* ---- Pago TOTAL ---- */}
+          {cita.paymentStatus === "paid_full" && (
+            <>
+              <label>Pago total</label>
+              <div className="citaAd_priceValue green">
+                ${cita.servicePrice}
+              </div>
+
+              <label>Estado</label>
+              <div className="citaAd_priceValue green">
+                Pago completado ✔
+              </div>
+            </>
+          )}
+        </div>
 
         <Link
           to={`/admin/try-on?citaId=${cita.id}`}
@@ -287,33 +309,34 @@ const CitasList = () => {
           Try-On
         </Link>
 
-          <Button
-            variant="success"
-            className="citaAd_btn citaAd_btn--ok"
-            onClick={() => markAsCompleted(cita.id)}
-          >
-            Realizada
-          </Button>
+        <Button
+          variant="success"
+          className="citaAd_btn citaAd_btn--ok"
+          onClick={() => markAsCompleted(cita.id)}
+        >
+          Realizada
+        </Button>
 
-          <Button
-            variant="outline-danger"
-            className="citaAd_btn citaAd_btn--cancel"
-            onClick={() => askCancelCita(cita)}
-          >
-            Cancelar
-          </Button>
-        </>
-      )}
+        <Button
+          variant="outline-danger"
+          className="citaAd_btn citaAd_btn--cancel"
+          onClick={() => askCancelCita(cita)}
+        >
+          Cancelar
+        </Button>
+      </>
+    )}
 
-      <Button
-        variant="danger"
-        className="citaAd_btn citaAd_btn--delete"
-        onClick={() => deleteCita(cita.id)}
-      >
-        Eliminar
-      </Button>
-    </div>
-  );
+    <Button
+      variant="danger"
+      className="citaAd_btn citaAd_btn--delete"
+      onClick={() => deleteCita(cita.id)}
+    >
+      Eliminar
+    </Button>
+  </div>
+);
+
 
   const CitaCard = ({ cita, estado }) => {
     const visiblePrice =
@@ -323,9 +346,8 @@ const CitasList = () => {
 
     return (
       <Card
-        className={`citaAd_card ${
-          cita.mode === "Domicilio" ? "citaAd_card--home" : ""
-        }`}
+        className={`citaAd_card ${cita.mode === "Domicilio" ? "citaAd_card--home" : ""
+          }`}
       >
         <EstadoRibbon estado={estado} />
 
@@ -402,8 +424,8 @@ const CitasList = () => {
               estado === "pendiente"
                 ? "pendiente"
                 : estado === "cancelada"
-                ? "cancelada"
-                : "realizada"
+                  ? "cancelada"
+                  : "realizada"
             }
           />
         ))}
