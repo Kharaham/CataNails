@@ -14,7 +14,14 @@ import {
 import { db } from "../../firebase/firebase";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import {
-  Typography, Box, Button, Modal, Snackbar, Tabs, Tab, TextField
+  Typography,
+  Box,
+  Button,
+  Modal,
+  Snackbar,
+  Tabs,
+  Tab,
+  TextField,
 } from "@mui/material";
 import LockIcon from "@mui/icons-material/Lock";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
@@ -34,7 +41,10 @@ const CalendarAppointments = () => {
   const [loading, setLoading] = useState(true);
 
   const [selectedDay, setSelectedDay] = useState(null);
-  const [selectedRange, setSelectedRange] = useState({ start: null, end: null });
+  const [selectedRange, setSelectedRange] = useState({
+    start: null,
+    end: null,
+  });
   const [selectedEvent, setSelectedEvent] = useState(null);
 
   const [snackbar, setSnackbar] = useState({ open: false, message: "" });
@@ -67,7 +77,7 @@ const CalendarAppointments = () => {
     const qs = await getDocs(collection(db, "blockedDays"));
     const loaded = qs.docs.map((d) => ({
       id: d.id,
-      date: d.data().date,   // "YYYY-MM-DD"
+      date: d.data().date, // "YYYY-MM-DD"
       reason: d.data().reason || "",
     }));
     return loaded;
@@ -178,7 +188,13 @@ const CalendarAppointments = () => {
     setReason("");
     // Si el usuario arrastró un rango, abre en pestaña "rango horario"
     const isSameDay = moment(slotInfo.start).isSame(slotInfo.end, "day");
-    setTab(isSameDay && slotInfo.action === "select" && slotInfo.end - slotInfo.start > 0 ? 1 : 0);
+    setTab(
+      isSameDay &&
+        slotInfo.action === "select" &&
+        slotInfo.end - slotInfo.start > 0
+        ? 1
+        : 0
+    );
     setIsModalOpen(true);
   };
 
@@ -200,9 +216,14 @@ const CalendarAppointments = () => {
     }
 
     // Evita si hay citas ese día
-    const hasAppt = appointments.some((ev) => moment(ev.start).isSame(dateStr, "day"));
+    const hasAppt = appointments.some((ev) =>
+      moment(ev.start).isSame(dateStr, "day")
+    );
     if (hasAppt) {
-      setSnackbar({ open: true, message: "No puedes bloquear: ya hay citas ese día." });
+      setSnackbar({
+        open: true,
+        message: "No puedes bloquear: ya hay citas ese día.",
+      });
       return;
     }
 
@@ -210,7 +231,10 @@ const CalendarAppointments = () => {
       date: dateStr,
       reason: reason.trim(),
     });
-    setBlockedDays((prev) => [...prev, { id: newDoc.id, date: dateStr, reason: reason.trim() }]);
+    setBlockedDays((prev) => [
+      ...prev,
+      { id: newDoc.id, date: dateStr, reason: reason.trim() },
+    ]);
     setSnackbar({ open: true, message: "Día bloqueado correctamente." });
     handleCloseModal();
   };
@@ -242,7 +266,10 @@ const CalendarAppointments = () => {
       rangesOverlap(start, end, ev.start, ev.end)
     );
     if (overlapAppt) {
-      setSnackbar({ open: true, message: "No puedes bloquear: hay citas en ese rango." });
+      setSnackbar({
+        open: true,
+        message: "No puedes bloquear: hay citas en ese rango.",
+      });
       return;
     }
 
@@ -251,7 +278,10 @@ const CalendarAppointments = () => {
       rangesOverlap(start, end, new Date(b.startISO), new Date(b.endISO))
     );
     if (overlapBlock) {
-      setSnackbar({ open: true, message: "Ese rango ya está cubierto por otro bloqueo." });
+      setSnackbar({
+        open: true,
+        message: "Ese rango ya está cubierto por otro bloqueo.",
+      });
       return;
     }
 
@@ -262,7 +292,10 @@ const CalendarAppointments = () => {
       endISO,
       reason: reason.trim(),
     });
-    setBlockedSlots((prev) => [...prev, { id: newDoc.id, startISO, endISO, reason: reason.trim() }]);
+    setBlockedSlots((prev) => [
+      ...prev,
+      { id: newDoc.id, startISO, endISO, reason: reason.trim() },
+    ]);
     setSnackbar({ open: true, message: "Horario bloqueado correctamente." });
     handleCloseModal();
   };
@@ -282,10 +315,14 @@ const CalendarAppointments = () => {
 
     if (selectedEvent.type === "blockedDay") {
       await deleteDoc(doc(db, "blockedDays", selectedEvent.meta.id));
-      setBlockedDays((prev) => prev.filter((d) => d.id !== selectedEvent.meta.id));
+      setBlockedDays((prev) =>
+        prev.filter((d) => d.id !== selectedEvent.meta.id)
+      );
     } else if (selectedEvent.type === "blockedSlot") {
       await deleteDoc(doc(db, "blockedSlots", selectedEvent.meta.id));
-      setBlockedSlots((prev) => prev.filter((b) => b.id !== selectedEvent.meta.id));
+      setBlockedSlots((prev) =>
+        prev.filter((b) => b.id !== selectedEvent.meta.id)
+      );
     }
     setSnackbar({ open: true, message: "Bloqueo eliminado." });
     setSelectedEvent(null);
@@ -335,7 +372,7 @@ const CalendarAppointments = () => {
             views={["month", "week", "day", "agenda"]}
             defaultView="month"
             selectable
-            step={30}            // precisión 30 min
+            step={30} // precisión 30 min
             timeslots={2}
             min={new Date(2024, 0, 1, 9, 0)}
             max={new Date(2024, 0, 1, 21, 0)}
@@ -366,16 +403,29 @@ const CalendarAppointments = () => {
 
           {/* Modal crear bloqueo */}
           <Modal open={isModalOpen} onClose={handleCloseModal}>
-            <Box sx={{
-              position: "absolute", top: "50%", left: "50%",
-              transform: "translate(-50%, -50%)", width: 520, bgcolor: "background.paper",
-              borderRadius: 2, boxShadow: 24, p: 3
-            }}>
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 520,
+                bgcolor: "background.paper",
+                borderRadius: 2,
+                boxShadow: 24,
+                p: 3,
+              }}
+            >
               <Typography variant="h6" align="center" gutterBottom>
                 Bloquear disponibilidad
               </Typography>
 
-              <Tabs value={tab} onChange={(_, v) => setTab(v)} centered sx={{ mb: 2 }}>
+              <Tabs
+                value={tab}
+                onChange={(_, v) => setTab(v)}
+                centered
+                sx={{ mb: 2 }}
+              >
                 <Tab label="Día completo" />
                 <Tab label="Rango por horas" />
               </Tabs>
@@ -383,21 +433,34 @@ const CalendarAppointments = () => {
               {tab === 0 && (
                 <Box>
                   <Typography variant="body2" sx={{ mb: 1 }}>
-                    Día seleccionado: <strong>{selectedDay ? moment(selectedDay).format("DD-MM-YYYY") : "-"}</strong>
+                    Día seleccionado:{" "}
+                    <strong>
+                      {selectedDay
+                        ? moment(selectedDay).format("DD-MM-YYYY")
+                        : "-"}
+                    </strong>
                   </Typography>
                   <TextField
-                    fullWidth size="small" label="Motivo (opcional)"
-                    value={reason} onChange={(e) => setReason(e.target.value)} sx={{ mb: 2 }}
+                    fullWidth
+                    size="small"
+                    label="Motivo (opcional)"
+                    value={reason}
+                    onChange={(e) => setReason(e.target.value)}
+                    sx={{ mb: 2 }}
                   />
                   <Box display="flex" gap={1} justifyContent="center">
                     <Button
-                      variant="contained" color="primary" startIcon={<LockIcon />}
+                      variant="contained"
+                      color="primary"
+                      startIcon={<LockIcon />}
                       onClick={handleBlockDay}
                     >
                       Bloquear día
                     </Button>
                     <Button
-                      variant="outlined" color="secondary" startIcon={<LockOpenIcon />}
+                      variant="outlined"
+                      color="secondary"
+                      startIcon={<LockOpenIcon />}
                       onClick={handleUnblockDay}
                     >
                       Desbloquear día
@@ -409,37 +472,67 @@ const CalendarAppointments = () => {
               {tab === 1 && (
                 <Box>
                   <Typography variant="body2" sx={{ mb: 1 }}>
-                    Fecha: <strong>{selectedDay ? moment(selectedDay).format("DD-MM-YYYY") : "-"}</strong>
+                    Fecha:{" "}
+                    <strong>
+                      {selectedDay
+                        ? moment(selectedDay).format("DD-MM-YYYY")
+                        : "-"}
+                    </strong>
                   </Typography>
 
-                  <Box display="grid" gridTemplateColumns="1fr 1fr" gap={2} sx={{ mb: 2 }}>
+                  <Box
+                    display="grid"
+                    gridTemplateColumns="1fr 1fr"
+                    gap={2}
+                    sx={{ mb: 2 }}
+                  >
                     <TextField
-                      label="Inicio" type="time" size="small"
-                      value={manualStart} onChange={(e) => setManualStart(e.target.value)}
+                      label="Inicio"
+                      type="time"
+                      size="small"
+                      value={manualStart}
+                      onChange={(e) => setManualStart(e.target.value)}
                       inputProps={{ step: 300 }}
                     />
                     <TextField
-                      label="Fin" type="time" size="small"
-                      value={manualEnd} onChange={(e) => setManualEnd(e.target.value)}
+                      label="Fin"
+                      type="time"
+                      size="small"
+                      value={manualEnd}
+                      onChange={(e) => setManualEnd(e.target.value)}
                       inputProps={{ step: 300 }}
                     />
                   </Box>
 
-                  <Button variant="text" onClick={applyManualTimes} sx={{ mb: 2 }}>
+                  <Button
+                    variant="text"
+                    onClick={applyManualTimes}
+                    sx={{ mb: 2 }}
+                  >
                     Usar horas ingresadas
                   </Button>
 
                   <TextField
-                    fullWidth size="small" label="Motivo (opcional)"
-                    value={reason} onChange={(e) => setReason(e.target.value)} sx={{ mb: 2 }}
+                    fullWidth
+                    size="small"
+                    label="Motivo (opcional)"
+                    value={reason}
+                    onChange={(e) => setReason(e.target.value)}
+                    sx={{ mb: 2 }}
                   />
 
                   <Typography variant="caption" display="block" sx={{ mb: 2 }}>
-                    * También puedes seleccionar un rango arrastrando en la vista “Semana” o “Día”.
+                    * También puedes seleccionar un rango arrastrando en la
+                    vista “Semana” o “Día”.
                   </Typography>
 
                   <Box display="flex" justifyContent="center">
-                    <Button variant="contained" color="primary" onClick={handleBlockHours} startIcon={<LockIcon />}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleBlockHours}
+                      startIcon={<LockIcon />}
+                    >
                       Bloquear rango
                     </Button>
                   </Box>
@@ -450,37 +543,78 @@ const CalendarAppointments = () => {
 
           {/* Modal ver/eliminar bloqueo o detalles de cita */}
           <Modal open={!!selectedEvent} onClose={() => setSelectedEvent(null)}>
-            <Box sx={{
-              position: "absolute", top: "50%", left: "50%",
-              transform: "translate(-50%, -50%)", width: 460, bgcolor: "background.paper",
-              borderRadius: 2, boxShadow: 24, p: 3
-            }}>
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 460,
+                bgcolor: "background.paper",
+                borderRadius: 2,
+                boxShadow: 24,
+                p: 3,
+              }}
+            >
               {selectedEvent?.type === "appointment" ? (
                 <>
-                  <Typography variant="h6" align="center" gutterBottom>Detalle de cita</Typography>
-                  <Typography>Cliente: {selectedEvent.details?.name}</Typography>
-                  <Typography>Servicio: {selectedEvent.details?.service}</Typography>
-                  <Typography>Modalidad: {selectedEvent.details?.mode}</Typography>
-                  <Typography>Fecha: {moment(selectedEvent.start).format("DD-MM-YYYY")}</Typography>
-                  <Typography>Hora: {moment(selectedEvent.start).format("HH:mm")}–{moment(selectedEvent.end).format("HH:mm")}</Typography>
+                  <Typography variant="h6" align="center" gutterBottom>
+                    Detalle de cita
+                  </Typography>
+                  <Typography>
+                    Cliente: {selectedEvent.details?.name}
+                  </Typography>
+                  <Typography>
+                    Servicio: {selectedEvent.details?.service}
+                  </Typography>
+                  <Typography>
+                    Modalidad: {selectedEvent.details?.mode}
+                  </Typography>
+                  <Typography>
+                    Fecha: {moment(selectedEvent.start).format("DD-MM-YYYY")}
+                  </Typography>
+                  <Typography>
+                    Hora: {moment(selectedEvent.start).format("HH:mm")}–
+                    {moment(selectedEvent.end).format("HH:mm")}
+                  </Typography>
                   <Box textAlign="center" mt={2}>
-                    <Button variant="contained" onClick={() => setSelectedEvent(null)}>Cerrar</Button>
+                    <Button
+                      variant="contained"
+                      onClick={() => setSelectedEvent(null)}
+                    >
+                      Cerrar
+                    </Button>
                   </Box>
                 </>
               ) : (
                 <>
-                  <Typography variant="h6" align="center" gutterBottom>Bloqueo</Typography>
+                  <Typography variant="h6" align="center" gutterBottom>
+                    Bloqueo
+                  </Typography>
                   <Typography>
                     {selectedEvent?.allDay
-                      ? `Día completo: ${moment(selectedEvent?.start).format("DD-MM-YYYY")}`
-                      : `Rango: ${moment(selectedEvent?.start).format("DD-MM-YYYY HH:mm")} – ${moment(selectedEvent?.end).format("HH:mm")}`}
+                      ? `Día completo: ${moment(selectedEvent?.start).format(
+                          "DD-MM-YYYY"
+                        )}`
+                      : `Rango: ${moment(selectedEvent?.start).format(
+                          "DD-MM-YYYY HH:mm"
+                        )} – ${moment(selectedEvent?.end).format("HH:mm")}`}
                   </Typography>
                   {selectedEvent?.meta?.reason && (
                     <Typography>Motivo: {selectedEvent.meta.reason}</Typography>
                   )}
                   <Box display="flex" justifyContent="center" gap={1} mt={2}>
-                    <Button variant="outlined" onClick={() => setSelectedEvent(null)}>Cerrar</Button>
-                    <Button color="error" variant="contained" onClick={handleDeleteBlock}>
+                    <Button
+                      variant="outlined"
+                      onClick={() => setSelectedEvent(null)}
+                    >
+                      Cerrar
+                    </Button>
+                    <Button
+                      color="error"
+                      variant="contained"
+                      onClick={handleDeleteBlock}
+                    >
                       Eliminar bloqueo
                     </Button>
                   </Box>

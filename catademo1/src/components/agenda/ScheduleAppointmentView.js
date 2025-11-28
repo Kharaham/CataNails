@@ -37,7 +37,7 @@ const formatYMD = (d) => {
   const m = String(d.getMonth() + 1).padStart(2, "0");
   const day = String(d.getDate()).padStart(2, "0");
   return `${y}-${m}-${day}`;
-};
+};  
 const parseLocalISO = (iso) => {
   const [y, m, d] = (iso || "").split("-").map(Number);
   return new Date(y, (m || 1) - 1, d || 1);
