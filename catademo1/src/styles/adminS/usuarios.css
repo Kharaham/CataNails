@@ -5,7 +5,6 @@
   --line: #eceef3;
   --muted: #6c757d;
 
-  /* Paleta rosada CataaNails */
   --primary: var(--rep-primary, #e91e63);
   --primary-600: var(--rep-primary-600, #d81b60);
   --primary-soft: #ffe3ea;
@@ -32,9 +31,9 @@
   overflow: hidden;
   transition: 0.2s;
   .user-management-card.h-100 .card-body {
-    height: calc(100vh - 200px); /* Altura ajustable */
+    height: calc(100vh - 200px);
     overflow-y: auto;
-    padding-right: 12px; /* Para que el scroll no tape contenido */
+    padding-right: 12px;
   }
 }
 
@@ -48,9 +47,6 @@
   padding: 14px 18px;
 }
 
-/* ------------------------------------------
-   TABLA USUARIOS
-------------------------------------------- */
 .user-management-table-wrapper {
   width: 100%;
 }
@@ -79,9 +75,6 @@
   min-width: 92px;
 }
 
-/* ------------------------------------------
-   BOTONES
-------------------------------------------- */
 .btn-outline-primary {
   border-color: var(--primary) !important;
   color: var(--primary) !important;
@@ -109,9 +102,6 @@
   color: white !important;
 }
 
-/* ------------------------------------------
-   BADGES (puntos)
-------------------------------------------- */
 .bg-success-subtle {
   background: #e9fff0 !important;
   color: #1a7c3c !important;
@@ -125,24 +115,17 @@
   color: #a1a1a1 !important;
 }
 
-/* ------------------------------------------
-   CONTROLES BUSCADOR / FILTROS
-------------------------------------------- */
 .user-list-root .user-list-controls {
   border-bottom: 1px solid var(--line);
   background: #ffffff;
 }
 
-/* Inputs más suaves */
 .user-list-root input,
 .user-list-root select {
   border-radius: 12px !important;
   border: 1px solid #dadde3 !important;
 }
 
-/* ------------------------------------------
-   PERFIL - TABS
-------------------------------------------- */
 .user-tabs {
   display: inline-flex;
   background: var(--soft);
@@ -174,9 +157,6 @@
   box-shadow: var(--shadow);
 }
 
-/* ------------------------------------------
-   PERFIL - CARDS DE DATOS
-------------------------------------------- */
 .user-card-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -212,9 +192,6 @@
   color: #383838;
 }
 
-/* ------------------------------------------
-   LISTA DE CITAS
-------------------------------------------- */
 .user-appointments .user-appointments-list {
   border-radius: 12px;
   overflow: hidden;
@@ -267,9 +244,6 @@
   color: #7d8590;
 }
 
-/* ------------------------------------------
-   ESTADOS VACÍOS
-------------------------------------------- */
 .empty-profile {
   background: linear-gradient(180deg, #ffffff, #fafbff);
   border: 1px dashed var(--line);
@@ -279,9 +253,6 @@
   color: #9c9c9c;
 }
 
-/* ------------------------------------------
-   ANIMACIONES SUAVES
-------------------------------------------- */
 @keyframes skl {
   0% {
     background-position: 0% 0;
@@ -306,11 +277,9 @@
     transform: translateY(0);
   }
 }
-/* ──────────────────────────────────────────────
-   PANEL DERECHO - SCROLL INTERNO
-─────────────────────────────────────────────── */
+
 .user-management-card.profile-card .card-body {
-  height: calc(100vh - 210px); /* Ajusta según tu header */
+  height: calc(100vh - 210px);
   overflow-y: auto;
   overflow-x: hidden;
   padding-right: 10px;
@@ -321,7 +290,7 @@
   z-index: 5;
   background: #fff;
 }
-/* Backdrop */
+
 .modal-backdrop-custom {
   position: fixed;
   top: 0;
@@ -335,7 +304,6 @@
   z-index: 2000;
 }
 
-/* Caja del modal */
 .modal-custom {
   background: white;
   padding: 24px;
@@ -356,14 +324,12 @@
   margin-bottom: 20px;
 }
 
-/* Botones */
 .modal-actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
 }
 
-/* Animación */
 @keyframes modalIn {
   from {
     opacity: 0;

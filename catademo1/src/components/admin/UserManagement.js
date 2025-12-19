@@ -1,4 +1,3 @@
-// src/components/admin/UserManagement.jsx
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { db } from "../../firebase/firebase";
 import {
@@ -119,7 +118,6 @@ const UserManagement = () => {
     [users, selectedUserId]
   );
 
-  // ---- Helpers ----
   const cleanupAppointmentListeners = () => {
     appointmentsUnsubsRef.current.forEach((fn) => {
       try {
@@ -129,9 +127,7 @@ const UserManagement = () => {
     appointmentsUnsubsRef.current = [];
   };
 
-  // Suscripción en vivo a citas desde "appointments" por correo
   useEffect(() => {
-    // Limpia listeners previos y estado
     appointmentsUnsubsRef.current.forEach((fn) => {
       try {
         fn && fn();
@@ -143,22 +139,20 @@ const UserManagement = () => {
     if (!selectedUser) return;
 
     const rawEmail = (selectedUser.correo || selectedUser.email || "").trim();
-    if (!rawEmail) return; // sin correo, no podemos buscar
+    if (!rawEmail) return;
 
     const apptsCol = collection(db, "appointments");
 
-    // helper: ordenar cliente por date+hour (ambos strings)
     const sortClient = (arr) => {
       const toKey = (a) => `${a.date || ""} ${a.hour || ""}`.trim();
       return [...arr].sort((a, b) => {
         const ak = toKey(a);
         const bk = toKey(b);
-        // desc (recientes primero)
+
         return ak < bk ? 1 : ak > bk ? -1 : 0;
       });
     };
 
-    // 1) FETCH inmediato para mostrar algo al abrir el perfil
     (async () => {
       try {
         const qOnce = query(apptsCol, where("email", "==", rawEmail));
@@ -170,7 +164,6 @@ const UserManagement = () => {
       }
     })();
 
-    // 2) Snapshot con orderBy(date) y fallback
     try {
       const qOrdered = query(
         apptsCol,
@@ -259,7 +252,6 @@ const UserManagement = () => {
       )}
 
       <div className="row g-3">
-        {/* Lista */}
         <div className="col-12 col-lg-7">
           <div className="card user-management-card">
             <div className="card-header d-flex align-items-center justify-content-between">
@@ -285,7 +277,6 @@ const UserManagement = () => {
           </div>
         </div>
 
-        {/* Perfil */}
         <div className="col-12 col-lg-5">
           <div className="card user-management-card profile-card h-100">
             <div className="card-header d-flex align-items-center justify-content-between">
@@ -308,7 +299,7 @@ const UserManagement = () => {
           </div>
         </div>
       </div>
-      {/* MODAL ELIMINAR */}
+
       {showDeleteModal && (
         <div className="modal-backdrop-custom">
           <div className="modal-custom">

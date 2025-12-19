@@ -1,11 +1,4 @@
-/* =========================================================
-   🌸 CataaNails Try-On — BEAUTY PREMIUM (LIGHT MODE)
-   CSS COMPLETO UNIFICADO
-   ========================================================= */
-
-/* ---------------- VARIABLES + ROOT ---------------- */
 .RecU_root {
-  /* Paleta general */
   --RecU_bg: #fafafa;
   --RecU_bg_2: #ffffff;
   --RecU_card: rgba(255, 255, 255, 0.7);
@@ -13,14 +6,12 @@
   --RecU_text: #2b2e33;
   --RecU_muted: #7a7f89;
 
-  /* Acentos */
   --RecU_brand: #e65fa0;
   --RecU_brand_2: #a678ff;
   --RecU_ok: #35c2a4;
   --RecU_warn: #ffb454;
   --RecU_danger: #ff6b81;
 
-  /* Superficies glass */
   --RecU_glass: linear-gradient(
     to bottom right,
     rgba(255, 255, 255, 0.85),
@@ -29,7 +20,6 @@
   --RecU_shadow: 0 24px 42px rgba(0, 0, 0, 0.06);
   --RecU_radius: 18px;
 
-  /* Controles */
   --RecU_btn_fg: #422347;
   --RecU_btn_ghost: rgba(0, 0, 0, 0.04);
   --RecU_input_bg: rgba(255, 255, 255, 0.65);
@@ -55,7 +45,6 @@
     "Segoe UI Emoji";
 }
 
-/* ---------------- LAYOUT BASE ---------------- */
 .RecU_container {
   max-width: 1200px;
   margin: 0 auto;
@@ -93,14 +82,12 @@
   color: var(--RecU_text);
 }
 
-/* Grid principal: 2 columnas (preview + controles) */
 .RecU_grid {
   display: grid;
   gap: 20px;
   grid-template-columns: 1.3fr 1fr;
 }
 
-/* Ocultar la tercera tarjeta (Checklist) si existe */
 .RecU_grid > .RecU_card:last-child {
   display: none;
 }
@@ -111,7 +98,6 @@
   }
 }
 
-/* Panel derecho sin overflow forzado */
 .RecU_sticky {
   position: sticky;
   top: 16px;
@@ -120,7 +106,6 @@
   overflow: visible;
 }
 
-/* ---------------- TARJETAS / SECCIONES ---------------- */
 .RecU_card {
   background: var(--RecU_glass);
   border: 1px solid var(--RecU_border);
@@ -139,7 +124,6 @@
   border-top: 0;
 }
 
-/* ---------------- DROPZONE ---------------- */
 .RecU_dropzone {
   display: flex;
   align-items: center;
@@ -170,7 +154,6 @@
   font-size: 12px;
 }
 
-/* ---------------- CANVAS / IMAGEN ---------------- */
 .RecU_canvasWrap {
   position: relative;
   width: 100%;
@@ -199,7 +182,6 @@
   gap: 8px;
 }
 
-/* ---------------- BOTONES ---------------- */
 .RecU_btn {
   appearance: none;
   border: none;
@@ -242,7 +224,6 @@
   background: rgba(0, 0, 0, 0.08);
 }
 
-/* Botones pequeños (lista uñas, etc.) */
 .RecU_btnTiny {
   padding: 6px 10px;
   border-radius: 10px;
@@ -250,7 +231,6 @@
   box-shadow: none;
 }
 
-/* ---------------- FILAS / INPUTS ---------------- */
 .RecU_row {
   display: flex;
   align-items: center;
@@ -296,7 +276,6 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* ---------------- RANGES (sliders) ---------------- */
 .RecU_root input[type="range"] {
   -webkit-appearance: none;
   appearance: none;
@@ -327,7 +306,6 @@
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
 }
 
-/* ---------------- TIPOGRAFÍAS / TÍTULOS ---------------- */
 .RecU_h3 {
   font-size: 14px;
   text-transform: uppercase;
@@ -336,7 +314,6 @@
   margin: 8px 16px 6px 16px;
 }
 
-/* ---------------- CHIPS ---------------- */
 .RecU_chip {
   display: inline-flex;
   align-items: center;
@@ -352,7 +329,6 @@
   border-color: color-mix(in srgb, var(--RecU_ok) 55%, var(--RecU_border));
 }
 
-/* ---------------- CHECKLIST (si lo usas en otra parte) ---------------- */
 .RecU_root ul {
   padding-left: 18px;
 }
@@ -360,7 +336,6 @@
   margin: 8px 0;
 }
 
-/* ---------------- LISTA DE UÑAS ---------------- */
 .RecU_list {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -413,15 +388,12 @@
   border: 1px solid var(--RecU_border);
 }
 
-/* ---------------- UTILIDADES ---------------- */
 .RecU_grid3xl {
-  /* placeholder si reusas la clase */
 }
 .RecU_hvh {
   min-height: 60dvh;
 }
 
-/* ---------------- FOCUS / ACCESIBILIDAD ---------------- */
 .RecU_btn:focus,
 .RecU_btnGhost:focus,
 .RecU_root select:focus,
@@ -432,7 +404,6 @@
   box-shadow: var(--RecU_focus);
 }
 
-/* Scrollbar sutil */
 .RecU_root ::-webkit-scrollbar {
   height: 10px;
   width: 10px;
@@ -441,9 +412,6 @@
   background: rgba(0, 0, 0, 0.18);
   border-radius: 999px;
 }
-/* ---------------------------------------
-   FIX: Botones blancos con mayor contraste
------------------------------------------*/
 
 .RecU_btnGhost {
   background: linear-gradient(
@@ -451,8 +419,8 @@
     rgba(255, 255, 255, 0.85),
     rgba(255, 255, 255, 0.65)
   ) !important;
-  color: #8a3ba0 !important; /* lavanda oscuro */
-  border: 1px solid rgba(230, 95, 160, 0.35) !important; /* borde rosado */
+  color: #8a3ba0 !important;
+  border: 1px solid rgba(230, 95, 160, 0.35) !important;
   box-shadow: 0 4px 10px rgba(230, 95, 160, 0.15) !important;
   backdrop-filter: blur(8px);
   transition: 0.15s ease;
@@ -474,17 +442,12 @@
   transform: translateY(0);
   filter: brightness(0.95);
 }
-/* =========================================================
-   📱 OPTIMIZACIÓN FULL PARA MÓVIL — CataaNails Try-On
-   ========================================================= */
 
 @media (max-width: 768px) {
-  /* ---- Contenedor principal ---- */
   .RecU_container {
     padding: 12px 12px 40px;
   }
 
-  /* ---- Header compacto ---- */
   .RecU_header {
     flex-direction: column;
     align-items: flex-start;
@@ -496,13 +459,11 @@
     padding: 4px 8px;
   }
 
-  /* ---- Grid a una sola columna ---- */
   .RecU_grid {
     grid-template-columns: 1fr !important;
     gap: 14px;
   }
 
-  /* ---- CARD compacta ---- */
   .RecU_card {
     border-radius: 16px;
     padding-top: 4px;
@@ -513,7 +474,6 @@
     padding: 10px 12px;
   }
 
-  /* ---- Canvas optimizado ---- */
   .RecU_canvasWrap {
     max-height: 60vh;
     border-radius: 16px;
@@ -525,14 +485,12 @@
     object-fit: contain;
   }
 
-  /* ---- Float button (Comparar) más pequeño ---- */
   .RecU_floatActions {
     bottom: 8px;
     right: 8px;
     transform: scale(0.9);
   }
 
-  /* ---- Botones más táctiles ---- */
   .RecU_btn,
   .RecU_btnGhost {
     padding: 9px 12px;
@@ -544,7 +502,6 @@
     font-size: 11px;
   }
 
-  /* ---- Inputs más pequeños ---- */
   .RecU_root select,
   .RecU_root input[type="text"],
   .RecU_textarea {
@@ -552,13 +509,11 @@
     font-size: 14px;
   }
 
-  /* ---- Selector de color más compacto ---- */
   .RecU_root input[type="color"] {
     width: 40px;
     height: 36px;
   }
 
-  /* ---- Grid de uñas (2 columnas → 1 columna si es muy estrecho) ---- */
   .RecU_list {
     grid-template-columns: 1fr 1fr;
     gap: 6px;
@@ -582,7 +537,6 @@
     padding: 1px 5px;
   }
 
-  /* ---- Sliders más delgados ---- */
   .RecU_root input[type="range"] {
     height: 20px;
   }
@@ -596,9 +550,6 @@
   }
 }
 
-/* ===============================
-   MUY PEQUEÑOS (iPhone SE / mini)
-   =============================== */
 @media (max-width: 380px) {
   .RecU_btn,
   .RecU_btnGhost {

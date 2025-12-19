@@ -33,14 +33,11 @@ const REPORTES_PIE_COLORS = [
 ];
 
 const ReportesView = () => {
-  // ====== INGRESOS ======
   const [reportesRegistros, setReportesRegistros] = useState([]);
 
-  // ====== CITAS / USUARIOS ======
   const [reportesCitas, setReportesCitas] = useState([]);
   const [reportesUsuarios, setReportesUsuarios] = useState([]);
 
-  // ====== FILTROS ======
   const [reportesFechaInicio, setReportesFechaInicio] = useState(() =>
     format(
       new Date(new Date().setDate(new Date().getDate() - 30)),
@@ -55,7 +52,6 @@ const ReportesView = () => {
   );
   const [reportesMetodo, setReportesMetodo] = useState("Todos");
 
-  // ====== SELECCIÓN DE SECCIONES ======
   const [reportesModo, setReportesModo] = useState("resumen");
   const [reportesSecciones, setReportesSecciones] = useState({
     kpis: true,
@@ -64,10 +60,8 @@ const ReportesView = () => {
     usuarios: true,
   });
 
-  // contenedor (para mantener estructura en pantalla, no se usa para PDF)
   const reportesRefContenedor = useRef(null);
 
-  // ====== LIVE DATA: ingresos ======
   useEffect(() => {
     const colRef = collection(db, "ingresos");
     const unsub = onSnapshot(colRef, (snap) => {
@@ -92,7 +86,6 @@ const ReportesView = () => {
     return () => unsub();
   }, []);
 
-  // ====== LIVE DATA: citas ======
   useEffect(() => {
     const colRef = collection(db, "appointments");
     const unsub = onSnapshot(colRef, (snap) => {
@@ -123,7 +116,6 @@ const ReportesView = () => {
     return () => unsub();
   }, []);
 
-  // ====== LIVE DATA: usuarios ======
   useEffect(() => {
     const colRef = collection(db, "usuarios");
     const unsub = onSnapshot(colRef, (snap) => {
@@ -134,7 +126,6 @@ const ReportesView = () => {
     return () => unsub();
   }, []);
 
-  // ====== helpers ======
   const reportesEnRango = (d) => {
     const norm = (x) =>
       format(toZonedTime(x, REPORTES_CHILE_TZ), "yyyy-MM-dd", {
@@ -144,7 +135,6 @@ const ReportesView = () => {
   };
   const reportesFmt = (n) => Number(n || 0).toLocaleString("es-CL");
 
-  // ====== FILTROS APLICADOS ======
   const reportesFiltrados = useMemo(() => {
     return reportesRegistros.filter(
       (r) =>
@@ -163,7 +153,6 @@ const ReportesView = () => {
     return reportesCitas.filter((c) => reportesEnRango(c.date));
   }, [reportesCitas, reportesFechaInicio, reportesFechaFin]);
 
-  // ====== MÉTRICAS INGRESOS ======
   const reportesTotal = useMemo(
     () => reportesFiltrados.reduce((acc, r) => acc + (r.amount || 0), 0),
     [reportesFiltrados]
@@ -181,7 +170,6 @@ const ReportesView = () => {
     return vals.reduce((a, b) => a + b, 0) / vals.length;
   }, [reportesCitasFiltradas]);
 
-  // ====== MÉTRICAS USUARIOS ======
   const reportesUsuariosTotal = reportesUsuarios.length;
   const reportesUsuariosConCita = useMemo(() => {
     const s = new Set(
@@ -198,7 +186,6 @@ const ReportesView = () => {
     return s.size;
   }, [reportesCitasFiltradas]);
 
-  // ====== MÉTRICAS CITAS ======
   const reportesCitasEnRango = reportesCitasFiltradas.length;
   const reportesCitasRealizadas = reportesCitasFiltradas.filter(
     (c) => c.completed
@@ -209,7 +196,6 @@ const ReportesView = () => {
   const reportesCitasPendientes =
     reportesCitasEnRango - reportesCitasRealizadas - reportesCitasCanceladas;
 
-  // ====== DATASETS GRÁFICOS ======
   const reportesLineasDiarias = useMemo(() => {
     const map = new Map();
     reportesFiltrados.forEach((r) => {
@@ -413,7 +399,6 @@ const ReportesView = () => {
 
     drawHeader();
 
-    // ===== KPIs =====
     let y = 28;
     if (include("kpis")) {
       const kpis = [
@@ -481,7 +466,6 @@ const ReportesView = () => {
       y = y + rowsKPIs * (cardH + 6) + 6;
     }
 
-    // ===== Ingresos =====
     if (include("ingresos")) {
       if (y > pageH - 70) {
         pdf.addPage();
@@ -516,7 +500,6 @@ const ReportesView = () => {
       y = pdf.lastAutoTable?.finalY || pageH - 30;
     }
 
-    // ===== Citas =====
     if (include("citas")) {
       pdf.addPage();
       drawHeader();
@@ -557,7 +540,6 @@ const ReportesView = () => {
       });
     }
 
-    // ===== Usuarios =====
     if (include("usuarios")) {
       pdf.addPage();
       drawHeader();
@@ -611,7 +593,6 @@ const ReportesView = () => {
     });
   };
 
-  /* ===== Labels personalizadas para Pie (evitan amontonamiento) ===== */
   const renderPieLabel = ({
     cx,
     cy,
@@ -621,13 +602,13 @@ const ReportesView = () => {
     value,
     percent,
   }) => {
-    if (!value) return null; // no pintar 0
+    if (!value) return null;
     const RAD = Math.PI / 180;
-    const r = outerRadius * 1.25; // fuera del pie
+    const r = outerRadius * 1.25;
     const x = cx + r * Math.cos(-midAngle * RAD);
     const y = cy + r * Math.sin(-midAngle * RAD);
     const right = x > cx;
-    const small = percent < 0.08; // texto un poco menor en segmentos chicos
+    const small = percent < 0.08;
     return (
       <text
         x={x}
@@ -693,7 +674,6 @@ const ReportesView = () => {
           </button>
         </div>
 
-        {/* Secciones a exportar */}
         <div className="reportes-secciones">
           <div className="reportes-radio-row">
             <label className="reportes-radio">
@@ -776,7 +756,6 @@ const ReportesView = () => {
           )}
         </div>
 
-        {/* Export */}
         <div className="reportes-acciones">
           <button
             className="reportes-btn reportes-primary"
@@ -793,7 +772,6 @@ const ReportesView = () => {
         </div>
       </div>
 
-      {/* KPIs de Ingresos */}
       <div className="reportes-kpi-grid">
         <div className="reportes-kpi">
           <span className="reportes-kpi-title">Transacciones (ingresos)</span>
@@ -819,7 +797,6 @@ const ReportesView = () => {
         </div>
       </div>
 
-      {/* KPIs de Usuarios / Citas */}
       <div className="reportes-kpi-grid">
         <div className="reportes-kpi">
           <span className="reportes-kpi-title">Usuarios totales</span>
@@ -844,7 +821,6 @@ const ReportesView = () => {
       </div>
 
       <div ref={reportesRefContenedor} className="reportes-root">
-        {/* INGRESOS */}
         <div className="reportes-chart-card">
           <div className="reportes-chart-title">Ingresos por día</div>
           <ResponsiveContainer width="100%" height={280}>
@@ -919,7 +895,6 @@ const ReportesView = () => {
           </ResponsiveContainer>
         </div>
 
-        {/* CITAS */}
         <div className="reportes-chart-card">
           <div className="reportes-chart-title">Citas por día (conteo)</div>
           <ResponsiveContainer width="100%" height={280}>
@@ -989,7 +964,6 @@ const ReportesView = () => {
           </ResponsiveContainer>
         </div>
 
-        {/* Tabla de ingresos */}
         <div className="reportes-table-card">
           <div className="reportes-chart-title">Ingresos (primeros 100)</div>
           <div className="reportes-table-wrap">
@@ -1034,7 +1008,6 @@ const ReportesView = () => {
           </div>
         </div>
 
-        {/* Tabla de citas */}
         <div className="reportes-table-card">
           <div className="reportes-chart-title">Citas (primeras 100)</div>
           <div className="reportes-table-wrap">

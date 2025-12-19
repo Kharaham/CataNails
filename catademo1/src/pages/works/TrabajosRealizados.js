@@ -10,9 +10,8 @@ const TrabajosRealizados = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Filtros bonitos
   const [selectedSection, setSelectedSection] = useState("todas");
-  const [sortMode, setSortMode] = useState("newest"); // newest | oldest | title
+  const [sortMode, setSortMode] = useState("newest");
 
   useEffect(() => {
     let isMounted = true;
@@ -41,13 +40,11 @@ const TrabajosRealizados = () => {
     };
   }, []);
 
-  // Secciones disponibles + conteo
-  // Secciones disponibles + conteo (sin "sin sección")
   const { sections, countsBySection } = useMemo(() => {
     const map = new Map();
     for (const t of trabajosRealizados) {
       const key = (t.section || "").toString().trim();
-      if (!key) continue; // ignora vacíos
+      if (!key) continue;
       map.set(key, (map.get(key) || 0) + 1);
     }
     const arr = Array.from(map.keys());
@@ -63,9 +60,7 @@ const TrabajosRealizados = () => {
     };
   }, [trabajosRealizados]);
 
-  // Aplicar filtro y orden (sin "sin sección")
   const filtrados = useMemo(() => {
-    // solo trabajos con sección válida
     let data = trabajosRealizados.filter((t) => (t.section || "").trim());
     if (selectedSection !== "todas") {
       data = data.filter((t) => t.section === selectedSection);
@@ -87,7 +82,6 @@ const TrabajosRealizados = () => {
     return data;
   }, [trabajosRealizados, selectedSection, sortMode]);
 
-  // Reveal on-scroll (se mantiene)
   useEffect(() => {
     if (loading) return;
     const items = document.querySelectorAll(".reveal");
@@ -111,7 +105,6 @@ const TrabajosRealizados = () => {
 
   return (
     <div className="container trabajos-realizados-container">
-      {/* Encabezado */}
       <div className="trabajos-header text-center">
         <h1 className="trabajos-title">Portafolio de Belleza</h1>
         <p className="trabajos-subtitle">
@@ -122,7 +115,6 @@ const TrabajosRealizados = () => {
 
       {error && <p className="text-center text-danger mb-4">{error}</p>}
 
-      {/* ======== FILTROS BONITOS ======== */}
       <div
         className="filters-bar"
         role="region"
@@ -172,7 +164,6 @@ const TrabajosRealizados = () => {
         </div>
       </div>
 
-      {/* Resultados */}
       {loading ? (
         <div className="trabajos-realizados-grid" aria-busy="true">
           {Array.from({ length: SKELETON_COUNT }).map((_, i) => (

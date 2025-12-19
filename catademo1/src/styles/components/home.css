@@ -38,7 +38,6 @@ body {
   transition: background 0.2s ease, color 0.2s ease;
 }
 
-/* Utilidades visuales */
 .gradient-text {
   background: linear-gradient(92deg, #fff, #ffe4e6 35%, #fecaca 60%, #fff);
   -webkit-background-clip: text;
@@ -68,7 +67,6 @@ body {
   box-shadow: 0 16px 36px rgba(225, 29, 72, 0.38);
 }
 
-/* Títulos de sección: TODO el título tiene el mismo tamaño */
 .section-title {
   margin: 0 0 0.6rem;
   font-size: clamp(1.35rem, 2.4vw, 1.9rem);
@@ -89,7 +87,6 @@ body {
   color: transparent;
 }
 
-/* ======= HERO / Carousel ======= */
 .hero-section {
   position: relative;
   overflow: hidden;
@@ -245,7 +242,6 @@ body {
   box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
 }
 
-/* Partículas decorativas */
 .decor {
   pointer-events: none;
   position: absolute;
@@ -270,7 +266,6 @@ body {
   }
 }
 
-/* ================== FAB / Sticky ================== */
 .sticky-reserve {
   position: sticky;
   bottom: 10px;
@@ -348,7 +343,6 @@ body {
   }
 }
 
-/* ===== BrandMarquee centrado ===== */
 .brandmarquee {
   position: relative;
   border-top: 1px dashed var(--border);
@@ -434,8 +428,6 @@ body {
   }
 }
 
-/* ================== Focus IA (minimal) ================== */
-/* ================== Focus IA v2 ================== */
 .focusIA.v2 {
   --cardR: 16px;
   --ring: color-mix(in srgb, var(--accent) 35%, transparent);
@@ -470,7 +462,6 @@ body {
   align-items: center;
 }
 
-/* Lado visual */
 .focusIA.v2 .focusIA-media {
   position: relative;
   aspect-ratio: 16/10;
@@ -478,7 +469,6 @@ body {
   overflow: hidden;
 }
 
-/* Lista de bullets */
 .focusIA.v2 .focusIA-list {
   display: grid;
   gap: 0.6rem;
@@ -521,7 +511,6 @@ body {
   margin-top: 0.1rem;
 }
 
-/* CTAs */
 .focusIA.v2 .focusIA-ctas {
   display: flex;
   gap: 0.55rem;
@@ -561,7 +550,6 @@ body {
   background: color-mix(in srgb, var(--soft) 88%, transparent);
 }
 
-/* Meta chips */
 .focusIA.v2 .focusIA-meta {
   display: flex;
   flex-wrap: wrap;
@@ -592,7 +580,6 @@ body {
   opacity: 0.6;
 }
 
-/* Responsive */
 @media (max-width: 980px) {
   .focusIA.v2 .focusIA-body {
     grid-template-columns: 1fr;
@@ -606,7 +593,7 @@ body {
     order: 1;
   }
 }
-/* ================== Mini carrusel Try-On ================== */
+
 .miniC {
   position: absolute;
   inset: 12px;
@@ -614,7 +601,6 @@ body {
   overflow: hidden;
   display: grid;
 
-  /* mantiene el tamaño del contenedor actual */
   width: 100%;
   height: 100%;
 
@@ -636,29 +622,24 @@ body {
   position: relative;
   overflow: hidden;
 
-  /* centra la imagen cuando sobren bandas */
   display: flex;
   align-items: center;
   justify-content: center;
 
-  /* opcional: fondo suave para letterboxing */
   background: linear-gradient(135deg, #fdfdfd, #fafafa);
 }
 :root[data-theme="dark"] .miniC-slide {
   background: linear-gradient(135deg, #0b0d10, #111418);
 }
 
-/* 🔑 imagen completa sin recorte ni estirado */
 .miniC-slide img {
   max-width: 100%;
   max-height: 100%;
 
-  /* quita el recorte suave que tapaba bordes */
   -webkit-mask-image: none !important;
   mask-image: none !important;
 }
 
-/* Flechas flotantes */
 .miniC-arrow {
   position: absolute;
   top: 50%;
@@ -686,7 +667,6 @@ body {
   right: 10px;
 }
 
-/* Dots */
 .miniC-dots {
   position: absolute;
   bottom: 10px;
@@ -711,14 +691,12 @@ body {
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);
 }
 
-/* Reduce motion */
 @media (prefers-reduced-motion: reduce) {
   .miniC-track {
     transition: none;
   }
 }
 
-/* ================== Explainer con fotos ================== */
 .ex2-section {
   max-width: 1100px;
   margin: 3rem auto;
@@ -727,7 +705,6 @@ body {
   gap: 3.2rem;
 }
 
-/* ---- Layout ---- */
 .ex2 {
   display: grid;
   grid-template-columns: 1.05fr 1fr;
@@ -745,7 +722,6 @@ body {
   order: 1;
 }
 
-/* ---- Media: fotos uniformes, estilizadas ---- */
 .ex2-media {
   position: relative;
   width: 100%;
@@ -772,7 +748,6 @@ body {
   transition: transform 0.55s ease;
 }
 
-/* ---- Hover minimal premium ---- */
 .ex2:hover .ex2-media {
   transform: translateY(-6px);
   box-shadow: 0 28px 60px rgba(0, 0, 0, 0.18);
@@ -782,7 +757,6 @@ body {
   transform: scale(1.06);
 }
 
-/* ---- Copy ---- */
 .ex2-copy {
   padding: 0.3rem 0.4rem;
 }
@@ -807,7 +781,6 @@ body {
   color: #b0b0b9;
 }
 
-/* ---- CTA mejorado ---- */
 .ex2-btn {
   appearance: none;
   background: none;
@@ -832,7 +805,6 @@ body {
   transform: translateY(-1px);
 }
 
-/* ================== Responsive ================== */
 @media (max-width: 980px) {
   .ex2 {
     grid-template-columns: 1fr;
@@ -848,11 +820,10 @@ body {
     font-size: 1.45rem;
   }
   .ex2-media {
-    aspect-ratio: 16 / 10; /* un poquito más alto para mobile */
+    aspect-ratio: 16 / 10;
   }
 }
 @media (max-width: 680px) {
-  /* Todas las tarjetas: layout horizontal */
   .ex2 {
     display: grid;
     grid-template-columns: 38% 1fr;
@@ -860,44 +831,37 @@ body {
     align-items: center;
   }
 
-  /* Imagen más grande en móvil */
   .ex2-media {
     aspect-ratio: 4 / 3 !important;
     border-radius: 1rem;
   }
 
-  /* Asegura que el texto quede a la derecha */
   .ex2-copy {
     padding: 0.3rem 0.2rem;
   }
 
-  /* Títulos más compactos */
   .ex2-title {
     font-size: 1.25rem;
     margin-bottom: 0.3rem;
     text-align: left;
   }
 
-  /* Texto compacto */
   .ex2-text {
     font-size: 0.92rem;
     margin-bottom: 0.6rem;
     text-align: left;
   }
 
-  /* Botón alineado a la izquierda */
   .ex2-btn {
     font-size: 0.85rem;
     padding: 0.5rem 0.7rem;
   }
 
-  /* EXCEPCIÓN: la PRIMERA tarjeta sigue siendo vertical */
   .ex2-section .ex2:first-child {
     grid-template-columns: 1fr !important;
   }
 }
 
-/* ================== Servicios ================== */
 .servicesX {
   max-width: 1100px;
   margin: 0 auto 2rem;
@@ -987,7 +951,6 @@ body {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
-/* ===== Badge ===== */
 .sx-badge {
   position: absolute;
   top: 12px;
@@ -1003,7 +966,6 @@ body {
   box-shadow: 0 4px 12px rgba(225, 29, 72, 0.35);
 }
 
-/* ===== Imagen pequeña ===== */
 .sx-mini-img {
   width: 100%;
   height: 110px;
@@ -1028,12 +990,10 @@ body {
   transition: transform 0.5s ease;
 }
 
-/* Sin hover en imagen */
 .sx-card:hover .sx-mini-img img {
   transform: none;
 }
 
-/* ===== Icono animado ===== */
 .sx-icon.icon-animated {
   width: 50px;
   height: 50px;
@@ -1053,7 +1013,6 @@ body {
   box-shadow: 0 12px 28px rgba(225, 29, 72, 0.12);
 }
 
-/* ===== Textos + CTA ===== */
 .sx-card.sx-advanced h4 {
   font-size: 1.05rem;
   font-weight: 800;
@@ -1089,7 +1048,6 @@ body {
   display: none !important;
 }
 
-/* ================== Testimonios ================== */
 .testimonials {
   max-width: 1100px;
   margin: 2rem auto;
@@ -1120,7 +1078,6 @@ body {
   color: var(--muted);
 }
 
-/* ================== FAQ ================== */
 .faq {
   max-width: 900px;
   margin: 1.5rem auto;
@@ -1151,7 +1108,6 @@ body {
   color: var(--muted);
 }
 
-/* ================== Newsletter ================== */
 .newsletter {
   max-width: 1100px;
   margin: 2rem auto;
@@ -1192,7 +1148,6 @@ body {
   background: var(--accent-900);
 }
 
-/* ================== Tira de confianza ================== */
 .trust-strip {
   max-width: 1100px;
   margin: 1rem auto 3rem;
@@ -1226,7 +1181,6 @@ body {
   color: var(--muted);
 }
 
-/* ================== Responsivo ================== */
 @media (max-width: 980px) {
   .t-carousel {
     grid-template-columns: 1fr 1fr;
@@ -1252,51 +1206,46 @@ body {
   }
 }
 .focusIA.v2 {
-  /* tamaño máximo del recuadro de la imagen */
-  --mediaSize: clamp(240px, 34vw, 380px); /* puedes subir/bajar 380px */
+  --mediaSize: clamp(240px, 34vw, 380px);
 }
 
 .focusIA.v2 .focusIA-body {
-  grid-template-columns: auto 1fr; /* la media ya no ocupa toda la columna */
+  grid-template-columns: auto 1fr;
   align-items: start;
   column-gap: clamp(0.9rem, 2vw, 1.2rem);
 }
 
 .focusIA.v2 .focusIA-media {
   width: var(--mediaSize);
-  aspect-ratio: 1 / 1; /* cuadrado como tus fotos */
+  aspect-ratio: 1 / 1;
   border-radius: 18px;
   overflow: hidden;
-  justify-self: start; /* pegado a la izquierda */
+  justify-self: start;
 }
 
 .focusIA.v2 .focusIA-right {
   min-width: 0;
-} /* evita que empuje a la imagen */
+}
 
-/* Mini carrusel: un poco menos de margen interno */
 .focusIA.v2 .focusIA-media .miniC {
   inset: 8px;
 }
 
-/* En móvil: que use todo el ancho, pero sin crecer infinito */
 @media (max-width: 980px) {
   .focusIA.v2 .focusIA-body {
     grid-template-columns: 1fr;
   }
   .focusIA.v2 .focusIA-media {
-    width: min(100%, 420px); /* tope en móvil */
-    margin-inline: auto; /* centrado */
+    width: min(100%, 420px);
+    margin-inline: auto;
     aspect-ratio: 1 / 1;
   }
 }
 
 .ex2-media {
   position: relative;
-  border-radius: 1.4rem;
-  overflow: hidden;
 
-  /* 👇 Aquí está la clave */
+  /*  */
   aspect-ratio: 16 / 9;
   width: 100%;
   height: auto;
@@ -1311,7 +1260,7 @@ body {
 .ex2-media img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* 👈 clave para que todas se recorten igual */
+  object-fit: cover;
   object-position: center;
   display: block;
   transition: transform 0.5s ease;
@@ -1374,16 +1323,12 @@ body {
   visibility: visible;
 }
 
-/* Responsive */
 @media (max-width: 760px) {
   .miniportfolio .mp-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-/* ---------------------------------------------------------
-   COLORES DESTACADOS DEL MES
---------------------------------------------------------- */
 .colorShowcase {
   max-width: 1100px;
   margin: 2rem auto 3rem;
@@ -1431,7 +1376,6 @@ body {
   font-size: 0.9rem;
 }
 
-/* Responsive */
 @media (max-width: 900px) {
   .csm-grid {
     grid-template-columns: repeat(3, 1fr);
@@ -1443,9 +1387,7 @@ body {
     grid-template-columns: repeat(2, 1fr);
   }
 }
-/* ---------------------------------------------------------
-   MASONRY GRID (PINTEREST STYLE)
---------------------------------------------------------- */
+
 .miniportfolio {
   max-width: 1100px;
   margin: 2rem auto;
@@ -1478,7 +1420,6 @@ body {
   transform: scale(1.06);
 }
 
-/* Responsive */
 @media (max-width: 900px) {
   .mp-masonry {
     column-count: 2;
@@ -1489,9 +1430,6 @@ body {
     column-count: 1;
   }
 }
-/* ==========================================================
-   CARRUSEL PRO – Últimos trabajos
-   ========================================================== */
 
 @media (min-width: 768px) {
   .mp-masonry {
@@ -1499,7 +1437,6 @@ body {
   }
 }
 
-/* CARRUSEL */
 .mp-carousel {
   width: 100%;
   overflow-x: auto;
@@ -1538,9 +1475,6 @@ body {
   display: block;
 }
 
-/* ---------------------------------------------------------
-   MODAL
---------------------------------------------------------- */
 .mp-modal {
   position: fixed;
   inset: 0;
@@ -1566,7 +1500,6 @@ body {
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
 }
 
-/* ANIMACIONES */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -1586,7 +1519,7 @@ body {
     opacity: 1;
   }
 }
-/* ======== Masonry Desktop ======== */
+
 .mp-masonry {
   column-count: 3;
   column-gap: 1rem;
@@ -1598,36 +1531,34 @@ body {
   overflow: hidden;
 }
 
-/* ======== Tablet: 2 columnas Masonry ======== */
 @media (max-width: 900px) {
   .mp-masonry {
     column-count: 2;
   }
 }
 
-/* ======== Mobile: DESACTIVAR masonry y usar GRID normal ======== */
 @media (max-width: 600px) {
   .mp-masonry {
-    column-count: unset; /* desactiva Masonry */
+    column-count: unset;
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 2 por fila */
+    grid-template-columns: repeat(2, 1fr);
     gap: 0.7rem;
   }
 
   .mp-masonry-item {
-    margin-bottom: 0; /* porque ahora usamos gap del grid */
+    margin-bottom: 0;
     width: 100%;
-    aspect-ratio: 1 / 1; /* cuadradas y bonitas */
+    aspect-ratio: 1 / 1;
   }
 
   .mp-masonry-item img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* se recorta igual en todas */
+    object-fit: cover;
     border-radius: 0.8rem;
   }
 }
-/* === Mobile: 3 por fila (compacto) === */
+
 @media (max-width: 600px) {
   .csm-grid {
     grid-template-columns: repeat(3, 1fr);
@@ -1647,23 +1578,19 @@ body {
     font-size: 0.75rem;
   }
 }
-/* Centrar contenido en cada tarjeta */
+
 .csm-item {
   text-align: center;
   display: flex;
   flex-direction: column;
-  align-items: center; /* centra horizontal */
+  align-items: center;
   justify-content: center;
 }
 
-/* Centrar la imagen explícitamente */
 .csm-item img {
   display: block;
   margin: 0 auto;
 }
-/* ---------------------------------------------------------
-   TRUST STRIP — Sección mejorada
---------------------------------------------------------- */
 
 .trust-strip {
   max-width: 1100px;
@@ -1698,7 +1625,7 @@ body {
 }
 
 .trust-item svg {
-  color: #e11d48; /* rosa elegante */
+  color: #e11d48;
 }
 
 .trust-item span {
@@ -1707,7 +1634,6 @@ body {
   color: var(--text);
 }
 
-/* Responsive */
 @media (max-width: 900px) {
   .trust-strip {
     grid-template-columns: repeat(2, 1fr);
@@ -1722,19 +1648,17 @@ body {
     font-size: 0.85rem;
   }
 }
-/* Oculta la galería original en móvil */
+
 @media (max-width: 767px) {
   .mp-masonry {
     display: none !important;
   }
 }
-/* ============================
-   CARRUSEL MUCHO MÁS PEQUEÑO EN DESKTOP
-   ============================ */
+
 @media (min-width: 1024px) {
   .mp-carousel {
-    max-width: 650px; /* ancho total reducido */
-    margin: 0 auto; /* centrar */
+    max-width: 650px;
+    margin: 0 auto;
     padding-bottom: 12px;
   }
 
@@ -1743,36 +1667,31 @@ body {
   }
 
   .mp-slide {
-    min-width: 42%; /* tamaño de cada tarjeta */
+    min-width: 42%;
     max-width: 42%;
     border-radius: 14px;
   }
 
   .mp-slide img {
-    height: 260px; /* altura uniforme como las demás imágenes */
-    object-fit: cover; /* recorte limpio */
+    height: 260px;
+    object-fit: cover;
   }
 }
-/* ============================================
-   DESKTOP — Carrusel más largo y multi-slides
-   ============================================ */
+
 @media (min-width: 1024px) {
-  /* Contenedor más largo */
   .mp-carousel {
-    max-width: 900px; /* antes 650px */
+    max-width: 900px;
     margin: 0 auto;
     padding-bottom: 14px;
     overflow-x: auto;
   }
 
-  /* Slides más pequeños para que entren varios */
   .mp-slide {
-    min-width: 28%; /* antes 42% */
+    min-width: 28%;
     max-width: 28%;
     border-radius: 14px;
   }
 
-  /* Ajuste visual uniforme */
   .mp-slide img {
     height: 240px;
     object-fit: cover;
@@ -1784,14 +1703,12 @@ body {
   }
 }
 
-/* Móvil → se muestra */
 @media (max-width: 767px) {
   .mp-carousel {
     display: block !important;
   }
 }
 
-/* Escritorio → ocultar completamente */
 @media (min-width: 768px) {
   .mp-carousel,
   .mp-masonry,
@@ -1799,9 +1716,7 @@ body {
     display: none !important;
   }
 }
-/* ============================================
-   COLORES — FORMATO 1:1 PERFECTO
-============================================ */
+
 .csm-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -1823,10 +1738,9 @@ body {
   align-items: center;
 }
 
-/* 🔥 CUADRADO PERFECTO 1:1 */
 .csm-img-wrap {
   width: 100%;
-  aspect-ratio: 1 / 1; /* 👈 clave mágica */
+  aspect-ratio: 1 / 1;
   overflow: hidden;
   border-radius: 0.8rem;
   border: 1px solid var(--border);
@@ -1837,11 +1751,10 @@ body {
   justify-content: center;
 }
 
-/* La imagen se ajusta sin deformarse */
 .csm-img-wrap img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* 👈 TODAS IGUALES */
+  object-fit: cover;
   display: block;
 }
 
@@ -1857,7 +1770,6 @@ body {
   color: var(--text);
 }
 
-/* ---------------- Responsivo ---------------- */
 @media (max-width: 900px) {
   .csm-grid {
     grid-template-columns: repeat(3, 1fr);
@@ -1869,10 +1781,10 @@ body {
     grid-template-columns: repeat(2, 1fr);
   }
 }
-/* --- Mantener todas las imágenes iguales en el carrusel móvil --- */
+
 .mp-img-wrap {
   width: 100%;
-  aspect-ratio: 3 / 4; /* 👈 Cambia a 1/1 si quieres cuadradas */
+  aspect-ratio: 3 / 4;
   border-radius: 14px;
   overflow: hidden;
   background: #fff;
@@ -1881,7 +1793,7 @@ body {
 .mp-img-wrap img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* 👈 TODAS SE VEN IGUAL */
+  object-fit: cover;
   object-position: center;
   display: block;
 }

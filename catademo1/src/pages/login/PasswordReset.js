@@ -17,7 +17,7 @@ export default function PasswordReset({ onBack }) {
   const [msg, setMsg] = useState({ error: "", success: "" });
 
   useEffect(() => {
-    auth.useDeviceLanguage(); // manda el correo en español
+    auth.useDeviceLanguage();
   }, []);
 
   const handlePasswordReset = async (e) => {
@@ -25,17 +25,11 @@ export default function PasswordReset({ onBack }) {
     setMsg({ error: "", success: "" });
     setLoading(true);
     try {
-      // (Opcional) verifica que exista algún método para ese correo
       const methods = await fetchSignInMethodsForEmail(auth, email.trim());
       if (!methods.length) {
-        // Para no revelar si el correo existe o no, podemos mostrar éxito igualmente,
-        // pero si prefieres avisar:
-        // throw { code: "auth/user-not-found" };
       }
 
-      // (Opcional) continúa en tu sitio después de resetear
       const actionCodeSettings = {
-        // Cambia al dominio permitido en Firebase Auth -> Dominios autorizados
         url: "https://tudominio.com/login",
         handleCodeInApp: false,
       };
@@ -53,7 +47,10 @@ export default function PasswordReset({ onBack }) {
         "auth/too-many-requests":
           "Demasiados intentos. Espera unos minutos e inténtalo otra vez.",
       };
-      setMsg({ error: map[err.code] || "No se pudo enviar el correo.", success: "" });
+      setMsg({
+        error: map[err.code] || "No se pudo enviar el correo.",
+        success: "",
+      });
     } finally {
       setLoading(false);
     }
@@ -66,7 +63,9 @@ export default function PasswordReset({ onBack }) {
         <Form.Group className="mb-4">
           <Form.Label>Correo</Form.Label>
           <InputGroup>
-            <InputGroup.Text><FaEnvelope /></InputGroup.Text>
+            <InputGroup.Text>
+              <FaEnvelope />
+            </InputGroup.Text>
             <Form.Control
               type="email"
               value={email}
@@ -77,9 +76,12 @@ export default function PasswordReset({ onBack }) {
           </InputGroup>
         </Form.Group>
 
-        {/* Botones abajo */}
         <div className="form-actions">
-          <Button className="login-button w-100" type="submit" disabled={loading}>
+          <Button
+            className="login-button w-100"
+            type="submit"
+            disabled={loading}
+          >
             {loading ? "Enviando..." : "Enviar correo de recuperación"}
           </Button>
           <div className="text-center">

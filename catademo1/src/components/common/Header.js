@@ -8,10 +8,8 @@ const Header = ({ user }) => {
   const auth = getAuth();
   const navigate = useNavigate();
 
-  // === Estado (prefijo headerC_) ===
   const [headerC_isCollapsed, setHeaderC_isCollapsed] = useState(true);
 
-  // === Handlers (prefijo headerC_) ===
   const headerC_handleLogout = async () => {
     try {
       await auth.signOut();
@@ -39,7 +37,6 @@ const Header = ({ user }) => {
         aria-label="Principal"
       >
         <div className="container">
-          {/* Brand */}
           <Link
             className="navbar-brand headerC_brand"
             to="/"
@@ -49,7 +46,6 @@ const Header = ({ user }) => {
             <span className="headerC_brandText">CataaNails</span>
           </Link>
 
-          {/* Toggler */}
           <button
             className="navbar-toggler headerC_toggle"
             type="button"
@@ -61,7 +57,6 @@ const Header = ({ user }) => {
             <span className="navbar-toggler-icon"></span>
           </button>
 
-          {/* Menú */}
           <div
             className={`collapse navbar-collapse ${
               headerC_isCollapsed ? "" : "show"
@@ -153,7 +148,6 @@ const Header = ({ user }) => {
               </li>
             </ul>
 
-            {/* CTA + Auth */}
             <div className="d-flex align-items-center gap-2 headerC_cta">
               {user ? (
                 <>

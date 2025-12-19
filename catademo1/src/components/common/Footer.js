@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../../styles/components/footer.css";
 
-/* === Detectar móvil === */
 const useIsMobile = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 600);
 
@@ -43,7 +42,6 @@ const Footer = () => {
     []
   );
 
-  /* Estado del acordeón móvil */
   const [openSection, setOpenSection] = useState(null);
   const toggle = (section) =>
     setOpenSection(openSection === section ? null : section);
@@ -58,12 +56,8 @@ const Footer = () => {
       </div>
 
       <div className="footer-top container">
-        {/* ========================================================
-            ✅ VERSIÓN MÓVIL — ACORDEÓN (SOLO MOVIL)
-        ======================================================== */}
         {isMobile && (
           <div className="mobile-footer">
-            {/* ⭐ SECCIÓN: CataaNails */}
             <div className="footer-accordion">
               <button
                 className={`fa-toggle ${openSection === "brand" ? "open" : ""}`}
@@ -104,7 +98,6 @@ const Footer = () => {
               </div>
             </div>
 
-            {/* ⭐ SECCIÓN: Enlaces */}
             <div className="footer-accordion">
               <button
                 className={`fa-toggle ${openSection === "links" ? "open" : ""}`}
@@ -131,7 +124,6 @@ const Footer = () => {
               </div>
             </div>
 
-            {/* ⭐ SECCIÓN: Contacto */}
             <div className="footer-accordion">
               <button
                 className={`fa-toggle ${
@@ -174,7 +166,6 @@ const Footer = () => {
               </div>
             </div>
 
-            {/* ⭐ SECCIÓN: Novedades & Promos */}
             <div className="footer-accordion">
               <button
                 className={`fa-toggle ${
@@ -217,13 +208,8 @@ const Footer = () => {
           </div>
         )}
 
-        {/* ========================================================
-            ✅ VERSIÓN DESKTOP — SIN CAMBIAR NADA
-        ======================================================== */}
         {!isMobile && (
           <div className="row gy-5">
-            {/* Tu footer WEB ORIGINAL aquí ↓↓↓ */}
-
             <div className="col-xl-4 col-lg-4 col-md-6">
               <div className="footer-brand cardish">
                 <Link to="/" className="footer-logo">
@@ -315,7 +301,6 @@ const Footer = () => {
           </div>
         )}
 
-        {/* ==================== Footer inferior ==================== */}
         <hr className="footer-separator" />
 
         <div className="footer-bottom text-center">

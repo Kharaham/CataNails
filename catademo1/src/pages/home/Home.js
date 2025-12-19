@@ -1,4 +1,3 @@
-// src/pages/Home.jsx
 import React, {
   useEffect,
   useRef,
@@ -26,7 +25,6 @@ import "../../styles/components/home.css";
 import { db } from "../../firebase/firebase";
 import { collection, getDocs } from "firebase/firestore";
 
-// Imágenes (usa rutas reales)
 import homeStudio1 from "../../assets/images/homev2/banner1.png";
 import homeStudio2 from "../../assets/images/homev2/banner2.png";
 import homeStudio4 from "../../assets/images/homev2/banner3.png";
@@ -59,7 +57,7 @@ import tone3 from "../../assets/images/homev2/color3.jpg";
 import tone4 from "../../assets/images/homev2/color5.jpg";
 import tone5 from "../../assets/images/homev2/color6.jpg";
 import tone6 from "../../assets/images/homev2/color7.jpg";
-/* ------------------- Helpers de animación ------------------- */
+
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 18 },
   whileInView: { opacity: 1, y: 0 },
@@ -67,7 +65,6 @@ const fadeUp = (delay = 0) => ({
   transition: { duration: 0.55, ease: "easeOut", delay },
 });
 
-/* ------------------- Carousel accesible y ligero ------------------- */
 const Carousel = memo(function Carousel({
   slides = [],
   autoPlayMs = 4500,
@@ -108,7 +105,6 @@ const Carousel = memo(function Carousel({
     return () => clearTimeout(timerRef.current);
   }, [index, autoPlayMs, slides.length, next, prefersReducedMotion]);
 
-  // Teclado
   useEffect(() => {
     const onKey = (e) => {
       const el = containerRef.current;
@@ -120,7 +116,6 @@ const Carousel = memo(function Carousel({
     return () => window.removeEventListener("keydown", onKey);
   }, [next, prev]);
 
-  // Swipe
   useEffect(() => {
     let startX = 0,
       dx = 0;
@@ -245,13 +240,12 @@ const Carousel = memo(function Carousel({
           </>
         )}
       </div>
-      {/* Partículas ligeras, desactivadas si reduce motion */}
+
       {!prefersReducedMotion && <DecorParticles />}
     </div>
   );
 });
 
-/* ------------------- Partículas (ligeras) ------------------- */
 const DecorParticles = memo(function DecorParticles() {
   return (
     <div aria-hidden className="decor">
@@ -262,7 +256,6 @@ const DecorParticles = memo(function DecorParticles() {
   );
 });
 
-/* ------------------- Barra sticky y FAB ------------------- */
 const StickyReserve = memo(function StickyReserve({ onReserve }) {
   const [show, setShow] = useState(false);
   useEffect(() => {
@@ -312,7 +305,6 @@ const FabMobile = memo(function FabMobile({ onReserve }) {
   );
 });
 
-/* ------------------- Marquee (ligero) ------------------- */
 const BrandMarquee = memo(function BrandMarquee() {
   const loop = useMemo(() => {
     const brands = [
@@ -345,8 +337,6 @@ const BrandMarquee = memo(function BrandMarquee() {
   );
 });
 
-/* ------------------- Servicios (HOME – versión mejorada) ------------------- */
-/* ------------------- Servicios (HOME – versión ULTRA) ------------------- */
 const ServicesShowcase = memo(function ServicesShowcase() {
   const navigate = useNavigate();
 
@@ -356,7 +346,7 @@ const ServicesShowcase = memo(function ServicesShowcase() {
       badge: "Nuevo",
       title: "Manicure Express",
       desc: "Perfecta si tienes poco tiempo. Limpio, rápido y elegante.",
-      img: miniExpress, // <-- AQUÍ se usa la variable importada
+      img: miniExpress,
       to: "/manicure",
       icon: <Sparkles size={20} />,
     },
@@ -421,8 +411,6 @@ const ServicesShowcase = memo(function ServicesShowcase() {
   );
 });
 
-/* ------------------- Mini Portafolio (galería) ------------------- */
-/* ------------------- Mini Portafolio (galería + carrusel) ------------------- */
 const MiniPortfolio = memo(function MiniPortfolio() {
   const [modalImg, setModalImg] = useState(null);
 
@@ -432,7 +420,6 @@ const MiniPortfolio = memo(function MiniPortfolio() {
     <motion.section className="miniportfolio" {...fadeUp(0.05)}>
       <h3 className="section-title emph">Nuestros últimos trabajos</h3>
 
-      {/* === CARRUSEL SOLO MÓVIL === */}
       <div className="mp-carousel">
         <div className="mp-track">
           {images.map((img, i) => (
@@ -445,7 +432,6 @@ const MiniPortfolio = memo(function MiniPortfolio() {
         </div>
       </div>
 
-      {/* === GRID ORIGINAL SOLO EN DESKTOP === */}
       <div className="mp-masonry">
         {images.map((img, i) => (
           <div
@@ -458,7 +444,6 @@ const MiniPortfolio = memo(function MiniPortfolio() {
         ))}
       </div>
 
-      {/* === MODAL === */}
       {modalImg && (
         <div className="mp-modal" onClick={() => setModalImg(null)}>
           <div className="mp-modal-content">
@@ -470,7 +455,6 @@ const MiniPortfolio = memo(function MiniPortfolio() {
   );
 });
 
-/* ------------------- Colores del mes ------------------- */
 const ColorShowcase = memo(function ColorShowcase() {
   const tones = [
     { img: tone1, name: "Rosa Quartz" },
@@ -500,7 +484,6 @@ const ColorShowcase = memo(function ColorShowcase() {
   );
 });
 
-/* ------------------- Focus IA (refinado) ------------------- */
 const FocusIA = memo(function FocusIA({ onReserve, onServices }) {
   return (
     <motion.section
@@ -519,12 +502,10 @@ const FocusIA = memo(function FocusIA({ onReserve, onServices }) {
       </header>
 
       <div className="focusIA-body">
-        {/* Lado visual */}
         <figure className="focusIA-media no-bg">
           <TryOnMiniCarousel images={[try1, try2, try3]} autoPlayMs={3500} />
         </figure>
 
-        {/* Lado texto */}
         <div className="focusIA-right">
           <ul className="focusIA-list" role="list">
             <li className="fi-item">
@@ -591,10 +572,9 @@ const FocusIA = memo(function FocusIA({ onReserve, onServices }) {
   );
 });
 
-/* ------------------- Mini carrusel Try-On (ligero) ------------------- */
 const TryOnMiniCarousel = memo(function TryOnMiniCarousel({
   images = [],
-  autoPlayMs = 0, // 0 = sin autoplay
+  autoPlayMs = 0,
 }) {
   const [index, setIndex] = useState(0);
   const ref = useRef(null);
@@ -616,7 +596,6 @@ const TryOnMiniCarousel = memo(function TryOnMiniCarousel({
   const next = useCallback(() => goTo(index + 1), [goTo, index]);
   const prev = useCallback(() => goTo(index - 1), [goTo, index]);
 
-  // Autoplay opcional
   useEffect(() => {
     if (
       !autoPlayMs ||
@@ -629,7 +608,6 @@ const TryOnMiniCarousel = memo(function TryOnMiniCarousel({
     return () => clearTimeout(timer.current);
   }, [index, autoPlayMs, images.length, prefersReducedMotion, next]);
 
-  // Swipe táctil
   useEffect(() => {
     let startX = 0,
       dx = 0;
@@ -714,7 +692,6 @@ const TryOnMiniCarousel = memo(function TryOnMiniCarousel({
   );
 });
 
-/* ------------------- Explainer con fotos V2 (mejorado) ------------------- */
 const ExplainerWithPhotos = memo(function ExplainerWithPhotos() {
   const navigate = useNavigate();
 
@@ -793,12 +770,10 @@ const FooterMini = memo(function FooterMini() {
   return <footer className="foot" />;
 });
 
-/* ------------------- Home ------------------- */
 export default function Home() {
   const navigate = useNavigate();
   const goReserve = useCallback(() => navigate("/reservar"), [navigate]);
 
-  // === REVIEWS ===
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {

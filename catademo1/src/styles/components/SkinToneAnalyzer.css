@@ -1,7 +1,3 @@
-/* ===================== CataaNails – Layout "One-Screen" ===================== */
-/* Mantiene los mismos classNames .Rec_*  y comprime layout para caber en 1 pantalla */
-
-/* -------- Raíz / fondo -------- */
 .Rec_root {
   --Rec-bg: #0b0e14;
   --Rec-panel: color-mix(in srgb, #0b0e14 65%, #141a24);
@@ -37,11 +33,10 @@
     ),
     var(--Rec-bg);
   color: var(--Rec-text);
-  /* margen superior pequeño para respiración */
+
   padding: 8px 0 12px;
 }
 
-/* -------- Grid principal (3 columnas en desktop) -------- */
 .Rec_app-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -49,31 +44,28 @@
   margin: 10px auto 8px;
   max-width: 1180px;
 
-  /* clave: reservamos el alto de la pantalla y hacemos scroll interno en columnas */
   height: calc(100svh - 24px);
   min-height: 460px;
 }
 @media (min-width: 992px) {
   .Rec_app-grid {
-    grid-template-columns: 1.2fr 0.9fr 0.9fr; /* preview | controles | checklist */
+    grid-template-columns: 1.2fr 0.9fr 0.9fr;
     gap: 16px;
   }
 }
 
-/* Cada columna scrollea internamente para que todo quepa sin mover el fondo */
 .Rec_col {
   min-width: 0;
   overflow: auto;
   overscroll-behavior: contain;
-  padding-right: 2px; /* evita recorte por barra */
+  padding-right: 2px;
 }
 .Rec_sticky-col {
   position: relative;
   top: auto;
   height: auto;
-} /* sticky no es necesario con scroll interno */
+}
 
-/* -------- Tarjetas compactas (glass) -------- */
 .Rec_card {
   background: linear-gradient(
     180deg,
@@ -93,7 +85,6 @@
   margin-top: 10px;
 }
 
-/* -------- Tipografía y utilidades más condensadas -------- */
 .Rec_row {
   display: flex;
   align-items: center;
@@ -121,7 +112,6 @@
   font-size: 0.86rem;
 }
 
-/* -------- Tabs móviles (se esconden en desktop) -------- */
 .Rec_mobile-tabs {
   position: sticky;
   top: 0;
@@ -146,7 +136,7 @@
   color: var(--Rec-text);
   font-weight: 700;
   padding: 8px 10px;
-  border-radius: 10px; /* compacto */
+  border-radius: 10px;
 }
 .Rec_mobile-tabs .Rec_tab.Rec_active {
   background: radial-gradient(
@@ -178,7 +168,6 @@
   }
 }
 
-/* -------- Botones (compactos) -------- */
 .Rec_btn {
   --shine: radial-gradient(
     120% 140% at 0% 0%,
@@ -221,7 +210,6 @@
   box-shadow: none;
 }
 
-/* -------- Badges / Chips -------- */
 .Rec_badge {
   background: linear-gradient(
     180deg,
@@ -243,7 +231,6 @@
   font-size: 0.8rem;
 }
 
-/* -------- Dropzone (más baja) -------- */
 .Rec_dropzone {
   display: grid;
   place-content: center;
@@ -261,7 +248,7 @@
   transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
   cursor: pointer;
   padding: 10px;
-  min-height: 88px; /* compacto */
+  min-height: 88px;
 }
 .Rec_dropzone:hover {
   border-color: color-mix(in srgb, var(--Rec-brand) 55%, var(--Rec-border));
@@ -281,17 +268,16 @@
   height: 0;
 }
 
-/* -------- Canvas: acotar para 1 pantalla -------- */
 .Rec_hvh {
   min-height: 0;
-} /* anulamos la min-height grande */
+}
 .Rec_canvas-wrap {
   background: #0c111b;
   border: 1px solid color-mix(in srgb, var(--Rec-border) 65%, transparent);
   border-radius: var(--Rec-radius);
   overflow: hidden;
   position: relative;
-  /* clave: altura adaptable que cabe en viewport con controles al lado */
+
   height: clamp(260px, 46svh, 520px);
 }
 .Rec_canvas {
@@ -302,7 +288,6 @@
   background: #0d131f;
 }
 
-/* Acciones flotantes */
 .Rec_floating-actions {
   position: absolute;
   right: 8px;
@@ -311,7 +296,6 @@
   gap: 6px;
 }
 
-/* -------- Inputs compactos -------- */
 .Rec_swatch {
   width: 44px;
   height: 44px;
@@ -365,7 +349,6 @@
   cursor: pointer;
 }
 
-/* -------- Listas y métricas compactas -------- */
 .Rec_stats {
   display: flex;
   gap: 6px;
@@ -391,7 +374,6 @@
   background: linear-gradient(90deg, var(--Rec-ok), var(--Rec-brand-2));
 }
 
-/* -------- Checklist / tablas: más densas -------- */
 .Rec_palette-card {
   padding: 10px;
   border-radius: var(--Rec-radius-sm);
@@ -407,12 +389,10 @@
   border-radius: 6px;
 }
 
-/* -------- Modal (sin cambios grandes, sólo padding) -------- */
 .Rec_modal-card {
   padding: 14px;
 }
 
-/* -------- Accesibilidad y performance -------- */
 .Rec_root code {
   background: #0b1020;
   color: #cfe3ff;

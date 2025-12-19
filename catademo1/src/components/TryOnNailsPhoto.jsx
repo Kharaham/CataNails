@@ -1,13 +1,9 @@
-// src/components/TryOnNailsPhoto.jsx
 import React, { useEffect, useRef, useState } from "react";
 import { fetchSAMMasks } from "../utils/samClient";
 import "../styles/components/TryOnNailsPhoto.css";
 
-// ---------- Firebase ----------
-import { storage } from "../firebase/firebase"; // <-- cambia a ../firebase/firebaseServicios si corresponde
+import { storage } from "../firebase/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-
-/* ================= Helpers (globales) ================= */
 
 function readEnv(key, fallback) {
   if (
@@ -28,7 +24,6 @@ function readEnv(key, fallback) {
 }
 const SAM_SERVER = readEnv("REACT_APP_SAM_URL", "http://127.0.0.1:8000");
 
-/* ================= Helpers de dibujo ================= */
 function bbox(poly) {
   let minX = Infinity,
     minY = Infinity,
@@ -43,7 +38,6 @@ function bbox(poly) {
   return { x: minX, y: minY, w: maxX - minX, h: maxY - minY };
 }
 function polygonArea(poly) {
-  // Área con fórmula de Shoelace (firma +/-, tomamos valor absoluto)
   if (!poly || poly.length < 3) return 0;
   let s = 0;
   for (let i = 0; i < poly.length; i++) {
@@ -126,35 +120,27 @@ function makeFilteredPattern(ctx, img, filters) {
   return ctx.createPattern(tile, "repeat");
 }
 
-/* =============== Componente =============== */
 export default function TryOnNailsPhoto() {
-  // flujo / estado
   const [step, setStep] = useState(1);
   const [status, setStatus] = useState("1) Sube una foto de tu mano 🖐️");
 
-  // imagen base
   const [imgURL, setImgURL] = useState("");
   const [img, setImg] = useState(null);
 
-  // máscaras
-  const [nails, setNails] = useState([]); // [{id, polygon, enabled, score, area}]
+  const [nails, setNails] = useState([]);
 
-  // estilo básico
   const [color, setColor] = useState("#c81e6e");
   const [opacity, setOpacity] = useState(1);
   const [blend, setBlend] = useState("soft-light");
 
-  // forma
   const [shapeSmooth, setShapeSmooth] = useState(0.65);
   const [shapeInset, setShapeInset] = useState(1.2);
 
-  // avanzado
   const [showMore, setShowMore] = useState(false);
   const [featherPx, setFeatherPx] = useState(1.1);
   const [glossPower, setGlossPower] = useState(0.35);
   const [glossSize, setGlossSize] = useState(0.55);
 
-  // diseño (opcional)
   const [designURL, setDesignURL] = useState("");
   const [designImg, setDesignImg] = useState(null);
   const [designScale, setDesignScale] = useState(1);
@@ -167,19 +153,16 @@ export default function TryOnNailsPhoto() {
   const [designSaturation, setDesignSaturation] = useState(1.25);
   const [undercoatAlpha, setUndercoatAlpha] = useState(0.1);
 
-  // canvases
   const baseCanvasRef = useRef(null);
   const paintCanvasRef = useRef(null);
   const outCanvasRef = useRef(null);
   const rafRef = useRef(0);
 
-  // NUEVO: Control manual del recorte de diseño
   const [cropX, setCropX] = useState(0);
   const [cropY, setCropY] = useState(0);
   const [cropScale, setCropScale] = useState(1);
   const [cropRotate, setCropRotate] = useState(0);
 
-  /* --------- Carga imagen --------- */
   const onPickFile = (e) => {
     const f = e.target.files?.[0];
     if (!f) return;
@@ -193,7 +176,6 @@ export default function TryOnNailsPhoto() {
     im.src = imgURL;
   }, [imgURL]);
 
-  /* --------- Carga diseño --------- */
   function onPickDesign(e) {
     const f = e.target.files?.[0];
     if (!f) {
@@ -223,9 +205,6 @@ export default function TryOnNailsPhoto() {
     im.src = designURL;
   }, [designURL]);
 
-  {
-    /* 🖼 Ajuste manual del diseño (nuevo) */
-  }
   <div className="RecU_section">
     <div className="RecU_h3">Ajustar diseño manualmente</div>
 
@@ -281,8 +260,15 @@ export default function TryOnNailsPhoto() {
       />
     </div>
   </div>;
+  function downloadImage() {
+    const out = outCanvasRef.current;
+    if (!out) return;
+    const a = document.createElement("a");
+    a.download = "tryon_esmalte.png";
+    a.href = out.toDataURL("image/png");
+    a.click();
+  }
 
-  /* --------- Canvas base --------- */
   function fitToImage(im) {
     const maxW = 1100;
     const scale = im.width > maxW ? maxW / im.width : 1;
@@ -312,7 +298,6 @@ export default function TryOnNailsPhoto() {
     if (img) drawBase(img);
   }, [img]);
 
-  /* --------- Pintura / composición --------- */
   function fillPolygon(ctx, polygon, { w, h }) {
     const { x: bx, y: by, w: bw, h: bh } = bbox(polygon);
     const cx = bx + bw / 2,
@@ -391,7 +376,7 @@ export default function TryOnNailsPhoto() {
           const s = designMode === "fit-cover" ? sCover : sContain;
 
           ctx.save();
-          // NUEVO: aplicar crop manual
+
           ctx.translate(
             cx + cropX + (designOffsetX || 0),
             cy + cropY + (designOffsetY || 0)
@@ -399,27 +384,22 @@ export default function TryOnNailsPhoto() {
 
           ctx.rotate(((cropRotate + (designRot || 0)) * Math.PI) / 180);
 
-          // Escala combinada: cropScale controla zoom, designScale si lo usas
           ctx.scale(s * cropScale, s * cropScale);
 
-          // Render del diseño con ajustes manuales
           ctx.drawImage(tile, -iw / 2, -ih / 2, iw, ih);
 
           ctx.restore();
         }
       } else {
-        // --- Color base con realismo ---
         ctx.fillStyle = color;
         ctx.globalAlpha = opacity * 0.85;
         ctx.fillRect(0, 0, w, h);
 
-        // Luz suave estilo esmalte real
         ctx.globalCompositeOperation = "soft-light";
         ctx.globalAlpha = opacity * 0.35;
         ctx.fillStyle = color;
         ctx.fillRect(0, 0, w, h);
 
-        // Restablecer para evitar errores
         ctx.globalCompositeOperation = "source-over";
         ctx.globalAlpha = 1;
       }
@@ -530,7 +510,6 @@ export default function TryOnNailsPhoto() {
     });
   }
 
-  /* --------- Detectar (SAM) --------- */
   async function onDetect() {
     try {
       if (!img) return;
@@ -550,7 +529,7 @@ export default function TryOnNailsPhoto() {
           area,
         };
       });
-      // ordenamos por X de bbox (izq → der) para que quede más natural
+
       det.sort((a, b) => bbox(a.polygon).x - bbox(b.polygon).x);
       setNails(det);
       setStep(3);
@@ -564,7 +543,6 @@ export default function TryOnNailsPhoto() {
     }
   }
 
-  /* --------- Comparar (mantener) --------- */
   function onCompareDown() {
     const out = outCanvasRef.current;
     if (!out) return;
@@ -577,7 +555,6 @@ export default function TryOnNailsPhoto() {
     queueRender();
   }
 
-  /* --------- Reiniciar --------- */
   function resetAll() {
     setImgURL("");
     setImg(null);
@@ -609,18 +586,19 @@ export default function TryOnNailsPhoto() {
     });
   }
 
-  /* --------- Subir a Firebase Storage --------- */
-  async function uploadToFirebase() {
+  async function uploadToFirebaseAndUse() {
     try {
       const out = outCanvasRef.current;
       if (!out) return setStatus("No hay imagen para subir");
+
       await paintAll();
       compose();
 
       const blob = await new Promise((res) =>
         out.toBlob(res, "image/png", 0.95)
       );
-      if (!blob) return setStatus("No se pudo generar PNG");
+
+      if (!blob) return setStatus("No se pudo generar la imagen");
 
       const ts = Date.now();
       const filename = `tryon/${ts}.png`;
@@ -629,19 +607,19 @@ export default function TryOnNailsPhoto() {
       await uploadBytes(storageRef, blob, { contentType: "image/png" });
       const url = await getDownloadURL(storageRef);
 
-      setStatus(`Subida OK ✓  URL copiada en consola`);
       console.log("Firebase URL:", url);
-      try {
-        await navigator.clipboard.writeText(url);
-      } catch {}
-      return url;
+      await navigator.clipboard.writeText(url);
+
+      setImgURL(url);
+      setNails([]);
+      setStep(2);
+      setStatus("Imagen subida ✓ Ahora puedes volver a detectar uñas");
     } catch (err) {
       console.error(err);
       setStatus("Error subiendo a Firebase");
     }
   }
 
-  /* --------- Repintar al cambiar controles --------- */
   useEffect(() => {
     if (step >= 3) queueRender();
   }, [
@@ -671,7 +649,6 @@ export default function TryOnNailsPhoto() {
     cropRotate,
   ]);
 
-  /* --------- Handlers lista uñas --------- */
   const enabledCount = nails.filter((n) => n.enabled).length;
   function setAll(val) {
     setNails((prev) => prev.map((n) => ({ ...n, enabled: !!val })));
@@ -685,7 +662,6 @@ export default function TryOnNailsPhoto() {
     );
   }
 
-  /* ===================== UI ===================== */
   return (
     <div className="RecU_root" aria-live="polite">
       <div className="RecU_container">
@@ -702,7 +678,6 @@ export default function TryOnNailsPhoto() {
         </div>
 
         <div className="RecU_grid RecU_grid3xl">
-          {/* Canvas / Preview */}
           <div className="RecU_card">
             <div className="RecU_section">
               <button
@@ -753,7 +728,6 @@ export default function TryOnNailsPhoto() {
             </div>
           </div>
 
-          {/* Controles principales */}
           <div className="RecU_card RecU_sticky">
             <div className="RecU_section">
               <div className="RecU_row" style={{ gap: 8, flexWrap: "wrap" }}>
@@ -772,7 +746,6 @@ export default function TryOnNailsPhoto() {
               </div>
             </div>
 
-            {/* === NUEVO: Lista de uñas con toggles === */}
             {nails.length > 0 && (
               <div className="RecU_section">
                 <div className="RecU_h3">Seleccionar uñas</div>
@@ -831,7 +804,6 @@ export default function TryOnNailsPhoto() {
               </div>
             )}
 
-            {/* Modo Color/Diseño */}
             <div className="RecU_section">
               <div className="RecU_row">
                 <div className="RecU_badge">Paso 3</div>
@@ -957,7 +929,6 @@ export default function TryOnNailsPhoto() {
                     value={blend}
                     onChange={(e) => setBlend(e.target.value)}
                   >
-                    {/* 🎨 Modos realistas */}
                     <option value="color">Color (realista)</option>
                     <option value="soft-light">Luz suave (natural)</option>
                     <option value="overlay">Superponer (intenso)</option>
@@ -966,14 +937,12 @@ export default function TryOnNailsPhoto() {
                     </option>
                     <option value="screen">Pantalla (aclarar esmalte)</option>
 
-                    {/* 🌟 Modos estéticos avanzados */}
                     <option value="hard-light">
                       Luz fuerte (contraste alto)
                     </option>
                     <option value="lighter">Aclarar (extra suave)</option>
                     <option value="darken">Oscurecer (suavizado)</option>
 
-                    {/* 🎯 Modos por tono y luz */}
                     <option value="hue">Matiz (solo cambia color)</option>
                     <option value="saturation">
                       Saturación (más vibrante)
@@ -988,19 +957,16 @@ export default function TryOnNailsPhoto() {
                       Color dodge (iluminación)
                     </option>
 
-                    {/* 🔮 Modos de excepción (experimentales) */}
                     <option value="difference">
                       Diferencia (efectos neon)
                     </option>
                     <option value="exclusion">Exclusión (suave)</option>
 
-                    {/* Normal */}
                     <option value="source-over">Normal</option>
                   </select>
                 </div>
               </div>
 
-              {/* Forma */}
               <div className="RecU_section">
                 <div className="RecU_h3">Forma</div>
                 <div className="RecU_row">
@@ -1029,7 +995,6 @@ export default function TryOnNailsPhoto() {
                 </div>
               </div>
 
-              {/* Avanzado */}
               <div className="RecU_section">
                 <button
                   className="RecU_btnGhost"
@@ -1042,7 +1007,6 @@ export default function TryOnNailsPhoto() {
 
                 {showMore && (
                   <div className="RecU_section RecU_advancedGrid">
-                    {/* === Columna 1: Forma === */}
                     <div className="RecU_cardMini">
                       <div className="RecU_h4">Forma</div>
 
@@ -1085,7 +1049,6 @@ export default function TryOnNailsPhoto() {
                       </button>
                     </div>
 
-                    {/* === Columna 2: Gloss y Bordes === */}
                     <div className="RecU_cardMini">
                       <div className="RecU_h4">Luz + Borde</div>
 
@@ -1143,7 +1106,6 @@ export default function TryOnNailsPhoto() {
                       </button>
                     </div>
 
-                    {/* === Columna 3: Ajuste del Diseño === */}
                     {designImg && (
                       <div className="RecU_cardMini">
                         <div className="RecU_h4">Diseño</div>
@@ -1239,25 +1201,29 @@ export default function TryOnNailsPhoto() {
                 )}
               </div>
 
-              <div className="RecU_section">
+              <div
+                className="RecU_section"
+                style={{ display: "flex", gap: 10, flexWrap: "wrap" }}
+              >
                 <button
                   className="RecU_btnGhost"
-                  onClick={() => {
-                    const out = outCanvasRef.current;
-                    const a = document.createElement("a");
-                    a.download = "tryon_esmalte.png";
-                    a.href = out.toDataURL("image/png");
-                    a.click();
-                  }}
+                  onClick={downloadImage}
                   disabled={!img}
                 >
-                  ⬇️ Descargar PNG
+                  ⬇️ Guardar PNG
+                </button>
+
+                <button
+                  className="RecU_btn"
+                  onClick={uploadToFirebaseAndUse}
+                  disabled={!img}
+                >
+                  ☁️ Subir y usar imagen
                 </button>
               </div>
             </div>
           </div>
 
-          {/* Checklist */}
           <div className="RecU_card RecU_sticky">
             <div className="RecU_h3">Checklist</div>
             <ul style={{ margin: "8px 0 0 16px", color: "var(--RecU_muted)" }}>

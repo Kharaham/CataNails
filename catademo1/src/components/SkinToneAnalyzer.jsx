@@ -1,4 +1,3 @@
-// src/components/SkinToneAnalyzerPro.jsx
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   averageRGBInROI,
@@ -19,7 +18,6 @@ const CANVAS_W = 720;
 const CANVAS_H = 540;
 const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
 
-/* ===== Helpers visuales y de color ===== */
 function deltaE76(lab1, lab2) {
   const dL = (lab1?.L || 0) - (lab2?.L || 0);
   const da = (lab1?.a || 0) - (lab2?.a || 0);
@@ -151,7 +149,6 @@ function drawBlockedOverlay(ctx, x, y, w, h, text) {
   ctx.restore();
 }
 
-/* ===== Componente ===== */
 export default function SkinToneAnalyzerPro() {
   const imgRef = useRef(null);
   const canvasRef = useRef(null);
@@ -170,7 +167,7 @@ export default function SkinToneAnalyzerPro() {
     dw: CANVAS_W,
     dh: CANVAS_H,
   });
-  const [mode, setMode] = useState("hand"); // "hand" | "hair"
+  const [mode, setMode] = useState("hand");
   const [blocked, setBlocked] = useState(false);
 
   // Piel
@@ -182,7 +179,6 @@ export default function SkinToneAnalyzerPro() {
   const [undertone, setUndertone] = useState(null);
   const [tone, setTone] = useState(null);
 
-  // Cabello
   const [hairROI, setHairROI] = useState({ x: 0.35, y: 0.12, w: 0.3, h: 0.2 });
   const [hairSize, setHairSize] = useState(24);
   const [hairRGB, setHairRGB] = useState(null);
@@ -190,15 +186,12 @@ export default function SkinToneAnalyzerPro() {
   const [hairType, setHairType] = useState(null);
   const [hairLabState, setHairLabState] = useState(null);
 
-  // Métricas
   const [quality, setQuality] = useState({ skinRatio: 0, varL: 0, score: 0 });
   const [ita, setIta] = useState(null);
   const itaLabel = useMemo(() => itaClass(ita), [ita]);
 
-  // WB (solo indicador visual; no se aplica corrección para mantener simple y estable)
   const [wbEnabled, setWbEnabled] = useState(true);
 
-  // Recos
   const [autoPalettes, setAutoPalettes] = useState([]);
   const [promptText, setPromptText] = useState("");
   const [promptRecs, setPromptRecs] = useState([]);
@@ -208,10 +201,8 @@ export default function SkinToneAnalyzerPro() {
   const [showModal, setShowModal] = useState(false);
   const [modalKind, setModalKind] = useState("auto");
 
-  // Historial mínimo
   const [history, setHistory] = useState([]);
 
-  /* ===== Renderizado + cálculo ===== */
   useEffect(() => {
     const canvas = canvasRef.current;
     const img = imgRef.current;
@@ -256,7 +247,6 @@ export default function SkinToneAnalyzerPro() {
         return;
       } else setBlocked(false);
 
-      // ROI piel
       const srx = dx + skinROI.x * dw,
         sry = dy + skinROI.y * dh;
       const srw = skinROI.w * dw,
@@ -289,7 +279,6 @@ export default function SkinToneAnalyzerPro() {
       setIta(itaDegrees(lab));
       drawROI(ctx, srx, sry, srw, srh, "rgba(255,255,255,0.95)");
 
-      // limpiar cabello
       setHairRGB(null);
       setHairHex("#333333");
       setHairType(null);
@@ -309,7 +298,6 @@ export default function SkinToneAnalyzerPro() {
       setHairType(detectHairType(hairLab));
       drawROI(ctx, hrx, hry, hrw, hrh, "rgba(124,92,255,0.95)");
 
-      // limpiar piel
       setSkinRGB(null);
       setSkinHex("#CCCCCC");
       setSkinLabState(null);
@@ -321,7 +309,6 @@ export default function SkinToneAnalyzerPro() {
     }
   }, [imgLoaded, mode, skinROI, hairROI]);
 
-  // Sliders
   useEffect(() => {
     if (mode !== "hand") return;
     const s = clamp(Number(skinSize), 15, 50) / 100;
@@ -356,7 +343,6 @@ export default function SkinToneAnalyzerPro() {
     });
   }, [hairSize, mode]);
 
-  /* ===== Handlers ===== */
   function onFileChange(e) {
     const f = e.target.files?.[0];
     if (!f) return;
@@ -380,7 +366,6 @@ export default function SkinToneAnalyzerPro() {
     ev.preventDefault();
   }
 
-  // Drag & pinch
   const [drag, setDrag] = useState({
     active: false,
     which: null,
@@ -499,7 +484,6 @@ export default function SkinToneAnalyzerPro() {
     setDrag({ active: false, which: null, ox: 0, oy: 0, id: null });
   }
 
-  // Click = eyedropper (reubica ROI)
   function onCanvasClick(e) {
     if (blocked || !imgLoaded || mode !== "hand") return;
     const rect = e.currentTarget.getBoundingClientRect();
@@ -519,7 +503,6 @@ export default function SkinToneAnalyzerPro() {
     }));
   }
 
-  /* ===== Guardar + historial ===== */
   async function saveResult() {
     try {
       const payload = {
@@ -561,7 +544,6 @@ export default function SkinToneAnalyzerPro() {
     }
   }
 
-  /* ===== Prompt + contraste ΔE ===== */
   function runPrompt() {
     try {
       const recs =
@@ -616,7 +598,6 @@ export default function SkinToneAnalyzerPro() {
     if (!autoGen) return;
     const id = setTimeout(() => runPrompt(), 300);
     return () => clearTimeout(id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [promptText, refineByContrast, undertone, tone, hairType, skinLabState]);
 
   const showPromptQuick =
@@ -634,7 +615,6 @@ export default function SkinToneAnalyzerPro() {
 
   return (
     <div className="Rec_root">
-      {/* Tabs móvil */}
       <div className="Rec_mobile-tabs">
         <button
           className={`Rec_tab ${mobileTab === "a" ? "Rec_active" : ""}`}
@@ -666,7 +646,6 @@ export default function SkinToneAnalyzerPro() {
       </div>
 
       <div className="Rec_app-grid Rec_grid-3xl">
-        {/* Col A: Canvas */}
         <section
           ref={colARef}
           className={`Rec_col Rec_card Rec_card-tight Rec_sticky-col Rec_mobile-pane ${
@@ -815,7 +794,6 @@ export default function SkinToneAnalyzerPro() {
           )}
         </section>
 
-        {/* Col B: Resultado */}
         <section
           ref={colBRef}
           className={`Rec_col Rec_card Rec_sticky-col Rec_mobile-pane ${
@@ -855,7 +833,6 @@ export default function SkinToneAnalyzerPro() {
                     )}
                   </div>
 
-                  {/* Stats: Calidad + WB */}
                   <div className="Rec_stats" style={{ marginTop: 8 }}>
                     {!blocked && (
                       <div className="Rec_stat">
@@ -1000,7 +977,6 @@ export default function SkinToneAnalyzerPro() {
           )}
         </section>
 
-        {/* Col C: Asistente */}
         <section
           ref={colCRef}
           className={`Rec_col Rec_card Rec_sticky-col Rec_mobile-pane ${
@@ -1133,7 +1109,6 @@ export default function SkinToneAnalyzerPro() {
         </section>
       </div>
 
-      {/* Modal */}
       {showModal && (
         <div
           role="dialog"
@@ -1217,7 +1192,6 @@ export default function SkinToneAnalyzerPro() {
   );
 }
 
-/* ===== Subcomponentes ===== */
 function ResizeHandles({ roi, draw, onResize, aspect = 1 }) {
   const wrapRef = useRef(null);
   const [active, setActive] = useState(false);

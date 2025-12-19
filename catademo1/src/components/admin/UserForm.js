@@ -1,8 +1,6 @@
-// src/components/admin/UserForm.jsx
 import React, { useMemo, useState } from "react";
 
 function parseDateTime(dateStr, hourStr) {
-  // date: "YYYY-MM-DD", hour: "HH:mm" (asumidos como strings)
   try {
     const [y, m, d] = (dateStr || "").split("-").map((n) => Number(n));
     const [hh, mm] = (hourStr || "00:00").split(":").map((n) => Number(n));
@@ -26,7 +24,7 @@ function formatDateTime(dateStr, hourStr) {
 }
 
 export default function UserForm({ usuario, citas = [] }) {
-  const [tab, setTab] = useState("datos"); // datos | citas
+  const [tab, setTab] = useState("datos");
 
   const { futuras, pasadas } = useMemo(() => {
     const now = new Date();
@@ -78,7 +76,6 @@ export default function UserForm({ usuario, citas = [] }) {
         </div>
       </div>
 
-      {/* Tabs */}
       <div className="user-tabs mb-3">
         <button
           className={`user-tab ${tab === "datos" ? "active" : ""}`}

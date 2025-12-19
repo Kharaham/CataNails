@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState, useRef } from "react";
 import { collection, getDocs, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 import {
   ResponsiveContainer,
@@ -52,16 +52,15 @@ import {
 import "../../styles/adminS/dashboard.css";
 
 const dashC_LOCAL_THEME = "dashC_theme_v1";
-const dashC_SLOTS_PER_DAY = 10; // Ajusta si quieres otra capacidad diaria
+const dashC_SLOTS_PER_DAY = 10;
 
 const DashAdmin = () => {
-  // ====== Estado base (prefijo dashC_) ======
   const [dashC_clientes, setDashC_clientes] = useState(0);
   const [dashC_citas, setDashC_citas] = useState([]);
   const [dashC_ingresos, setDashC_ingresos] = useState(0);
 
   const [dashC_feedback, setDashC_feedback] = useState("");
-  const [dashC_filterStatus, setDashC_filterStatus] = useState("all"); // all|pending|completed|canceled
+  const [dashC_filterStatus, setDashC_filterStatus] = useState("all");
   const [dashC_filterDate, setDashC_filterDate] = useState("");
   const [dashC_loading, setDashC_loading] = useState(true);
 
@@ -69,7 +68,6 @@ const DashAdmin = () => {
   const [dashC_eventOpen, setDashC_eventOpen] = useState(false);
   const [dashC_eventSel, setDashC_eventSel] = useState(null);
 
-  // Tema (claro/oscuro)
   const [dashC_theme, setDashC_theme] = useState(
     () => localStorage.getItem(dashC_LOCAL_THEME) || "light"
   );
@@ -77,10 +75,8 @@ const DashAdmin = () => {
     localStorage.setItem(dashC_LOCAL_THEME, dashC_theme);
   }, [dashC_theme]);
 
-  // Pestañas (bottom card)
-  const [dashC_tab, setDashC_tab] = useState("calendar"); // 'calendar' | 'list'
+  const [dashC_tab, setDashC_tab] = useState("calendar");
 
-  // Abrir modal con el id del evento
   const dashC_openEvent = (id) => {
     const c = dashC_citas.find((x) => x.id === id);
     if (!c) return;
@@ -88,15 +84,12 @@ const DashAdmin = () => {
     setDashC_eventOpen(true);
   };
 
-  // ====== Carga de datos Firestore ======
   useEffect(() => {
     const fetchAll = async () => {
       try {
-        // Usuarios
         const uSnap = await getDocs(collection(db, "usuarios"));
         setDashC_clientes(uSnap.size || 0);
 
-        // Ingresos (suma simple)
         const iSnap = await getDocs(collection(db, "ingresos"));
         let totalIngresos = 0;
         iSnap.forEach((d) => {
@@ -109,7 +102,6 @@ const DashAdmin = () => {
         });
         setDashC_ingresos(totalIngresos);
 
-        // Citas
         const cSnap = await getDocs(collection(db, "appointments"));
         let items = cSnap.docs.map((d) => ({ id: d.id, ...(d.data() || {}) }));
 
@@ -117,7 +109,7 @@ const DashAdmin = () => {
           .map((c) => {
             const canceled = !!c.canceled;
             const completed = !!c.completed;
-            const dateStr = c.date; // "YYYY-MM-DD"
+            const dateStr = c.date;
             const hourStr = c.hour || "10:00";
             const start = new Date(`${dateStr}T${hourStr}`);
             return {
@@ -130,7 +122,7 @@ const DashAdmin = () => {
           })
           .filter((c) => {
             const h = c.start.getHours();
-            return h >= 10 && h <= 20; // horario útil (ajústalo a tu lógica)
+            return h >= 10 && h <= 20;
           })
           .sort((a, b) => a.start - b.start);
 
@@ -144,7 +136,6 @@ const DashAdmin = () => {
     fetchAll();
   }, []);
 
-  // ====== Derivados ======
   const dashC_counts = useMemo(() => {
     const pending = dashC_citas.filter(
       (c) => !c.completed && !c.canceled
@@ -154,14 +145,11 @@ const DashAdmin = () => {
     return { pending, completed, canceled, total: dashC_citas.length };
   }, [dashC_citas]);
 
-  // Citas hoy
   const dashC_todayCount = useMemo(() => {
     const now = new Date();
     return dashC_citas.filter((c) => isSameDay(c.start, now)).length;
   }, [dashC_citas]);
 
-  // Próximos 7 días (citas por día)
-  // Próximos 7 días (citas por día)
   const dashC_next7daysData = useMemo(() => {
     const start = new Date();
     const end = addDays(start, 6);
@@ -174,7 +162,6 @@ const DashAdmin = () => {
     });
   }, [dashC_citas]);
 
-  // Ocupación 7 días
   const dashC_occupancy7d = useMemo(() => {
     const start = startOfDay(new Date());
     const end = endOfDay(addDays(start, 6));
@@ -186,19 +173,16 @@ const DashAdmin = () => {
     return { upcoming, capacity, pct };
   }, [dashC_citas]);
 
-  // Tasa cancelación
   const dashC_cancelRate = useMemo(() => {
     const { canceled, total } = dashC_counts;
     return total > 0 ? Math.round((canceled / total) * 100) : 0;
   }, [dashC_counts]);
 
-  // Ticket promedio (ingresos / realizadas)
   const dashC_ticketAvg = useMemo(() => {
     const n = dashC_counts.completed || 0;
     return n > 0 ? Math.round(dashC_ingresos / n) : 0;
   }, [dashC_ingresos, dashC_counts]);
 
-  // Top servicios (Top 5)
   const dashC_topServicios = useMemo(() => {
     const map = new Map();
     dashC_citas.forEach((c) => {
@@ -212,12 +196,10 @@ const DashAdmin = () => {
     return arr;
   }, [dashC_citas]);
 
-  // Ingresos (simple)
   const dashC_ingresosData = useMemo(() => {
     return [{ name: "Total", valor: dashC_ingresos }];
   }, [dashC_ingresos]);
 
-  // Filtro listado corto de citas (últimas 6 según filtro)
   const dashC_filteredCitas = useMemo(() => {
     let list = dashC_citas;
     if (dashC_filterStatus === "pending") {
@@ -234,7 +216,6 @@ const DashAdmin = () => {
     return list.slice(0, 6);
   }, [dashC_citas, dashC_filterStatus, dashC_filterDate]);
 
-  // Calendario de eventos
   const dashC_calendarEvents = useMemo(() => {
     return dashC_citas.map((c) => {
       let color = "#0ea5e9";
@@ -256,7 +237,6 @@ const DashAdmin = () => {
     });
   }, [dashC_citas]);
 
-  // ====== Acciones ======
   const dashC_markAsCompleted = async (id) => {
     try {
       await updateDoc(doc(db, "appointments", id), { completed: true });
@@ -272,7 +252,6 @@ const DashAdmin = () => {
     }
   };
 
-  // Estilo de item por estado
   const dashC_itemClass = (c) =>
     c.canceled
       ? "dashC_item dashC_isCanceled"
@@ -280,7 +259,6 @@ const DashAdmin = () => {
       ? "dashC_item dashC_isDone"
       : "dashC_item";
 
-  // Tooltip estilizado para Recharts
   const DashCTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
@@ -306,39 +284,38 @@ const DashAdmin = () => {
   };
 
   return (
-      <div className="dashC_wrap" data-theme={dashC_theme}>
-        <header className="dashC_header">
-          <div>
-            <h2 className="dashC_title">Panel de Control</h2>
-            <p className="dashC_sub">Resumen de negocio y agenda</p>
-          </div>
+    <div className="dashC_wrap" data-theme={dashC_theme}>
+      <header className="dashC_header">
+        <div>
+          <h2 className="dashC_title">Panel de Control</h2>
+          <p className="dashC_sub">Resumen de negocio y agenda</p>
+        </div>
 
-          <div className="dashC_actions">
-            <button
-              className="dashC_btnGhost dashC_themeBtn"
-              onClick={() =>
-                setDashC_theme((t) => (t === "light" ? "dark" : "light"))
-              }
-              title="Cambiar tema"
-            >
-              <FontAwesomeIcon icon={dashC_theme === "dark" ? faSun : faMoon} />
-            </button>
+        <div className="dashC_actions">
+          <button
+            className="dashC_btnGhost dashC_themeBtn"
+            onClick={() =>
+              setDashC_theme((t) => (t === "light" ? "dark" : "light"))
+            }
+            title="Cambiar tema"
+          >
+            <FontAwesomeIcon icon={dashC_theme === "dark" ? faSun : faMoon} />
+          </button>
 
-            <Link to="/admin/try-on" className="dashC_btnPrimary">
-              Try-On
-            </Link>
+          <Link to="/admin/try-on" className="dashC_btnPrimary">
+            Try-On
+          </Link>
 
-            <Link to="/agendar-cita" className="dashC_btnPrimary">
-              Nueva cita
-            </Link>
+          <Link to="/agendar-cita" className="dashC_btnPrimary">
+            Nueva cita
+          </Link>
 
-            <Link to="/admin/reports" className="dashC_btnGhost">
-              Ver reportes
-            </Link>
-          </div>
-        </header>
+          <Link to="/admin/reports" className="dashC_btnGhost">
+            Ver reportes
+          </Link>
+        </div>
+      </header>
 
-      {/* KPIs — 8 tarjetas compactas */}
       <section className="dashC_stats">
         <div className="dashC_statCard">
           <div className="dashC_statIcon dashC_icBlue">
@@ -439,7 +416,6 @@ const DashAdmin = () => {
         </div>
       </section>
 
-      {/* Gráficos (3 en una fila) */}
       <section className="dashC_gridCharts">
         <div className="dashC_card">
           <div className="dashC_cardHead">
@@ -549,7 +525,6 @@ const DashAdmin = () => {
         </div>
       </section>
 
-      {/* Calendario / Lista con pestañas */}
       <section className="dashC_gridBottom">
         <div className="dashC_card">
           <div className="dashC_tabs">
@@ -571,7 +546,6 @@ const DashAdmin = () => {
             </button>
           </div>
 
-          {/* Calendario */}
           {dashC_tab === "calendar" && (
             <div className="dashC_calendarBox">
               {dashC_loading ? (
@@ -628,7 +602,6 @@ const DashAdmin = () => {
             </div>
           )}
 
-          {/* Lista + filtros */}
           {dashC_tab === "list" && (
             <>
               <div className="dashC_cardHead dashC_filters">
@@ -739,7 +712,6 @@ const DashAdmin = () => {
         </div>
       </section>
 
-      {/* ===== Modal Global (fuera de las pestañas) ===== */}
       {dashC_eventOpen && dashC_eventSel && (
         <div className="dashC_modal" onClick={() => setDashC_eventOpen(false)}>
           <div className="dashC_modalCard" onClick={(e) => e.stopPropagation()}>

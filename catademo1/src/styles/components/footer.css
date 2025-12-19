@@ -1,4 +1,3 @@
-/* Paleta base (puede ir en global.css) */
 :root {
   --rose-50: #fff1f5;
   --rose-500: #e11d48;
@@ -15,7 +14,6 @@
   --shadow-hover: 0 14px 32px rgba(17, 24, 39, 0.12);
 }
 
-/* Tokens del footer derivados */
 .footer.v3 {
   --bg: color-mix(in srgb, var(--ink-900) 94%, black);
   --bg-2: color-mix(in srgb, var(--ink-900) 86%, black);
@@ -29,7 +27,6 @@
   --border: rgba(255, 255, 255, 0.08);
 }
 
-/* Contenedor general */
 .footer.v3 {
   position: relative;
   background: radial-gradient(
@@ -48,7 +45,6 @@
   max-width: 1200px;
 }
 
-/* Divider wave superior */
 .footer.v3 .footer-divider {
   position: absolute;
   inset: 0 0 auto 0;
@@ -65,7 +61,6 @@
   fill: color-mix(in srgb, var(--rose-500) 35%, transparent);
 }
 
-/* Tarjeta para brand */
 .footer.v3 .cardish {
   background: color-mix(in srgb, var(--card) 88%, transparent);
   border: 1px solid var(--border);
@@ -74,7 +69,6 @@
   box-shadow: var(--shadow);
 }
 
-/* Brand */
 .footer.v3 .footer-logo {
   display: inline-flex;
   align-items: center;
@@ -108,7 +102,6 @@
   line-height: 1.65;
 }
 
-/* Trust badges */
 .footer.v3 .trust-list {
   display: flex;
   flex-wrap: wrap;
@@ -129,7 +122,6 @@
   border: 1px solid var(--border);
 }
 
-/* Títulos */
 .footer.v3 .footer-title {
   font-size: 1rem;
   font-weight: 700;
@@ -138,7 +130,6 @@
   color: #f9fafb;
 }
 
-/* Listas */
 .footer.v3 .footer-list {
   list-style: none;
   padding: 0;
@@ -148,7 +139,6 @@
   margin-top: 8px;
 }
 
-/* Enlaces */
 .footer.v3 .footer-link {
   color: var(--link);
   text-decoration: none;
@@ -180,7 +170,6 @@
   box-shadow: var(--ring);
 }
 
-/* Address / Hours */
 .footer.v3 .footer-address {
   display: grid;
   gap: 6px;
@@ -194,7 +183,6 @@
   margin-bottom: 10px;
 }
 
-/* Métodos de pago */
 .footer.v3 .payments {
   display: flex;
   gap: 12px;
@@ -207,7 +195,6 @@
   filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.35));
 }
 
-/* Newsletter */
 .footer.v3 .footer-muted {
   color: var(--muted);
   font-size: 0.92rem;
@@ -255,7 +242,6 @@
   transform: translateY(0);
 }
 
-/* Social */
 .footer.v3 .social-block {
   margin-top: 10px;
 }
@@ -293,7 +279,6 @@
   font-size: 1.05rem;
 }
 
-/* Separador & bottom */
 .footer.v3 .footer-separator {
   border-color: var(--border);
   margin: 28px 0 16px 0;
@@ -326,7 +311,6 @@
   color: #fff;
 }
 
-/* Glow decorativo */
 .footer.v3 .footer-glow {
   position: absolute;
   inset: auto -20% -40% -20%;
@@ -340,7 +324,6 @@
   pointer-events: none;
 }
 
-/* CTA WhatsApp dentro del footer */
 .footer.v3 .footer-cta {
   position: relative;
   display: flex;
@@ -368,7 +351,6 @@
   font-size: 1.1rem;
 }
 
-/* Utilidad a11y */
 .footer.v3 .visually-hidden {
   position: absolute !important;
   width: 1px;
@@ -381,7 +363,6 @@
   border: 0;
 }
 
-/* Responsive */
 @media (max-width: 992px) {
   .footer.v3 {
     padding: 46px 0 20px 0;
@@ -402,7 +383,6 @@
   }
 }
 
-/* (Opcional) Modo claro automático */
 @media (prefers-color-scheme: light) {
   .footer.v3 {
     --bg: #0f172a;
@@ -413,32 +393,22 @@
     --border: rgba(255, 255, 255, 0.1);
   }
 }
-/* ============================================================
-   FOOTER MÓVIL — VERSIÓN PRO, LIMPIA Y ULTRA COMPACTA
-   ============================================================ */
-/* ============================================================
-   FOOTER MÓVIL — VERSIÓN PREMIUM, ULTRA COMPACTA Y PROFESIONAL
-   ============================================================ */
+
 @media (max-width: 600px) {
-  /* Compactar footer */
   .footer.v3 {
     padding: 22px 0 12px !important;
   }
 
-  /* Contenedor lateral */
   .footer.v3 .footer-top.container {
     padding: 0 14px !important;
   }
 
-  /* Acordeón */
   .footer-accordion {
     width: 100%;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     margin: 0;
     padding: 0;
   }
-
-  /* Botón del acordeón */
   .fa-toggle {
     width: 100%;
     padding: 13px 4px;
@@ -461,7 +431,6 @@
     transform: rotate(180deg);
   }
 
-  /* Contenido */
   .fa-content {
     max-height: 0;
     overflow: hidden;
@@ -481,16 +450,12 @@
     opacity: 1;
   }
 
-  /* Centramos absolutamente TODO dentro */
   .fa-content * {
     text-align: center !important;
     margin-left: auto;
     margin-right: auto;
   }
 
-  /* ===========================
-     TARJETA PRINCIPAL (BRAND)
-     =========================== */
   .footer.v3 .cardish {
     margin: 0 auto;
     padding: 18px 16px;
@@ -507,7 +472,6 @@
     font-size: 0.88rem;
   }
 
-  /* Badges */
   .trust-list {
     justify-content: center !important;
     gap: 8px !important;
@@ -519,9 +483,6 @@
     border-radius: 999px;
   }
 
-  /* ===========================
-     ENLACES
-     =========================== */
   .footer-list {
     display: flex;
     flex-direction: column;
@@ -532,9 +493,6 @@
     font-size: 0.9rem;
   }
 
-  /* ===========================
-     CONTACTO
-     =========================== */
   .footer-address,
   .footer-hours {
     font-size: 0.84rem !important;
@@ -547,9 +505,6 @@
     opacity: 0.9;
   }
 
-  /* ===========================
-     NEWSLETTER
-     =========================== */
   .footer-muted {
     max-width: 240px;
     font-size: 0.83rem !important;
@@ -578,9 +533,6 @@
     font-size: 0.88rem !important;
   }
 
-  /* ===========================
-     REDES SOCIALES
-     =========================== */
   .social-icons {
     width: 100%;
     justify-content: center !important;
@@ -593,9 +545,6 @@
     border-radius: 10px !important;
   }
 
-  /* ===========================
-     FOOTER INFERIOR
-     =========================== */
   .footer-separator {
     margin: 16px 0 10px !important;
   }
@@ -610,9 +559,6 @@
     gap: 12px;
   }
 
-  /* ===========================
-     CTA WhatsApp
-     =========================== */
   .cta-pill {
     transform: scale(0.92);
     padding: 9px 12px !important;

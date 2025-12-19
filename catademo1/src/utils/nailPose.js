@@ -1,18 +1,15 @@
-// src/utils/opencvLoader.js debe existir (ver paso 3)
 import { waitForOpenCV } from "./opencvLoader";
 
-/** Convierte imagen (Image/Bitmap/Canvas) a cv.Mat RGBA */
 function toMatFromImage(cv, source) {
-  const canvas = document.createElement('canvas');
+  const canvas = document.createElement("canvas");
   canvas.width = source.width;
   canvas.height = source.height;
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext("2d");
   ctx.drawImage(source, 0, 0);
   const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
   return cv.matFromImageData(imgData);
 }
 
-/** Binariza usando canal alfa */
 function alphaToBinary(cv, rgbaMat, alphaThresh = 10) {
   const channels = new cv.MatVector();
   cv.split(rgbaMat, channels);
@@ -24,13 +21,14 @@ function alphaToBinary(cv, rgbaMat, alphaThresh = 10) {
   return bin;
 }
 
-/** Morph close + fill holes + blur leve → binario final */
 function refineBinaryMask(cv, bin, kernelSize = 3, blurSize = 1) {
-  const kernel = cv.getStructuringElement(cv.MORPH_ELLIPSE, new cv.Size(kernelSize, kernelSize));
+  const kernel = cv.getStructuringElement(
+    cv.MORPH_ELLIPSE,
+    new cv.Size(kernelSize, kernelSize)
+  );
   const closed = new cv.Mat();
   cv.morphologyEx(bin, closed, cv.MORPH_CLOSE, kernel);
 
-  // Flood-fill para rellenar agujeros
   const inv = new cv.Mat();
   cv.bitwise_not(closed, inv);
   const filled = new cv.Mat();
@@ -51,32 +49,49 @@ function refineBinaryMask(cv, bin, kernelSize = 3, blurSize = 1) {
   const binRefined = new cv.Mat();
   cv.threshold(blurred, binRefined, 127, 255, cv.THRESH_BINARY);
 
-  kernel.delete(); closed.delete(); inv.delete(); filled.delete(); filledInv.delete(); blurred.delete();
+  kernel.delete();
+  closed.delete();
+  inv.delete();
+  filled.delete();
+  filledInv.delete();
+  blurred.delete();
   return binRefined;
 }
 
-/** Contorno mayor → minAreaRect → {cx,cy,angle,length,width,area} */
 function poseFromMask(cv, bin) {
   const contours = new cv.MatVector();
   const hierarchy = new cv.Mat();
-  cv.findContours(bin, contours, hierarchy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE);
+  cv.findContours(
+    bin,
+    contours,
+    hierarchy,
+    cv.RETR_EXTERNAL,
+    cv.CHAIN_APPROX_SIMPLE
+  );
   hierarchy.delete();
-  if (contours.size() === 0) { contours.delete(); return null; }
+  if (contours.size() === 0) {
+    contours.delete();
+    return null;
+  }
 
-  let maxIdx = 0, maxArea = 0;
+  let maxIdx = 0,
+    maxArea = 0;
   for (let i = 0; i < contours.size(); i++) {
     const a = cv.contourArea(contours.get(i));
-    if (a > maxArea) { maxArea = a; maxIdx = i; }
+    if (a > maxArea) {
+      maxArea = a;
+      maxIdx = i;
+    }
   }
   const cnt = contours.get(maxIdx);
   const rotRect = cv.minAreaRect(cnt);
 
   let length = Math.max(rotRect.size.width, rotRect.size.height);
-  let width  = Math.min(rotRect.size.width, rotRect.size.height);
+  let width = Math.min(rotRect.size.width, rotRect.size.height);
 
   let angle = rotRect.angle;
   if (rotRect.size.width < rotRect.size.height) angle += 90.0;
-  const theta = angle * Math.PI / 180;
+  const theta = (angle * Math.PI) / 180;
 
   const pose = {
     cx: rotRect.center.x,
@@ -85,20 +100,26 @@ function poseFromMask(cv, bin) {
     angleDeg: angle,
     length,
     width,
-    area: maxArea
+    area: maxArea,
   };
 
   contours.delete();
   return pose;
 }
 
-/** 🔹 Export nombrado que espera tu componente */
 export async function refineMaskAndPose(imageElOrBitmap, opts = {}) {
   const cv = await waitForOpenCV();
   const src = toMatFromImage(cv, imageElOrBitmap);
   const bin0 = alphaToBinary(cv, src, opts.alphaThresh ?? 10);
-  const bin = refineBinaryMask(cv, bin0, opts.kernelSize ?? 3, opts.blurSize ?? 1);
+  const bin = refineBinaryMask(
+    cv,
+    bin0,
+    opts.kernelSize ?? 3,
+    opts.blurSize ?? 1
+  );
   const pose = poseFromMask(cv, bin);
-  src.delete(); bin0.delete(); bin.delete();
+  src.delete();
+  bin0.delete();
+  bin.delete();
   return pose;
 }

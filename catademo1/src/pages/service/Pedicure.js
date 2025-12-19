@@ -15,7 +15,12 @@ const currencyCL = new Intl.NumberFormat("es-CL", {
 const SafeImg = ({ src, alt }) => {
   const [ok, setOk] = useState(true);
   if (!src || !ok) {
-    return <div className="service-card-image placeholder shimmer" aria-hidden="true" />;
+    return (
+      <div
+        className="service-card-image placeholder shimmer"
+        aria-hidden="true"
+      />
+    );
   }
   return (
     <Card.Img
@@ -30,7 +35,9 @@ const SafeImg = ({ src, alt }) => {
 };
 
 const Badge = ({ children, tone = "rose" }) => (
-  <span className={`pill pill--${tone}`} role="note">{children}</span>
+  <span className={`pill pill--${tone}`} role="note">
+    {children}
+  </span>
 );
 
 const Pedicure = () => {
@@ -38,7 +45,7 @@ const Pedicure = () => {
   const [services, setServices] = useState([]);
   const [selectedServiceId, setSelectedServiceId] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error,   setError]   = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -58,17 +65,21 @@ const Pedicure = () => {
   }, []);
 
   const goToForm = (service) => {
-    const serviceName  = service.Nombre || service.name || service.service || "";
+    const serviceName = service.Nombre || service.name || service.service || "";
     const servicePrice = service.Precio ?? service.price ?? "";
     navigate(
-      `/agendar-cita?serviceId=${encodeURIComponent(service.id)}&serviceName=${encodeURIComponent(serviceName)}&servicePrice=${encodeURIComponent(servicePrice)}`,
+      `/agendar-cita?serviceId=${encodeURIComponent(
+        service.id
+      )}&serviceName=${encodeURIComponent(
+        serviceName
+      )}&servicePrice=${encodeURIComponent(servicePrice)}`,
       { state: { service }, replace: false }
     );
   };
 
   const handleSelectService = (service) => {
     setSelectedServiceId(service.id);
-    goToForm(service); // navega directo con el servicio seleccionado
+    goToForm(service);
   };
 
   if (loading) {
@@ -76,7 +87,14 @@ const Pedicure = () => {
       <Container className="service-container mt-5">
         <Row className="justify-content-center mt-4">
           {[...Array(6)].map((_, i) => (
-            <Col key={i} xs={12} sm={6} md={4} lg={3} className="mb-4 d-flex justify-content-center">
+            <Col
+              key={i}
+              xs={12}
+              sm={6}
+              md={4}
+              lg={3}
+              className="mb-4 d-flex justify-content-center"
+            >
               <div className="service-card service-card--loading">
                 <div className="service-card-image placeholder shimmer" />
                 <div className="card-body">
@@ -107,10 +125,10 @@ const Pedicure = () => {
           <div className="services-header">
             <h1 className="services-title">Pedicure</h1>
             <p className="services-subtitle">
-              Cuidado y estética para pies suaves y saludables: limpieza profunda,
-              retiro de durezas, cuidado de cutículas y uñas, más esmaltado clásico
-              o con diseño. Tratamientos hidratantes para una experiencia relajante
-              y resultados duraderos.
+              Cuidado y estética para pies suaves y saludables: limpieza
+              profunda, retiro de durezas, cuidado de cutículas y uñas, más
+              esmaltado clásico o con diseño. Tratamientos hidratantes para una
+              experiencia relajante y resultados duraderos.
             </p>
             <div className="services-divider" aria-hidden="true" />
           </div>
@@ -120,12 +138,13 @@ const Pedicure = () => {
       <Row className="justify-content-center mt-4">
         {services.map((service) => {
           const isSelected = selectedServiceId === service.id;
-          const name       = service.Nombre || "Servicio";
-          const tipo       = service.Tipo || "No especificado";
-          const priceNum   = service.Precio ?? service.price ?? null;
-          const priceTxt   = priceNum !== null ? currencyCL.format(priceNum) : "—";
-          const isPromo    = Boolean(service.Promo || service.promo);
-          const isNew      = Boolean(service.Nuevo || service.nuevo);
+          const name = service.Nombre || "Servicio";
+          const tipo = service.Tipo || "No especificado";
+          const priceNum = service.Precio ?? service.price ?? null;
+          const priceTxt =
+            priceNum !== null ? currencyCL.format(priceNum) : "—";
+          const isPromo = Boolean(service.Promo || service.promo);
+          const isNew = Boolean(service.Nuevo || service.nuevo);
 
           return (
             <Col
@@ -137,11 +156,16 @@ const Pedicure = () => {
               className="mb-4 d-flex justify-content-center"
             >
               <Card
-                className={`service-card ${isSelected ? "service-card--selected" : ""}`}
+                className={`service-card ${
+                  isSelected ? "service-card--selected" : ""
+                }`}
                 role="button"
                 tabIndex={0}
                 onClick={() => handleSelectService(service)}
-                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") handleSelectService(service); }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ")
+                    handleSelectService(service);
+                }}
                 aria-pressed={isSelected}
               >
                 <div className="ribbon-wrap">
@@ -158,7 +182,10 @@ const Pedicure = () => {
                     {isNew && <Badge tone="violet">Nuevo</Badge>}
                   </div>
 
-                  <div className="service-card-price text-center" aria-label={`Precio ${priceTxt}`}>
+                  <div
+                    className="service-card-price text-center"
+                    aria-label={`Precio ${priceTxt}`}
+                  >
                     <span className="price-label">Desde</span>
                     <span className="price-amount">{priceTxt}</span>
                   </div>

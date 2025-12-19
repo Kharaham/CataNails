@@ -39,7 +39,6 @@ const ServiceForm = ({ service, onSave, onCancel }) => {
       const storage = getStorage();
       const imageRef = ref(storage, `images/${Date.now()}_${imagen.name}`);
 
-      // Subir la imagen y obtener su URL
       await uploadBytes(imageRef, imagen);
       imageUrl = await getDownloadURL(imageRef);
     }

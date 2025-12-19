@@ -9,9 +9,9 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
-import manos1 from "../../assets/images/services/manos1.jpg";
-import pies from "../../assets/images/services/pies.jpg";
-import bo1 from "../../assets/images/home/bo1.WebP";
+import manos1 from "../../assets/images/homev2/HomeC.jpeg";
+import pies from "../../assets/images/homev2/MaterialesC.jpeg";
+import bo1 from "../../assets/images/homev2/ProfesionalC.jpeg";
 
 import "../../styles/components/about.css";
 
@@ -27,7 +27,6 @@ const About = () => {
   const [status, setStatus] = useState({ type: "", text: "" });
   const [submitting, setSubmitting] = useState(false);
 
-  // Prefill desde Firestore si el usuario está logueado
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (u) => {
       if (!u?.email) return;
@@ -45,9 +44,7 @@ const About = () => {
         } else {
           setFormData((p) => ({ ...p, email: u.email }));
         }
-      } catch {
-        /* silencioso */
-      }
+      } catch {}
     });
     return () => unsub();
   }, []);
@@ -62,10 +59,8 @@ const About = () => {
     e.preventDefault();
     setStatus({ type: "", text: "" });
 
-    // honeypot
     if (formData.botField) return;
 
-    // validación simple
     if (
       !formData.name.trim() ||
       !formData.email.trim() ||
@@ -93,7 +88,7 @@ const About = () => {
         type: "success",
         text: "¡Mensaje enviado! Te responderemos pronto.",
       });
-      setFormData((p) => ({ ...p, message: "", botField: "" })); // mantenemos name/email
+      setFormData((p) => ({ ...p, message: "", botField: "" }));
     } catch (err) {
       console.error("Error guardando el mensaje en Firestore:", err);
       setStatus({
@@ -107,7 +102,6 @@ const About = () => {
 
   return (
     <section className="about">
-      {/* HERO */}
       <div className="about-hero">
         <div className="container">
           <p className="eyebrow">CataaNails</p>
@@ -125,9 +119,7 @@ const About = () => {
         <div className="hero-glow" aria-hidden="true" />
       </div>
 
-      {/* Sección alternada (tarjetas + fotos) */}
       <section className="feature-rows container">
-        {/* FILA 1: 2 cards + foto */}
         <div className="feature-row">
           <article className="feature-card tidy feature-card--centered">
             <div className="card-icon">📌</div>
@@ -153,7 +145,6 @@ const About = () => {
           </figure>
         </div>
 
-        {/* FILA 2 (invertida): foto + 2 cards */}
         <div className="feature-row inverted">
           <figure className="feature-photo">
             <img src={pies} alt="Materiales profesionales" />
@@ -190,7 +181,6 @@ const About = () => {
         </div>
       </section>
 
-      {/* MÉTRICAS */}
       <div className="container metrics">
         <div className="metric">
           <span className="metric-value">+450</span>
@@ -206,34 +196,35 @@ const About = () => {
         </div>
       </div>
 
-      <div className="container professional-section">
-        <div className="professional-card">
-          <div className="professional-photo">
-            <img src={bo1} alt="Profesional CataaNails" />
+      <div className="container profile-beauty">
+        <div className="profile-card">
+          <div className="profile-photo">
+            <img src={bo1} alt="Cataa - Especialista en Belleza" />
           </div>
 
-          <div className="professional-info">
-            <h2>Cataa</h2>
-            <p className="role">Fundadora & Especialista en Belleza</p>
-            <p className="bio">
+          <div className="profile-content">
+            <h2 className="profile-name">Cataa</h2>
+            <p className="profile-role">Fundadora & Especialista en Belleza</p>
+
+            <p className="profile-description">
               Con más de 6 años de experiencia en estética y cuidado personal,
               Daniela es apasionada por realzar la belleza natural de cada
               cliente. Especialista en manicure, pedicure, tratamientos
               capilares y tendencias modernas.
             </p>
 
-            <ul className="highlights clean">
+            <ul className="profile-highlights">
               <li>
-                <span className="hi-icon">✓</span>
+                <span className="check-icon">✨</span>
                 Certificación en Estética Profesional
               </li>
               <li>
-                <span className="hi-icon">✓</span>
-                Experta en técnicas avanzadas de cuidado de uñas
+                <span className="check-icon">✨</span>
+                Técnicas avanzadas de cuidado de uñas
               </li>
               <li>
-                <span className="hi-icon">✓</span>
-                Formación en tratamientos capilares de última generación
+                <span className="check-icon">✨</span>
+                Tratamientos capilares de última generación
               </li>
             </ul>
           </div>
@@ -256,7 +247,6 @@ const About = () => {
           )}
 
           <form onSubmit={handleSubmit} className="contact-form" noValidate>
-            {/* Honeypot real para bots */}
             <input
               type="text"
               name="botField"

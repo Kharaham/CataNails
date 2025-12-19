@@ -29,13 +29,13 @@ import { getAuth } from "firebase/auth";
 const LOCAL_KEY = "adminSidebarPrefs_v2";
 
 const AdminSidebar = ({
-  defaultPosition = "left", // "left" | "right"
+  defaultPosition = "left",
   defaultFixed = true,
-  defaultWidth = 280, // px
+  defaultWidth = 280,
   defaultSidebarBg = "#0f172a",
   defaultSidebarFg = "#e2e8f0",
   defaultAccent = "#ff3b7b",
-  headerOffset = 72, // altura del header fijo
+  headerOffset = 72,
 }) => {
   const [isSidebarVisible, setIsSidebarVisible] = useState(
     window.innerWidth > 768
@@ -55,17 +55,15 @@ const AdminSidebar = ({
   const [sidebarFg, setSidebarFg] = useState(defaultSidebarFg);
   const [accentColor, setAccentColor] = useState(defaultAccent);
   const [showQuickSettings, setShowQuickSettings] = useState(false);
-  const [itemPadding, setItemPadding] = useState(8); // densidad vertical
-  const [fontScale, setFontScale] = useState(1);     // <<--- NUEVO: escala de fuente
+  const [itemPadding, setItemPadding] = useState(8);
+  const [fontScale, setFontScale] = useState(1);
 
-  // Estado móvil
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   const sidebarRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Cargar preferencias una vez
   useEffect(() => {
     try {
       const saved = JSON.parse(localStorage.getItem(LOCAL_KEY));
@@ -79,14 +77,12 @@ const AdminSidebar = ({
         if (saved.itemPadding) setItemPadding(saved.itemPadding);
         if (typeof saved.isCollapsed === "boolean")
           setIsCollapsed(saved.isCollapsed);
-        if (typeof saved.fontScale === "number")               // <<--- carga scale
-          setFontScale(saved.fontScale);
+        if (typeof saved.fontScale === "number") setFontScale(saved.fontScale);
       }
     } catch {}
     setPrefsLoaded(true);
   }, []);
 
-  // Guardar preferencias
   useEffect(() => {
     if (!prefsLoaded) return;
     const prefs = {
@@ -98,7 +94,7 @@ const AdminSidebar = ({
       accentColor,
       itemPadding,
       isCollapsed,
-      fontScale,                    // <<--- guarda scale
+      fontScale,
     };
     localStorage.setItem(LOCAL_KEY, JSON.stringify(prefs));
   }, [
@@ -111,21 +107,19 @@ const AdminSidebar = ({
     accentColor,
     itemPadding,
     isCollapsed,
-    fontScale, // <<---
+    fontScale,
   ]);
 
-  // detectar cambio de tamaño (para modo móvil/desktop)
   useEffect(() => {
     const onResize = () => {
       const mobile = window.innerWidth <= 768;
       setIsMobile(mobile);
-      if (!mobile) setIsSidebarVisible(true); // en desktop, visible siempre
+      if (!mobile) setIsSidebarVisible(true);
     };
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
-  // Cerrar por click afuera en móvil
   useEffect(() => {
     const handleOutsideClick = (event) => {
       if (
@@ -161,7 +155,6 @@ const AdminSidebar = ({
       b.classList.remove("has-admin-sidebar");
       delete b.dataset.sidebarPosition;
 
-      // solo empujar en DESKTOP, con sidebar fijo y visible
       const shouldOffset = isFixed && !isMobile && isSidebarVisible;
       if (!shouldOffset) return;
 
@@ -178,7 +171,6 @@ const AdminSidebar = ({
 
     applyBodyOffset();
 
-    // también re-aplicar al cambiar orientación o tamaño
     const onResize = () => applyBodyOffset();
     window.addEventListener("orientationchange", onResize);
     window.addEventListener("resize", onResize);
@@ -201,7 +193,6 @@ const AdminSidebar = ({
     sidebarPosition,
   ]);
 
-  // Menú
   const menuItems = useMemo(
     () => [
       {
@@ -250,7 +241,6 @@ const AdminSidebar = ({
         group: "content",
       },
 
-      // === NUEVA SECCIÓN: Innovación & Estilo ===
       {
         id: "try-on",
         title: "Try-On de Uñas",
@@ -300,7 +290,6 @@ const AdminSidebar = ({
     [notifications]
   );
 
-  // Expandir grupo activo
   useEffect(() => {
     const activeItem = menuItems.find(
       (item) => location.pathname === item.path
@@ -308,7 +297,6 @@ const AdminSidebar = ({
     if (activeItem && !expandedGroups.has(activeItem.group)) {
       setExpandedGroups((prev) => new Set([...prev, activeItem.group]));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
   const groups = {
@@ -317,7 +305,7 @@ const AdminSidebar = ({
     finance: { title: "Finanzas", icon: faDollarSign },
     reports: { title: "Reportes", icon: faChartBar },
     content: { title: "Contenido", icon: faImages },
-    innovation: { title: "Innovación & Estilo", icon: faPalette }, // nuevo grupo
+    innovation: { title: "Innovación & Estilo", icon: faPalette },
     feedback: { title: "Feedback", icon: faStar },
     management: { title: "Gestión", icon: faUsers },
     misc: { title: "Otros", icon: faBars },
@@ -353,7 +341,6 @@ const AdminSidebar = ({
     if (isMobile) setIsSidebarVisible(false);
   };
 
-  // Logout
   const handleLogout = async () => {
     try {
       const auth = getAuth();
@@ -365,7 +352,6 @@ const AdminSidebar = ({
     }
   };
 
-  // Variables CSS (incluye --font-scale)
   const cssVars = {
     "--sidebar-width": `${sidebarWidth}px`,
     "--sidebar-bg": sidebarBg,
@@ -375,12 +361,11 @@ const AdminSidebar = ({
     "--accent-color": accentColor,
     "--sidebar-top": `${headerOffset}px`,
     "--item-vpad": `${itemPadding}px`,
-    "--font-scale": fontScale, // <<--- aplica escala global
+    "--font-scale": fontScale,
   };
 
   return createPortal(
     <>
-      {/* CSS mínimo para que la escala funcione aunque no toques el archivo .css */}
       <style>{`
         .admin-sidebar { font-size: calc(14px * var(--font-scale, 1)); }
         .admin-sidebar .group-header,
@@ -391,7 +376,6 @@ const AdminSidebar = ({
         .admin-sidebar .qs-value { font-size: calc(1em * var(--font-scale, 1)); }
       `}</style>
 
-      {/* Overlay solo en móvil */}
       {isSidebarVisible && isMobile && (
         <div
           className="sidebar-overlay"
@@ -399,7 +383,6 @@ const AdminSidebar = ({
         />
       )}
 
-      {/* Botón flotante cuando el sidebar está cerrado */}
       {!isSidebarVisible && (
         <button
           className="sidebar-toggle-button"
@@ -412,7 +395,6 @@ const AdminSidebar = ({
         </button>
       )}
 
-      {/* Sidebar */}
       <div
         ref={sidebarRef}
         className={`admin-sidebar ${isSidebarVisible ? "visible" : "hidden"} ${
@@ -424,7 +406,6 @@ const AdminSidebar = ({
         data-fixed={isFixed ? "true" : "false"}
         style={cssVars}
       >
-        {/* Header */}
         <div className="sidebar-header">
           {!isCollapsed && (
             <div className="admin-profile">
@@ -486,7 +467,6 @@ const AdminSidebar = ({
           </div>
         </div>
 
-        {/* Panel de personalización */}
         {!isCollapsed && showQuickSettings && (
           <div className="quick-settings">
             <div className="qs-row">
@@ -536,7 +516,6 @@ const AdminSidebar = ({
               <span className="qs-value">{itemPadding}px</span>
             </div>
 
-            {/* >>> NUEVO control de tamaño de texto <<< */}
             <div className="qs-row">
               <label>Tamaño texto</label>
               <input
@@ -555,13 +534,17 @@ const AdminSidebar = ({
               <label>Posición</label>
               <div className="qs-seg">
                 <button
-                  className={`seg-btn ${sidebarPosition === "left" ? "active" : ""}`}
+                  className={`seg-btn ${
+                    sidebarPosition === "left" ? "active" : ""
+                  }`}
                   onClick={() => setSidebarPosition("left")}
                 >
                   Izquierda
                 </button>
                 <button
-                  className={`seg-btn ${sidebarPosition === "right" ? "active" : ""}`}
+                  className={`seg-btn ${
+                    sidebarPosition === "right" ? "active" : ""
+                  }`}
                   onClick={() => setSidebarPosition("right")}
                 >
                   Derecha
@@ -582,7 +565,6 @@ const AdminSidebar = ({
           </div>
         )}
 
-        {/* Búsqueda */}
         {!isCollapsed && (
           <div className="sidebar-search">
             <div className="search-container">
@@ -598,7 +580,6 @@ const AdminSidebar = ({
           </div>
         )}
 
-        {/* Navegación */}
         <nav className="sidebar-nav">
           {Object.entries(groupedItems).map(([groupId, items]) => {
             const group = groups[groupId] || groups.misc;
@@ -627,7 +608,9 @@ const AdminSidebar = ({
                 )}
 
                 <div
-                  className={`nav-items ${isExpanded ? "expanded" : "collapsed"}`}
+                  className={`nav-items ${
+                    isExpanded ? "expanded" : "collapsed"
+                  }`}
                 >
                   {items.map((item) => (
                     <NavLink
@@ -671,7 +654,6 @@ const AdminSidebar = ({
           })}
         </nav>
 
-        {/* Footer */}
         <div className="sidebar-footer">
           <button
             className="footer-item"
@@ -692,7 +674,6 @@ const AdminSidebar = ({
           </button>
         </div>
 
-        {/* Estado conexión */}
         <div className="connection-status online">
           <div className="status-dot"></div>
           {!isCollapsed && <span>Conectado</span>}

@@ -93,16 +93,13 @@ const CitasList = () => {
           if (!photoURL && data.photoPath) {
             try {
               photoURL = await getDownloadURL(ref(storage, data.photoPath));
-            } catch {
-              /* ignore */
-            }
+            } catch {}
           }
           const servicePrice = data.servicePrice ?? null;
           return { id: d.id, ...data, photoURL, servicePrice };
         })
       );
 
-      // Orden por fecha desc (siempre que date sea ISO o parseable)
       citasList.sort((a, b) => new Date(b.date) - new Date(a.date));
 
       const pendientes = citasList.filter((c) => !c.completed && !c.canceled);
@@ -113,7 +110,6 @@ const CitasList = () => {
       setCompletedCitas(realizadas);
       setCanceledCitas(canceladas);
 
-      // Prefill de montos visibles
       setAmounts((prev) => {
         const next = { ...prev };
         pendientes.forEach((c) => {
@@ -133,7 +129,6 @@ const CitasList = () => {
     }
   };
 
-  // cache de todas (para mover entre tabs con info completa)
   const allCitas = React.useRef([]);
 
   const markAsCompleted = async (citaId) => {
@@ -223,7 +218,6 @@ const CitasList = () => {
 
   useEffect(() => {
     fetchCitas();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const filteredByDate = (arr) =>
@@ -268,24 +262,40 @@ const CitasList = () => {
       {isPending && (
         <>
           <div className="citaAd_priceGroup">
-            <label htmlFor={`amount-${cita.id}`}>Precio</label>
-            <input
-              id={`amount-${cita.id}`}
-              type="number"
-              inputMode="numeric"
-              className="citaAd_input"
-              placeholder="Ej: 12000"
-              value={amounts[cita.id] ?? cita.servicePrice ?? ""}
-              onChange={(e) => handleAmountChange(e, cita.id)}
-            />
+            <label>Precio Total</label>
+            <div className="citaAd_priceValue">${cita.servicePrice}</div>
+
+            {cita.paymentStatus === "paid_40" && (
+              <>
+                <label>Abono pagado (40%)</label>
+                <div className="citaAd_priceValue green">${cita.abonoCLP}</div>
+
+                <label>Saldo pendiente</label>
+                <div className="citaAd_priceValue red">
+                  ${cita.servicePrice - cita.abonoCLP}
+                </div>
+              </>
+            )}
+
+            {cita.paymentStatus === "paid_full" && (
+              <>
+                <label>Pago total</label>
+                <div className="citaAd_priceValue green">
+                  ${cita.servicePrice}
+                </div>
+
+                <label>Estado</label>
+                <div className="citaAd_priceValue green">Pago completado ✔</div>
+              </>
+            )}
           </div>
 
-        <Link
-          to={`/admin/try-on?citaId=${cita.id}`}
-          className="btn btn-primary citaAd_btn citaAd_btn--tryon"
-        >
-          Try-On
-        </Link>
+          <Link
+            to={`/admin/try-on?citaId=${cita.id}`}
+            className="btn btn-primary citaAd_btn citaAd_btn--tryon"
+          >
+            Try-On
+          </Link>
 
           <Button
             variant="success"

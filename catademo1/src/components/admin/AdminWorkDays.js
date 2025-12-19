@@ -30,14 +30,13 @@ import "../../styles/adminS/calendario.css";
 moment.locale("es");
 const localizer = momentLocalizer(moment);
 
-// Util: ¿rango A solapa con rango B?
 const rangesOverlap = (aStart, aEnd, bStart, bEnd) =>
   aStart < bEnd && bStart < aEnd;
 
 const CalendarAppointments = () => {
   const [appointments, setAppointments] = useState([]);
   const [blockedDays, setBlockedDays] = useState([]);
-  const [blockedSlots, setBlockedSlots] = useState([]); // NUEVO
+  const [blockedSlots, setBlockedSlots] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const [selectedDay, setSelectedDay] = useState(null);
@@ -49,10 +48,9 @@ const CalendarAppointments = () => {
 
   const [snackbar, setSnackbar] = useState({ open: false, message: "" });
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [tab, setTab] = useState(0); // 0 = día completo, 1 = rango horario
+  const [tab, setTab] = useState(0);
   const [reason, setReason] = useState("");
 
-  // Carga citas
   const loadAppointments = useCallback(async () => {
     const qs = await getDocs(collection(db, "appointments"));
     const loaded = qs.docs.map((d) => {
@@ -72,18 +70,16 @@ const CalendarAppointments = () => {
     return loaded;
   }, []);
 
-  // Carga días bloqueados
   const loadBlockedDays = useCallback(async () => {
     const qs = await getDocs(collection(db, "blockedDays"));
     const loaded = qs.docs.map((d) => ({
       id: d.id,
-      date: d.data().date, // "YYYY-MM-DD"
+      date: d.data().date,
       reason: d.data().reason || "",
     }));
     return loaded;
   }, []);
 
-  // Carga rangos bloqueados (horas)
   const loadBlockedSlots = useCallback(async () => {
     const qs = await getDocs(collection(db, "blockedSlots"));
     const loaded = qs.docs.map((d) => ({
@@ -95,7 +91,6 @@ const CalendarAppointments = () => {
     return loaded;
   }, []);
 
-  // Inicializa
   useEffect(() => {
     (async () => {
       setLoading(true);
@@ -116,9 +111,7 @@ const CalendarAppointments = () => {
     })();
   }, [loadAppointments, loadBlockedDays, loadBlockedSlots]);
 
-  // Eventos “bloqueados” para que se vean en el calendario
   const blockedEvents = [
-    // días completos
     ...blockedDays.map((b) => {
       const dayStart = moment(b.date).startOf("day").toDate();
       const dayEnd = moment(b.date).endOf("day").toDate();
@@ -132,7 +125,7 @@ const CalendarAppointments = () => {
         meta: b,
       };
     }),
-    // rangos horarios
+
     ...blockedSlots.map((b) => ({
       id: `bs_${b.id}`,
       title: b.reason ? `Bloqueado: ${b.reason}` : "Bloqueado",
@@ -144,7 +137,6 @@ const CalendarAppointments = () => {
     })),
   ];
 
-  // Estilos de eventos
   const eventPropGetter = (event) => {
     if (event.type === "blockedDay" || event.type === "blockedSlot") {
       return {
@@ -156,7 +148,7 @@ const CalendarAppointments = () => {
         },
       };
     }
-    // citas agendadas
+
     return {
       style: {
         backgroundColor: "rgba(76, 175, 80, 0.2)",
@@ -167,7 +159,6 @@ const CalendarAppointments = () => {
     };
   };
 
-  // Pinta el día completo en vista month si está bloqueado
   const dayPropGetter = (date) => {
     const blocked = blockedDays.some((d) => moment(d.date).isSame(date, "day"));
     if (blocked) {
@@ -181,12 +172,11 @@ const CalendarAppointments = () => {
     return {};
   };
 
-  // Abrir modal (slot selection puede traer rango)
   const handleOpenModal = (slotInfo) => {
     setSelectedDay(slotInfo.start);
     setSelectedRange({ start: slotInfo.start, end: slotInfo.end });
     setReason("");
-    // Si el usuario arrastró un rango, abre en pestaña "rango horario"
+
     const isSameDay = moment(slotInfo.start).isSame(slotInfo.end, "day");
     setTab(
       isSameDay &&
@@ -205,7 +195,6 @@ const CalendarAppointments = () => {
     setReason("");
   };
 
-  // === Acciones: bloquear / desbloquear día ===
   const handleBlockDay = async () => {
     if (!selectedDay) return;
     const dateStr = moment(selectedDay).format("YYYY-MM-DD");
@@ -215,7 +204,6 @@ const CalendarAppointments = () => {
       return;
     }
 
-    // Evita si hay citas ese día
     const hasAppt = appointments.some((ev) =>
       moment(ev.start).isSame(dateStr, "day")
     );
@@ -253,7 +241,6 @@ const CalendarAppointments = () => {
     handleCloseModal();
   };
 
-  // === Acciones: bloquear / desbloquear rango horario ===
   const handleBlockHours = async () => {
     const { start, end } = selectedRange;
     if (!start || !end || end <= start) {
@@ -261,7 +248,6 @@ const CalendarAppointments = () => {
       return;
     }
 
-    // Evita solape con citas
     const overlapAppt = appointments.some((ev) =>
       rangesOverlap(start, end, ev.start, ev.end)
     );
@@ -273,7 +259,6 @@ const CalendarAppointments = () => {
       return;
     }
 
-    // Evita solape con otros bloqueos horarios
     const overlapBlock = blockedSlots.some((b) =>
       rangesOverlap(start, end, new Date(b.startISO), new Date(b.endISO))
     );
@@ -300,11 +285,9 @@ const CalendarAppointments = () => {
     handleCloseModal();
   };
 
-  // Si el usuario hace click en un evento “bloqueado”, ofrecer eliminar
   const handleSelectEvent = (event) => {
     if (event.type === "appointment") {
-      // si quieres seguir mostrando detalles de cita, puedes dejar tu modal de cita
-      setSelectedEvent(event); // opcional
+      setSelectedEvent(event);
       return;
     }
     setSelectedEvent(event);
@@ -328,7 +311,6 @@ const CalendarAppointments = () => {
     setSelectedEvent(null);
   };
 
-  // Inputs de hora (cuando el usuario no arrastra y quiere fijar horas exactas)
   const [manualStart, setManualStart] = useState("");
   const [manualEnd, setManualEnd] = useState("");
   useEffect(() => {
@@ -372,7 +354,7 @@ const CalendarAppointments = () => {
             views={["month", "week", "day", "agenda"]}
             defaultView="month"
             selectable
-            step={30} // precisión 30 min
+            step={30}
             timeslots={2}
             min={new Date(2024, 0, 1, 9, 0)}
             max={new Date(2024, 0, 1, 21, 0)}
@@ -401,7 +383,6 @@ const CalendarAppointments = () => {
             }}
           />
 
-          {/* Modal crear bloqueo */}
           <Modal open={isModalOpen} onClose={handleCloseModal}>
             <Box
               sx={{
@@ -541,7 +522,6 @@ const CalendarAppointments = () => {
             </Box>
           </Modal>
 
-          {/* Modal ver/eliminar bloqueo o detalles de cita */}
           <Modal open={!!selectedEvent} onClose={() => setSelectedEvent(null)}>
             <Box
               sx={{

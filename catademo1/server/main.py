@@ -1,4 +1,3 @@
-# server/main.py
 import io, os, base64, logging
 from typing import List, Tuple, Optional, Dict
 
@@ -9,49 +8,45 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import cv2
 
-# =================== Logging ===================
+
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
 logging.basicConfig(level=LOG_LEVEL)
 log = logging.getLogger("nails-server")
 
-# =================== Config por defecto (modificables) ===================
-# Alpha matte (borde)
+
+
 ALPHA_DILATE_PX_DEFAULT  = 1
 ALPHA_FEATHER_PX_DEFAULT = 2
 
-# Guided filter (si hay opencv-contrib)
+
 GUIDED_RADIUS_DEFAULT = 5
 GUIDED_EPS_DEFAULT    = 1e-6
 
-# Multi-escala (paddings)
+
 FOR_PAD_DEFAULT = [0.25, 0.38]
 
-# GrabCut
 GRABCUT_ITERS_DEFAULT = 3
 
-# Prompt grid (densidad)
-PROMPT_ALONG_DEFAULT  = (0.18, 0.62, 4)    # start, end, steps (a lo largo)
-PROMPT_ACROSS_DEFAULT = (-0.22, 0.22, 3)   # start, end, steps (a lo ancho)
 
-# Salida: además de polígonos, devuelvo PNG RGBA por uña
+PROMPT_ALONG_DEFAULT  = (0.18, 0.62, 4)    
+PROMPT_ACROSS_DEFAULT = (-0.22, 0.22, 3)  
+
+
 RETURN_ALPHA_PNG = os.getenv("RETURN_ALPHA_PNG", "true").lower() == "true"
 
-# Límite de tamaño de imagen (para evitar OOM). 3.5 megapíxeles por defecto.
+
 MAX_PIXELS = int(os.getenv("MAX_PIXELS", "3500000"))
 
-# =================== SAM (carga perezosa) =================
+
 SAM_AVAILABLE = False
 sam_predictor = None
 _sam_device = "cpu"
 
 def _try_load_sam():
-    """
-    Carga SAM (o SAM-HQ si está sam_hq_vit_b.pth en el mismo dir).
-    Usa CUDA si está disponible.
-    """
+
     global SAM_AVAILABLE, sam_predictor, _sam_device
     try:
-        from segment_anything import sam_model_registry, SamPredictor  # type: ignore
+        from segment_anything import sam_model_registry, SamPredictor 
         here = os.path.dirname(__file__)
         ckpt_hq = os.path.join(here, "sam_hq_vit_b.pth")
         ckpt_b  = os.path.join(here, "sam_vit_b_01ec64.pth")
@@ -77,11 +72,11 @@ def _try_load_sam():
 
 _try_load_sam()
 
-# =================== MediaPipe Hands ======================
+
 import mediapipe as mp
 mp_hands = mp.solutions.hands
 
-# =================== (Opcional) Firebase Auth =============
+
 FIREBASE_AUTH_REQUIRED = os.getenv("FIREBASE_AUTH_REQUIRED", "false").lower() == "true"
 FIREBASE_READY = False
 firebase_verify_id_token = None
@@ -92,12 +87,11 @@ if FIREBASE_AUTH_REQUIRED:
         from firebase_admin import auth, credentials
 
         if not firebase_admin._apps:
-            # Usará GOOGLE_APPLICATION_CREDENTIALS en Cloud Run si existe,
-            # o credenciales por defecto de GCP.
+
             try:
                 firebase_admin.initialize_app()
             except Exception:
-                # Fallback: si montas un service-account.json
+
                 cred_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
                 if cred_path and os.path.exists(cred_path):
                     firebase_admin.initialize_app(credentials.Certificate(cred_path))
@@ -126,11 +120,11 @@ def _require_firebase_auth(auth_header: Optional[str]):
     except Exception:
         raise HTTPException(status_code=401, detail="Token inválido")
 
-# =================== FastAPI ==============================
+
 ALLOWED_ORIGINS_ENV = os.getenv("ALLOWED_ORIGINS", "")
 allowed_origins = [o.strip() for o in ALLOWED_ORIGINS_ENV.split(",") if o.strip()]
 if not allowed_origins:
-    # Si usas proxy de Firebase Hosting (rewrite /api/**) no necesitas CORS.
+
     allowed_origins = ["*"]
 
 app = FastAPI()
@@ -150,7 +144,7 @@ def ping():
 def healthz():
     return {"status": "ok"}
 
-# =================== Utilidades genéricas =================
+
 def _pil_to_cv2(img_pil: Image.Image) -> np.ndarray:
     return cv2.cvtColor(np.array(img_pil), cv2.COLOR_RGBA2BGR if img_pil.mode=="RGBA" else cv2.COLOR_RGB2BGR)
 
@@ -168,16 +162,13 @@ def _rect_from_two_points(p1: np.ndarray,
                           p2: np.ndarray,
                           width_scale: float=0.70,
                           length_scale: float=0.60):
-    """
-    Rectángulo adaptativo según ángulo y tamaño real de la uña.
-    Mucho más preciso que la versión fija.
-    """
+
     v = p2 - p1
     L = np.linalg.norm(v) + 1e-6
     u = v / L
     n = np.array([-u[1], u[0]])
 
-    # 🔥 Ajustes dinámicos según la uña detectada
+
     dynamic_width = np.clip(L * 0.45, 6, 32)
     dynamic_length = np.clip(L * 0.65, 12, 52)
 
@@ -235,7 +226,7 @@ def _distal_brightness(crop_bgr: np.ndarray, mask: np.ndarray) -> float:
     ys, xs = np.where(mask)
     if len(xs)==0: return 0.0
     ymid = int(np.median(ys))
-    distal = (ys < ymid)  # aprox “punta”
+    distal = (ys < ymid) 
     if distal.sum()==0: return 0.0
     return float(L[ys[distal], xs[distal]].mean())
 
@@ -250,11 +241,9 @@ def _iou(a: np.ndarray, b: np.ndarray) -> float:
     union = np.logical_or(a, b).sum()
     return float(inter) / (float(union) + 1e-6)
 
-# =================== Guided Filter helper =================
+
 def _guided_filter_soften(img_bgr: np.ndarray, alpha: np.ndarray, radius: int=5, eps: float=1e-6) -> np.ndarray:
-    """
-    Suaviza alpha guiado por imagen si está opencv-contrib.
-    """
+
     try:
         gf = cv2.ximgproc.guidedFilter(guide=img_bgr, src=alpha, radius=radius, eps=eps)
         return gf
@@ -262,7 +251,7 @@ def _guided_filter_soften(img_bgr: np.ndarray, alpha: np.ndarray, radius: int=5,
         # fallback
         return cv2.GaussianBlur(alpha, (0,0), sigmaX=1.0, sigmaY=1.0)
 
-# =================== Post-proceso de máscara ==============
+
 def _morph_clean(mask: np.ndarray) -> np.ndarray:
     from skimage.morphology import remove_small_holes, remove_small_objects
     m = mask.astype(bool)
@@ -274,7 +263,7 @@ def _morph_clean(mask: np.ndarray) -> np.ndarray:
     m = cv2.morphologyEx(m, cv2.MORPH_OPEN,  k, iterations=1)
     return m.astype(bool)
 
-# ---------------- GrabCut refinamiento final ----------------
+
 def _grabcut_refine(crop_bgr: np.ndarray, init_mask_bool: np.ndarray, iters: int=3) -> np.ndarray:
     h, w = init_mask_bool.shape
     trimap = _color_prior_trimap(crop_bgr, init_mask_bool)  # ← antes creabas uno simple
@@ -288,15 +277,11 @@ def _grabcut_refine(crop_bgr: np.ndarray, init_mask_bool: np.ndarray, iters: int
     return final.astype(bool)
 
 
-# =================== Prompts SAM ==========================
 def _place_points_for_prompts(poly_local: np.ndarray,
-                              tip_local: Tuple[int,int],
-                              along: Tuple[float,float,int],
-                              across: Tuple[float,float,int]):
-    """
-    Prompts mejorados: bordes internos + puntos negativos lejanos.
-    SAM queda mucho más estable y preciso.
-    """
+                tip_local: Tuple[int,int],
+                along: Tuple[float,float,int],
+                across: Tuple[float,float,int]):
+
     rect = cv2.minAreaRect(poly_local.astype(np.float32))
     box = cv2.boxPoints(rect).astype(np.float32)
     center = box.mean(axis=0)
@@ -307,7 +292,7 @@ def _place_points_for_prompts(poly_local: np.ndarray,
     long_edge = long_edge / (np.linalg.norm(long_edge)+1e-6)
     ortho = np.array([-long_edge[1], long_edge[0]])
 
-    # 🔥 Bordes internos de la uña
+
     border_pts = []
     for v in poly_local:
         d = v - center
@@ -315,10 +300,10 @@ def _place_points_for_prompts(poly_local: np.ndarray,
         border_pts.append(v - d*4)
     border_pts = np.array(border_pts, np.float32)
 
-    # Puntos positivos = borde interno
+
     pos = border_pts
 
-    # Puntos negativos más inteligentes
+
     neg = []
     for k in [0.3, 0.5, 0.9]:
         neg.append(tip_local + long_edge * (75*k))
@@ -333,21 +318,18 @@ def _place_points_for_prompts(poly_local: np.ndarray,
 
 
 
-# =================== SAM por crop =========================
+
 def _sam_predict_on_crop(crop_bgr: np.ndarray,
                          poly_local: np.ndarray,
                          tip_local: Tuple[int,int],
                          along: Tuple[float,float,int],
                          across: Tuple[float,float,int]) -> Tuple[Optional[np.ndarray], float]:
-    """
-    Ejecuta SAM en un crop (una escala) con caja + puntos +/-.
-    Devuelve: (mask_bool, value) donde 'value' es métrica compuesta.
-    """
+
     if not SAM_AVAILABLE:
         return (None, -1e9)
 
     Hc, Wc = crop_bgr.shape[:2]
-    # realce leve
+
     lab = cv2.cvtColor(crop_bgr, cv2.COLOR_BGR2LAB)
     l, a, b = cv2.split(lab)
     clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
@@ -388,7 +370,7 @@ def _sam_predict_on_crop(crop_bgr: np.ndarray,
             best_val, best_mask = val, m_clean
     return (best_mask, best_val)
 
-# =================== SAM multi-escala + GrabCut ===========
+
 def _refine_with_sam_multiscale(image_bgr: np.ndarray,
                                 seed: Tuple[int,int],
                                 poly_global: np.ndarray,
@@ -396,9 +378,7 @@ def _refine_with_sam_multiscale(image_bgr: np.ndarray,
                                 along: Tuple[float,float,int],
                                 across: Tuple[float,float,int],
                                 grab_iters: int) -> Optional[np.ndarray]:
-    """
-    pads: lista de paddings para multi-escala (ej: [0.25, 0.38])
-    """
+
     if not SAM_AVAILABLE:
         return None
 
@@ -431,9 +411,9 @@ def _refine_with_sam_multiscale(image_bgr: np.ndarray,
     mask_global[y1:y2, x1:x2] = final_local
     return mask_global
 
-# =================== Helpers de imagen ====================
+
 def _ensure_rgb_and_downscale(raw: bytes) -> np.ndarray:
-    """Abre la imagen, asegura RGB y reduce si excede MAX_PIXELS."""
+
     try:
         img = Image.open(io.BytesIO(raw))
     except Exception:
@@ -450,10 +430,7 @@ def _ensure_rgb_and_downscale(raw: bytes) -> np.ndarray:
     return _pil_to_cv2(img)
 
 def _shape_arc_regularization(poly, strength=0.22):
-    """
-    Ajusta ligeramente el polígono hacia una forma de arco natural.
-    Evita puntas raras o bordes quebrados.
-    """
+
     poly = np.array(poly, np.float32)
     cx = poly[:,0].mean()
     cy = poly[:,1].mean()
@@ -463,7 +440,7 @@ def _shape_arc_regularization(poly, strength=0.22):
     r = np.sqrt(dx*dx + dy*dy)
     mean_r = r.mean()
 
-    # suavizar hacia un arco
+
     new_x = cx + dx * (1 - strength) + (dx/r)*mean_r*strength
     new_y = cy + dy * (1 - strength) + (dy/r)*mean_r*strength
 
@@ -483,14 +460,11 @@ def _nail_color_separation_score(crop_bgr, mask):
 
 
 
-# =================== AUTO-SMOOTH + AUTO-INSET ===================
 
 def _auto_needs_smoothing(poly: np.ndarray) -> bool:
-    """
-    Detecta si el polígono tiene quiebres bruscos o bordes irregulares.
-    """
+
     poly = np.array(poly, np.float32)
-    # diferencias entre puntos
+
     d = np.diff(poly, axis=0)
     angles = []
     for i in range(len(d)-1):
@@ -500,16 +474,13 @@ def _auto_needs_smoothing(poly: np.ndarray) -> bool:
         angle = np.degrees(np.arccos(np.clip(dot, -1, 1)))
         angles.append(angle)
 
-    # si hay demasiados ángulos bruscos → necesita suavizado
+
     sharp_angles = [a for a in angles if a > 42]
     return len(sharp_angles) >= 3
 
 
 def _auto_needs_inset(mask: np.ndarray) -> bool:
-    """
-    Mira si la máscara llega demasiado afuera de la piel (sobra).
-    Detecta 'rebalses' del borde.
-    """
+
     if mask.sum() == 0:
         return False
     h, w = mask.shape
@@ -522,16 +493,14 @@ def _auto_needs_inset(mask: np.ndarray) -> bool:
 
 
 def _apply_shape_adjustments(poly: List[List[int]], mask_local: np.ndarray, crop_rgb: np.ndarray) -> List[List[int]]:
-    """
-    Aplica AUTO-SMOOTH y AUTO-INSET al polígono final.
-    """
+
     poly_np = np.array(poly, np.int32)
 
-    # AUTO-SMOOTH (forma más curva y limpia)
+
     if _auto_needs_smoothing(poly_np):
         poly_np = _shape_arc_regularization(poly_np, strength=0.22)
 
-    # AUTO-INSET (recorta un poquito si se pasó)
+
     if _auto_needs_inset(mask_local):
         cx = mask_local.shape[1] // 2
         cy = mask_local.shape[0] // 2
@@ -544,7 +513,7 @@ def _apply_shape_adjustments(poly: List[List[int]], mask_local: np.ndarray, crop
     return poly_np.tolist()
 
 
-# =================== Núcleo del endpoint ==================
+
 def _run_inference(
     img_cv: np.ndarray,
     profile: str,
@@ -556,7 +525,7 @@ def _run_inference(
 ) -> Dict:
     h, w = img_cv.shape[:2]
 
-    # ---- Perfiles rápidos ----
+
     pads = FOR_PAD_DEFAULT[:]
     grab_iters = GRABCUT_ITERS_DEFAULT
     alpha_dilate = ALPHA_DILATE_PX_DEFAULT
@@ -566,19 +535,19 @@ def _run_inference(
     along = PROMPT_ALONG_DEFAULT
     across = PROMPT_ACROSS_DEFAULT
 
-    if profile == "wide":      # manos completas / mucha piel
+    if profile == "wide":     
         pads = [0.30, 0.45]
         grab_iters = 4
         alpha_dilate, alpha_feather = 1, 3
         along = (0.18, 0.62, 5)
         across = (-0.26, 0.26, 5)
-    elif profile == "closeup":  # close-up uñas
+    elif profile == "closeup":
         pads = [0.18, 0.30]
         grab_iters = 5
         alpha_dilate, alpha_feather = 0, 3
         along = (0.15, 0.68, 6)
         across = (-0.30, 0.30, 5)
-    elif profile == "noisy":    # fotos con ruido/compresión
+    elif profile == "noisy":    
         pads = [0.25, 0.40]
         grab_iters = 4
         alpha_dilate, alpha_feather = 2, 4
@@ -587,7 +556,7 @@ def _run_inference(
         
     
 
-    # ---- Overrides por query ----
+
     if padA is not None or padB is not None:
         a = padA if padA is not None else pads[0]
         b = padB if padB is not None else (pads[1] if len(pads)>1 else a)
@@ -616,7 +585,7 @@ def _run_inference(
         t = acrossSteps if acrossSteps is not None else across[2]
         across = (float(s), float(e), int(t))
 
-    # -------------- Detección base (MediaPipe) --------------
+
     base_polys: List[Dict] = []
     seeds: List[Tuple[int,int]] = []
     with mp_hands.Hands(
@@ -631,7 +600,7 @@ def _run_inference(
         if res.multi_hand_landmarks:
             for hand_landmarks in res.multi_hand_landmarks:
                 lm = hand_landmarks.landmark
-                pairs = [(7,8),(11,12),(15,16),(19,20),(3,4)]  # index,middle,ring,pinky,thumb
+                pairs = [(7,8),(11,12),(15,16),(19,20),(3,4)]  
                 for a,b in pairs:
                     ax, ay = _norm_to_px(lm[a].x, lm[a].y, w, h)
                     bx, by = _norm_to_px(lm[b].x, lm[b].y, w, h)
@@ -650,7 +619,7 @@ def _run_inference(
     refined_out = []
     matte_pngs = []
 
-    # -------------- Refinamiento (SAM + GrabCut) ------------
+
     if SAM_AVAILABLE and seeds:
         for item, seed in zip(base_polys, seeds):
             poly_np = np.array(item["polygon"], dtype=np.int32)
@@ -666,8 +635,8 @@ def _run_inference(
             if poly is None:
                 continue
 
-            # ========== AUTO-SMOOTH + AUTO-INSET ==========
-            # Recorte local para análisis
+
+
             x1b, y1b, x2b, y2b = _poly_to_bbox(
                 np.array(poly, dtype=np.int32),
                 pad=0.10,
@@ -678,10 +647,9 @@ def _run_inference(
             crop_rgb_b = img_cv[y1b:y2b, x1b:x2b]
             mask_local_b = mask_glob[y1b:y2b, x1b:x2b]
 
-            # Ajustes automáticos de forma
             poly = _apply_shape_adjustments(poly, mask_local_b, crop_rgb_b)
             
-            # ==============================================
+     
             poly = _shape_arc_regularization(np.array(poly, np.int32), strength=0.18).tolist()
             refined_out.append({
                 "polygon": poly,
@@ -691,22 +659,22 @@ def _run_inference(
 
 
             if RETURN_ALPHA_PNG:
-                # alpha suave guiado
+            
                 alpha = (mask_glob.astype(np.uint8) * 255).astype(np.float32) / 255.0
-                # dilate/feather
+              
                 if alpha_dilate > 0:
                     k = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (alpha_dilate*2+1, alpha_dilate*2+1))
                     alpha = cv2.dilate((alpha*255).astype(np.uint8), k, iterations=1).astype(np.float32)/255.0
                 if alpha_feather > 0:
                     alpha = cv2.GaussianBlur(alpha, (0,0), sigmaX=alpha_feather*0.6, sigmaY=alpha_feather*0.6)
-                # guided filter si disponible
+              
                 try:
                     alpha = _guided_filter_soften(img_cv, alpha.astype(np.float32), radius=g_radius, eps=g_eps)
                 except Exception:
                     pass
                 alpha = np.clip(alpha, 0.0, 1.0)
 
-                # Recorte justo a la uña
+              
                 x1, y1, x2, y2 = _poly_to_bbox(np.array(poly, dtype=np.int32), pad=0.08, w=w, h=h)
                 crop_rgb = img_cv[y1:y2, x1:x2]
                 crop_a = alpha[y1:y2, x1:x2]
@@ -747,7 +715,7 @@ def _run_inference(
 def _distal_thinness_penalty(mask: np.ndarray) -> float:
     ys, xs = np.where(mask)
     if len(xs)==0: return 0.0
-    ymid = np.percentile(ys, 30)  # “punta”
+    ymid = np.percentile(ys, 30)  
     top = mask[:int(ymid), :]
     bot = mask[int(ymid):, :]
     w_top = top.sum(axis=1).mean() if top.size else 0
@@ -763,10 +731,9 @@ def _regularize_set(polys: list, shape):
         feats.append([w/h, w/max(W,1), h/max(H,1)])
     F = np.array(feats); mu = F.mean(0); sd = F.std(0)+1e-6
     scores = 1.0 - np.clip(np.abs((F-mu)/sd), 0, 3).mean(1)/3.0
-    return scores  # 1=perfecto, 0=outlier
-# > mejor
+    return scores  
 
-# =================== Endpoints públicos ===================
+
 def _validate_image_content_type(content_type: Optional[str]):
     if not content_type or not content_type.startswith("image/"):
         raise HTTPException(status_code=415, detail="Se esperaba image/*")
@@ -822,7 +789,7 @@ async def predict(
         alongStart, alongEnd, alongSteps, acrossStart, acrossEnd, acrossSteps
     )
 
-# Alias sugerido para el front: /segment (compat con tus llamadas)
+
 @app.post("/segment")
 async def segment(
     image: UploadFile = File(...),

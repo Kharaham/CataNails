@@ -1,10 +1,5 @@
-// src/utils/reco.js
-// Motor de recomendaciones por prompt (robusto, ampliado)
-
-// Import mínimo (tu conversión Lab ya existente)
 import { rgbToLab } from "./color";
 
-// --------------------------- Utils de texto ---------------------------
 const norm = (s) =>
   (s || "")
     .toString()
@@ -17,10 +12,7 @@ const splitTokens = (s) =>
     .split(/[^a-z0-9#]+/g)
     .filter(Boolean);
 
-// ===================== Biblioteca de familias ========================
-// (Originales + pack de 10 nuevas cuidadosamente curadas)
 const F = [
-  // ---- Originales ----
   {
     key: "nude_taupe",
     name: "Nude Taupe",
@@ -166,7 +158,6 @@ const F = [
     vibe: ["otono", "retro", "tierra"],
   },
 
-  // ---- Pack de 10 nuevas ----
   {
     key: "greige",
     name: "Greige Neutro",
@@ -229,10 +220,8 @@ const F = [
   },
 ];
 
-// Índice para validar keys y evitar undefined
 const F_INDEX = F.reduce((acc, f) => ((acc[f.key] = f), acc), {});
 
-// ====================== Bias por undertone / tono / cabello ======================
 const undertoneBias = {
   calido: new Set([
     "terracota",
@@ -373,9 +362,7 @@ const hairBoost = {
   ]),
 };
 
-// ====================== Alias / Sinónimos de keywords ======================
 const ALIAS = {
-  // estilos / vibes
   oficina: [
     "trabajo",
     "laboral",
@@ -485,14 +472,12 @@ const ALIAS = {
   flores: ["florales", "flower", "flowerpower", "daisy", "🌼", "🌺", "🌷"],
   frances: ["francesa", "french", "milk", "leche", "babyboomer", "boomer"],
 
-  // estéticas / tendencias
   romantico: ["romántico", "soft", "suave", "delicado", "femenino", "sweet"],
   euforia: ["euphoria", "festival", "coachella", "editorial", "runway", "y2k"],
   gotico: ["gótico", "goth", "oscuro", "dark", "grunge"],
   barbie: ["barbiecore", "barbie_pink", "rosa_barbie"],
   boho: ["bohemio", "bohemia", "bohemian"],
 
-  // ocasiones
   oficina_dura: [
     "reunión",
     "entrevista",
@@ -501,7 +486,6 @@ const ALIAS = {
     "mesa_directiva",
   ],
 
-  // colores (alias semánticos)
   rojo: ["red", "carmin", "carmín", "escarlata", "granate", "vino", "tinto"],
   burgundy: ["vino", "granate", "bordo", "burdeos", "maroon", "vino_tinto"],
   fucsia: ["magenta", "hot_pink", "barbie", "barbie_pink"],
@@ -533,13 +517,10 @@ const ALIAS = {
   pastel: ["pasteles", "soft_tone", "baby_colors", "candy"],
   neon: ["neón", "neon", "fluor", "fluorescente", "highlighter"],
 
-  // exclusiones “sin …”
   sin: ["no", "evitar", "evita", "without"],
 };
 
-// =================== Biblioteca de keywords → familias =====================
 const KEYMAP_RAW = {
-  // base existentes y ampliados
   oficina: [
     "nude_taupe",
     "nude_rosa",
@@ -702,7 +683,6 @@ const KEYMAP_RAW = {
   barbie: ["fucsia", "neon_pink", "nude_rosa", "white_pearl", "blush"],
   boho: ["olive", "mustard", "caramelo", "terracota", "mint", "greige"],
 
-  // ocasiones específicas
   entrevista: [
     "nude_taupe",
     "french",
@@ -756,7 +736,6 @@ const KEYMAP_RAW = {
   ],
   trabajo: ["nude_taupe", "french", "mauve", "navy", "taupe_gray", "greige"],
 
-  // preferencias de acabado/estética
   mate: [
     "nude_taupe",
     "black",
@@ -785,7 +764,6 @@ const KEYMAP_RAW = {
   ],
   perla: ["white_pearl", "french", "nude_rosa", "holographic"],
 
-  // colores semánticos directos (positivo)
   rojo: ["rojo_clasico", "burgundy"],
   burgundy: ["burgundy"],
   fucsia: ["fucsia"],
@@ -807,7 +785,6 @@ const KEYMAP_RAW = {
   ],
   neon: ["neon_pink", "neon_orange"],
 
-  // emojis (compat: también los detectamos en parser)
   "🌸": ["pastel_mix", "lila", "nude_rosa", "blush"],
   "☀️": ["coral", "mint", "aqua", "neon_orange", "sky_blue"],
   "🍂": [
@@ -837,9 +814,7 @@ const KEYMAP = Object.fromEntries(
   ])
 );
 
-// ====================== Exclusiones por color/estética =====================
 const COLOR_WORDS = {
-  // colores con sinónimos
   rojo: ["rojo_clasico", "burgundy"],
   carmin: ["rojo_clasico", "burgundy"],
   granate: ["burgundy"],
@@ -879,7 +854,6 @@ const COLOR_WORDS = {
   neon: ["neon_pink", "neon_orange"],
   fluorescente: ["neon_pink", "neon_orange"],
 
-  // acabados/estética para excluir
   brillo: [
     "metal_gold",
     "metal_silver",
@@ -899,12 +873,10 @@ const COLOR_WORDS = {
   metalico: ["metal_gold", "metal_silver", "rose_gold", "gunmetal"],
   metal: ["metal_gold", "metal_silver", "rose_gold", "gunmetal"],
 
-  // estilos
   geometrico: ["black", "white_pearl", "navy", "mauve", "gunmetal"],
   frances: ["french", "white_pearl", "nude_rosa"],
 };
 
-// ===================== Parser mejorado de prompt ======================
 function parsePrompt(prompt) {
   const raw = String(prompt || "");
   const text = norm(raw);
@@ -914,10 +886,9 @@ function parsePrompt(prompt) {
   const excludes = new Set();
   const hexes = [];
 
-  // #RRGGBB
   const hexFull = raw.match(/#([0-9a-fA-F]{6})/g) || [];
   hexFull.forEach((h) => hexes.push(h.toUpperCase()));
-  // #RGB → expandir a #RRGGBB
+
   const hexShort = raw.match(/#([0-9a-fA-F]{3})(?![0-9a-fA-F])/g) || [];
   hexShort.forEach((h) => {
     const tri = h.replace("#", "");
@@ -926,7 +897,6 @@ function parsePrompt(prompt) {
     hexes.push(exp);
   });
 
-  // alias → canónico
   const expandAlias = (t) => {
     if (ALIAS[t]) return [t];
     for (const [canon, syns] of Object.entries(ALIAS)) {
@@ -935,7 +905,6 @@ function parsePrompt(prompt) {
     return [t];
   };
 
-  // Exclusiones por frases: “sin X”, “no X”, “evitar X”, “without X”
   const NEG_TRIGGERS = new Set(["sin", "no", "evitar", "without"]);
   const words = text.split(/\s+/g).filter(Boolean);
   for (let i = 0; i < words.length; i++) {
@@ -951,7 +920,6 @@ function parsePrompt(prompt) {
     }
   }
 
-  // Emojis → keywords
   const EMOJI_MAP = {
     "🌸": "primavera",
     "☀️": "verano",
@@ -966,18 +934,16 @@ function parsePrompt(prompt) {
       KEYMAP[kw].forEach((famKey) => wants.add(famKey));
   });
 
-  // Tokens → alias → wants
   tokens.forEach((t) => {
     expandAlias(t).forEach((canon) => {
       if (KEYMAP[canon]) KEYMAP[canon].forEach((famKey) => wants.add(famKey));
-      if (F_INDEX[canon]) wants.add(canon); // permitir pedir familias por nombre
+      if (F_INDEX[canon]) wants.add(canon);
     });
   });
 
   return { wants, excludes, hexes };
 }
 
-// ======================= Scoring y recomendador =======================
 function scoreFamily(fam, ctx) {
   let score = 0;
   const { undertone, tone, hairType, wants } = ctx;
@@ -1003,7 +969,7 @@ export function generatePromptRecommendations({
     const ctx = { undertone, tone, hairType, wants };
 
     let pool = F.filter((fam) => !excludes.has(fam.key));
-    if (!pool.length) pool = F; // nunca vacío
+    if (!pool.length) pool = F;
 
     let candidates = pool
       .map((fam) => ({ fam, score: scoreFamily(fam, ctx) }))
@@ -1051,7 +1017,7 @@ export function generatePromptRecommendations({
     return out;
   } catch (err) {
     console.error("[reco] generatePromptRecommendations error:", err);
-    // fallback ultra simple para que la UI nunca se caiga
+
     return [
       {
         name: "Sugerencias básicas",
@@ -1062,7 +1028,6 @@ export function generatePromptRecommendations({
   }
 }
 
-// ============================ Helpers ============================
 function hexToRgb(hex) {
   const h = String(hex || "").replace("#", "");
   if (!/^[0-9A-Fa-f]{6}$/.test(h)) return { r: 0, g: 0, b: 0 };

@@ -45,7 +45,6 @@ const DEFAULT_UI = {
   },
 };
 
-/* === helper para saber si estamos en pantalla angosta === */
 function useIsNarrow(bp = 640) {
   const [isNarrow, setIsNarrow] = React.useState(() => window.innerWidth <= bp);
   React.useEffect(() => {
@@ -83,12 +82,10 @@ const BankBalance = () => {
 
   const isNarrow = useIsNarrow(640);
 
-  /* Persist UI */
   useEffect(() => {
     localStorage.setItem(UI_STORE_KEY, JSON.stringify(ui));
   }, [ui]);
 
-  /* Firestore live */
   useEffect(() => {
     const ingresosRef = collection(db, "ingresos");
     const unsubscribe = onSnapshot(ingresosRef, (snapshot) => {
@@ -190,7 +187,6 @@ const BankBalance = () => {
     timeZone: CHILE_TZ,
   });
 
-  /* ====== DATASETS ====== */
   const last14DaysData = useMemo(() => {
     const map = new Map();
     for (let i = 13; i >= 0; i--) {
@@ -392,7 +388,6 @@ const BankBalance = () => {
           </div>
         )}
 
-        {/* KPIs */}
         <div className="money-cards-container mt-3 mb-4">
           <div
             className="money-card daily"
@@ -435,7 +430,6 @@ const BankBalance = () => {
           </div>
         </div>
 
-        {/* Ingreso manual del día */}
         <div className="money-input-group mb-4">
           <input
             type="number"
@@ -465,7 +459,6 @@ const BankBalance = () => {
           </button>
         </div>
 
-        {/* Filtros */}
         <div className="money-filters-grid">
           <div className="money-filter-section mb-2">
             <label htmlFor="dateFilter" className="money-form-label">
@@ -523,7 +516,6 @@ const BankBalance = () => {
           </div>
         </div>
 
-        {/* ====== ANALYTICS ====== */}
         <div className="analytics-grid">
           <div className="chart-card span-4">
             <div className="chart-title">Ingresos últimos 14 días</div>
@@ -619,7 +611,6 @@ const BankBalance = () => {
           </div>
         </div>
 
-        {/* ====== HISTORIAL ====== */}
         <h4 className="transactions-title mt-4">Historial de Transacciones</h4>
         <ul className="money-transaction-list mt-3">
           {filteredTransactions.length > 0 ? (

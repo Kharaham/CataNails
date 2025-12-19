@@ -1,7 +1,6 @@
-/* ===== Fondo y layout (único para agenda) ===== */
 .agenC_page {
   min-height: 100vh;
-  padding: 88px 16px 120px; /* espacio para toolbar y action bar */
+  padding: 88px 16px 120px;
 }
 .agenC_card {
   background: #fff;
@@ -20,7 +19,6 @@
   filter: saturate(1.08);
 }
 
-/* ===== Toolbar fija superior ===== */
 .agenC_toolbar {
   position: fixed;
   top: 12px;
@@ -64,7 +62,6 @@
   margin-top: 2px;
 }
 
-/* Píldoras de progreso */
 .agenC_toolbarPills {
   display: flex;
   gap: 8px;
@@ -86,14 +83,12 @@
   font-weight: 600;
 }
 
-/* ===== Form wrapper ===== */
 .agenC_form {
   max-width: 1100px;
   margin: 0 auto;
   padding: 18px;
 }
 
-/* Versión compacta para “todo a mano” */
 .agenC_formCompact .agenC_field {
   margin-bottom: 12px;
 }
@@ -110,7 +105,6 @@
   gap: 6px;
 }
 
-/* Grid principal */
 .agenC_grid {
   display: grid;
   grid-template-columns: 1fr 320px;
@@ -121,11 +115,10 @@
 }
 .agenC_colAside {
   position: sticky;
-  top: 86px; /* bajo la toolbar */
+  top: 86px;
   align-self: start;
 }
 
-/* Summary */
 .agenC_summary h4 {
   margin: 0 0 10px;
   color: #111827;
@@ -167,7 +160,6 @@
   text-overflow: ellipsis;
 }
 
-/* ===== Campos ===== */
 .agenC_field label {
   display: block;
   font-weight: 600;
@@ -239,7 +231,6 @@ textarea:focus {
   color: #6b7280;
 }
 
-/* Segmented control */
 .agenC_segmented {
   display: inline-flex;
   background: #f5f3ff;
@@ -264,7 +255,6 @@ textarea:focus {
   transform: translateY(1px);
 }
 
-/* Upload */
 .agenC_upload {
   border: 1px dashed #d1d5db;
   border-radius: 12px;
@@ -289,7 +279,6 @@ textarea:focus {
   display: block;
 }
 
-/* Horas */
 .agenC_hourGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -312,7 +301,6 @@ textarea:focus {
   box-shadow: 0 0 0 3px rgba(217, 70, 239, 0.12);
 }
 
-/* Autocomplete */
 .agenC_acWrap {
   position: relative;
 }
@@ -411,7 +399,6 @@ textarea:focus {
   background: #f9fafb;
 }
 
-/* Calendario */
 .agenC_cal {
   border: 1px solid #e5e7eb;
   border-radius: 16px;
@@ -514,7 +501,6 @@ textarea:focus {
   display: inline-block;
 }
 
-/* Pill servicio preseleccionado */
 .agenC_pill {
   display: inline-flex;
   align-items: center;
@@ -542,7 +528,6 @@ textarea:focus {
   background: #f8f5ff;
 }
 
-/* ===== Barra de acciones pegajosa ===== */
 .agenC_actionBar {
   position: sticky;
   bottom: 0;
@@ -578,7 +563,6 @@ textarea:focus {
   display: inline-block;
 }
 
-/* Botones */
 .agenC_btn {
   background: linear-gradient(90deg, #d946ef, #f43f5e);
   color: #fff;
@@ -611,7 +595,6 @@ textarea:focus {
   background: #f9fafb;
 }
 
-/* ===== Responsivo ===== */
 @media (max-width: 1024px) {
   .agenC_grid {
     grid-template-columns: 1fr;
@@ -634,4 +617,21 @@ textarea:focus {
   .agenC_page {
     padding: 82px 12px 116px;
   }
+}
+.citaAd_priceValue {
+  background: #f4f4f4;
+  border-radius: 8px;
+  padding: 6px 10px;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.citaAd_priceValue.green {
+  background: rgba(0, 200, 100, 0.12);
+  color: #0a8040;
+}
+
+.citaAd_priceValue.red {
+  background: rgba(255, 0, 0, 0.12);
+  color: #b00020;
 }

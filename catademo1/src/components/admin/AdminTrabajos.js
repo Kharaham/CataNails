@@ -31,7 +31,6 @@ const AdminTrabajos = () => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
 
-  // Paginación
   const [currentPage, setCurrentPage] = useState(1);
   const trabajosPorPagina = 12;
   const indexOfLastTrabajo = currentPage * trabajosPorPagina;
@@ -172,7 +171,6 @@ const AdminTrabajos = () => {
         </p>
       </div>
 
-      {/* Card de carga */}
       <div className="Tadmin_card">
         <div className="Tadmin_cardHeader">Nuevo trabajo</div>
         <div className="Tadmin_cardBody">
@@ -241,7 +239,6 @@ const AdminTrabajos = () => {
         </div>
       </div>
 
-      {/* Listado */}
       <div className="Tadmin_listHeader">
         <h3 className="Tadmin_listTitle">Trabajos subidos</h3>
       </div>
@@ -284,7 +281,6 @@ const AdminTrabajos = () => {
         ))}
       </div>
 
-      {/* Paginación */}
       <div className="Tadmin_pagination">
         {Array.from({ length: totalPages }, (_, index) => (
           <Button
@@ -300,7 +296,6 @@ const AdminTrabajos = () => {
         ))}
       </div>
 
-      {/* Modal eliminar */}
       <Modal show={showModalDelete} onHide={() => setShowModalDelete(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Confirmar Eliminación</Modal.Title>
@@ -318,7 +313,6 @@ const AdminTrabajos = () => {
         </Modal.Footer>
       </Modal>
 
-      {/* Modal actualizar */}
       <Modal show={showModalUpdate} onHide={() => setShowModalUpdate(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Actualizar Trabajo</Modal.Title>
@@ -370,7 +364,6 @@ const AdminTrabajos = () => {
         </Modal.Footer>
       </Modal>
 
-      {/* Toast */}
       <Toast
         onClose={() => setShowToast(false)}
         show={showToast}

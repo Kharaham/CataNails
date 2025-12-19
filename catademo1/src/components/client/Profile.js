@@ -1,6 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react";
 import useAuth from "../../hooks/useAuth";
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
 import firebaseApp from "../../firebase/firebase";
 import {
   getFirestore,
@@ -38,18 +43,14 @@ const Profile = () => {
   const [citas, setCitas] = useState([]);
   const [selectedCita, setSelectedCita] = useState(null);
 
-  // reprogramación
   const [showCalendar, setShowCalendar] = useState(false);
   const [newDate, setNewDate] = useState("");
   const [newHour, setNewHour] = useState("");
 
-  // modal detalles
   const [showDetails, setShowDetails] = useState(false);
 
-  // confirmación cancelación
   const [confirmData, setConfirmData] = useState({ open: false, citaId: null });
 
-  // reseña
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [review, setReview] = useState("");
@@ -63,7 +64,10 @@ const Profile = () => {
       const citasRef = collection(firestore, "appointments");
       const q = query(citasRef, where("email", "==", user.email));
       const querySnapshot = await getDocs(q);
-      const fetched = querySnapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+      const fetched = querySnapshot.docs.map((d) => ({
+        id: d.id,
+        ...d.data(),
+      }));
       setCitas(fetched);
     };
 
@@ -101,7 +105,10 @@ const Profile = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData((p) => ({ ...p, [name]: type === "checkbox" ? checked : value }));
+    setFormData((p) => ({
+      ...p,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
   const handleImageUpload = (e) => {
@@ -124,7 +131,11 @@ const Profile = () => {
         const url = await getDownloadURL(imageRef);
         setFormData((p) => ({ ...p, profilePic: url }));
         setUploadPct(0);
-        setToast({ show: true, type: "success", msg: "Foto de perfil actualizada." });
+        setToast({
+          show: true,
+          type: "success",
+          msg: "Foto de perfil actualizada.",
+        });
       }
     );
   };
@@ -142,10 +153,18 @@ const Profile = () => {
         notiEmail: formData.notiEmail,
         notiWhats: formData.notiWhats,
       });
-      setToast({ show: true, type: "success", msg: "Perfil actualizado correctamente." });
+      setToast({
+        show: true,
+        type: "success",
+        msg: "Perfil actualizado correctamente.",
+      });
       setEditMode(false);
     } catch {
-      setToast({ show: true, type: "error", msg: "No se pudo guardar. Intenta de nuevo." });
+      setToast({
+        show: true,
+        type: "error",
+        msg: "No se pudo guardar. Intenta de nuevo.",
+      });
     } finally {
       setSaving(false);
     }
@@ -156,7 +175,6 @@ const Profile = () => {
     ? new Date(authUser.metadata.lastSignInTime).toLocaleString()
     : null;
 
-  // --- Reprogramación
   const handleRequestChangeHour = (c) => {
     setSelectedCita(c);
     setNewDate(c.date || "");
@@ -167,23 +185,32 @@ const Profile = () => {
     if (!selectedCita || !newDate || !newHour) return;
     try {
       const citaRef = doc(firestore, `appointments/${selectedCita.id}`);
-      await updateDoc(citaRef, { date: newDate, hour: newHour, changeRequestedBy: user?.uid });
+      await updateDoc(citaRef, {
+        date: newDate,
+        hour: newHour,
+        changeRequestedBy: user?.uid,
+      });
       setCitas((prev) =>
-        prev.map((c) => (c.id === selectedCita.id ? { ...c, date: newDate, hour: newHour } : c))
+        prev.map((c) =>
+          c.id === selectedCita.id ? { ...c, date: newDate, hour: newHour } : c
+        )
       );
       setToast({ show: true, type: "success", msg: "Cita reprogramada." });
     } catch {
-      setToast({ show: true, type: "error", msg: "No se pudo reprogramar la cita." });
+      setToast({
+        show: true,
+        type: "error",
+        msg: "No se pudo reprogramar la cita.",
+      });
     } finally {
       setShowCalendar(false);
       setSelectedCita(null);
     }
   };
 
-  // --- Detalles
   const openDetails = (c) => {
     setSelectedCita(c);
-    // preparar reseña si aplica
+
     setRating(c.rating || 0);
     setReview(c.review || "");
     setShowDetails(true);
@@ -195,7 +222,6 @@ const Profile = () => {
     setReview("");
   };
 
-  // --- Cancelación con confirmación
   const askCancel = (citaId) => setConfirmData({ open: true, citaId });
   const closeConfirm = () => setConfirmData({ open: false, citaId: null });
   const confirmCancel = async () => {
@@ -203,19 +229,32 @@ const Profile = () => {
     if (!citaId) return;
     try {
       const citaRef = doc(firestore, `appointments/${citaId}`);
-      await updateDoc(citaRef, { canceled: true, canceledBy: user?.uid, canceledAt: serverTimestamp() });
-      setCitas((prev) => prev.map((c) => (c.id === citaId ? { ...c, canceled: true } : c)));
+      await updateDoc(citaRef, {
+        canceled: true,
+        canceledBy: user?.uid,
+        canceledAt: serverTimestamp(),
+      });
+      setCitas((prev) =>
+        prev.map((c) => (c.id === citaId ? { ...c, canceled: true } : c))
+      );
       setToast({ show: true, type: "success", msg: "Cita cancelada." });
       if (selectedCita?.id === citaId) closeDetails();
     } catch {
-      setToast({ show: true, type: "error", msg: "No se pudo cancelar la cita." });
+      setToast({
+        show: true,
+        type: "error",
+        msg: "No se pudo cancelar la cita.",
+      });
     } finally {
       closeConfirm();
     }
   };
 
-  // --- Reseña
-  const canReview = !!(selectedCita && selectedCita.completed && !selectedCita.canceled);
+  const canReview = !!(
+    selectedCita &&
+    selectedCita.completed &&
+    !selectedCita.canceled
+  );
   const handleSubmitReview = async () => {
     if (!selectedCita || !canReview || submittingReview) return;
     setSubmittingReview(true);
@@ -229,13 +268,19 @@ const Profile = () => {
       });
       setCitas((prev) =>
         prev.map((c) =>
-          c.id === selectedCita.id ? { ...c, rating: rating || 0, review: review.trim() } : c
+          c.id === selectedCita.id
+            ? { ...c, rating: rating || 0, review: review.trim() }
+            : c
         )
       );
       setToast({ show: true, type: "success", msg: "¡Gracias por tu reseña!" });
       closeDetails();
     } catch {
-      setToast({ show: true, type: "error", msg: "No se pudo enviar la reseña." });
+      setToast({
+        show: true,
+        type: "error",
+        msg: "No se pudo enviar la reseña.",
+      });
     } finally {
       setSubmittingReview(false);
     }
@@ -243,44 +288,68 @@ const Profile = () => {
 
   return (
     <div className="profile">
-      {/* Cover */}
       <div className="profile-cover">
         <div className="profile-cover__inner">
           <div className="avatar">
             <img
-              src={formData.profilePic || "https://api.dicebear.com/8.x/initials/svg?seed=" + (formData.nombre || formData.email || "CN")}
+              src={
+                formData.profilePic ||
+                "https://api.dicebear.com/8.x/initials/svg?seed=" +
+                  (formData.nombre || formData.email || "CN")
+              }
               alt="Foto de perfil"
             />
             {editMode && (
               <label className="avatar-upload">
-                <input type="file" accept="image/*" onChange={handleImageUpload} />
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                />
                 Cambiar
               </label>
             )}
             {uploadPct > 0 && (
-              <div className="avatar-progress"><span style={{ width: `${uploadPct}%` }} /></div>
+              <div className="avatar-progress">
+                <span style={{ width: `${uploadPct}%` }} />
+              </div>
             )}
           </div>
 
           <div className="identity">
             <h1>{formData.nombre || "Tu nombre"}</h1>
             <div className="badges">
-              <span className={`badge ${authUser?.emailVerified ? "ok" : "warn"}`}>
+              <span
+                className={`badge ${authUser?.emailVerified ? "ok" : "warn"}`}
+              >
                 {emailVerified ? "Correo verificado" : "Correo no verificado"}
               </span>
               {user?.rol && <span className="badge role">{user.rol}</span>}
             </div>
             <p className="identity__email">{formData.email}</p>
-            {lastLogin && <p className="identity__meta">Último acceso: {lastLogin}</p>}
+            {lastLogin && (
+              <p className="identity__meta">Último acceso: {lastLogin}</p>
+            )}
           </div>
 
           <div className="header-actions">
             {!editMode ? (
-              <button className="btn primary" onClick={() => setEditMode(true)}>Editar perfil</button>
+              <button className="btn primary" onClick={() => setEditMode(true)}>
+                Editar perfil
+              </button>
             ) : (
               <div className="btn-row">
-                <button className="btn ghost" onClick={() => setEditMode(false)}>Cancelar</button>
-                <button className="btn primary" onClick={handleSave} disabled={saving || uploadPct > 0}>
+                <button
+                  className="btn ghost"
+                  onClick={() => setEditMode(false)}
+                >
+                  Cancelar
+                </button>
+                <button
+                  className="btn primary"
+                  onClick={handleSave}
+                  disabled={saving || uploadPct > 0}
+                >
                   {saving ? "Guardando…" : "Guardar cambios"}
                 </button>
               </div>
@@ -289,34 +358,44 @@ const Profile = () => {
         </div>
       </div>
 
-      {/* Stats */}
       <section className="profile-stats">
         <div className="stat">
           <span className="stat__label">Próxima cita</span>
           <span className="stat__value">
             {proximaCita
-              ? `${proximaCita.date} · ${proximaCita.hour} (${proximaCita.service || "-"})`
+              ? `${proximaCita.date} · ${proximaCita.hour} (${
+                  proximaCita.service || "-"
+                })`
               : "Sin próximas citas"}
           </span>
         </div>
         <div className="stat">
           <span className="stat__label">Completadas</span>
-          <span className="stat__value">{historialCitas.filter((c) => c.completed).length}</span>
+          <span className="stat__value">
+            {historialCitas.filter((c) => c.completed).length}
+          </span>
         </div>
         <div className="stat">
           <span className="stat__label">Canceladas</span>
-          <span className="stat__value">{historialCitas.filter((c) => c.canceled).length}</span>
+          <span className="stat__value">
+            {historialCitas.filter((c) => c.canceled).length}
+          </span>
         </div>
       </section>
 
       <div className="profile-grid">
-        {/* Datos personales */}
         <section className="card">
           <h2>Datos personales</h2>
           <div className="form-grid">
             <label className="field">
               <span>Nombre</span>
-              <input type="text" name="nombre" value={formData.nombre} onChange={handleChange} disabled={!editMode} />
+              <input
+                type="text"
+                name="nombre"
+                value={formData.nombre}
+                onChange={handleChange}
+                disabled={!editMode}
+              />
             </label>
             <label className="field">
               <span>Correo</span>
@@ -324,11 +403,22 @@ const Profile = () => {
             </label>
             <label className="field">
               <span>Teléfono</span>
-              <input type="tel" name="telefono" value={formData.telefono} onChange={handleChange} disabled={!editMode} />
+              <input
+                type="tel"
+                name="telefono"
+                value={formData.telefono}
+                onChange={handleChange}
+                disabled={!editMode}
+              />
             </label>
             <label className="field">
               <span>Servicio favorito</span>
-              <select name="preferencia" value={formData.preferencia} onChange={handleChange} disabled={!editMode}>
+              <select
+                name="preferencia"
+                value={formData.preferencia}
+                onChange={handleChange}
+                disabled={!editMode}
+              >
                 <option value="">Selecciona…</option>
                 <option value="Manicure">Manicure</option>
                 <option value="Pedicure">Pedicure</option>
@@ -337,17 +427,28 @@ const Profile = () => {
               </select>
             </label>
             <label className="toggle">
-              <input type="checkbox" name="notiEmail" checked={formData.notiEmail} onChange={handleChange} disabled={!editMode} />
+              <input
+                type="checkbox"
+                name="notiEmail"
+                checked={formData.notiEmail}
+                onChange={handleChange}
+                disabled={!editMode}
+              />
               <span>Recibir recordatorios por correo</span>
             </label>
             <label className="toggle">
-              <input type="checkbox" name="notiWhats" checked={formData.notiWhats} onChange={handleChange} disabled={!editMode} />
+              <input
+                type="checkbox"
+                name="notiWhats"
+                checked={formData.notiWhats}
+                onChange={handleChange}
+                disabled={!editMode}
+              />
               <span>Recibir recordatorios por WhatsApp</span>
             </label>
           </div>
         </section>
 
-        {/* Citas en progreso */}
         <section className="card">
           <div className="card-header">
             <h2>Citas en progreso</h2>
@@ -359,14 +460,30 @@ const Profile = () => {
             <ul className="appointments">
               {citasEnProgreso.map((c) => (
                 <li key={c.id} className="appt">
-                  <button className="appt__main appt-click" onClick={() => openDetails(c)}>
+                  <button
+                    className="appt__main appt-click"
+                    onClick={() => openDetails(c)}
+                  >
                     <strong>{c.service || "Servicio"}</strong>
-                    <span>{c.date || "—"} · {c.hour || "—"} · {c.mode || "—"}</span>
+                    <span>
+                      {c.date || "—"} · {c.hour || "—"} · {c.mode || "—"}
+                    </span>
                     {c.address && <small className="muted">{c.address}</small>}
                   </button>
                   <div className="appt__actions">
-                    <button className="btn ghost" onClick={() => handleRequestChangeHour(c)} disabled={c.completed}>Cambiar hora</button>
-                    <button className="btn danger" onClick={() => askCancel(c.id)}>Cancelar</button>
+                    <button
+                      className="btn ghost"
+                      onClick={() => handleRequestChangeHour(c)}
+                      disabled={c.completed}
+                    >
+                      Cambiar hora
+                    </button>
+                    <button
+                      className="btn danger"
+                      onClick={() => askCancel(c.id)}
+                    >
+                      Cancelar
+                    </button>
                   </div>
                 </li>
               ))}
@@ -374,7 +491,6 @@ const Profile = () => {
           )}
         </section>
 
-        {/* Historial */}
         <section className="card">
           <div className="card-header">
             <h2>Historial de citas</h2>
@@ -385,16 +501,31 @@ const Profile = () => {
           ) : (
             <ul className="appointments history">
               {historialCitas.map((c) => (
-                <li key={c.id} className={`appt ${c.canceled ? "is-canceled" : "is-done"}`}>
-                  <button className="appt__main appt-click" onClick={() => openDetails(c)}>
+                <li
+                  key={c.id}
+                  className={`appt ${c.canceled ? "is-canceled" : "is-done"}`}
+                >
+                  <button
+                    className="appt__main appt-click"
+                    onClick={() => openDetails(c)}
+                  >
                     <strong>{c.service || "Servicio"}</strong>
-                    <span>{c.date || "—"} · {c.hour || "—"} · {c.mode || "—"}</span>
+                    <span>
+                      {c.date || "—"} · {c.hour || "—"} · {c.mode || "—"}
+                    </span>
                     {!!c.rating && (
-                      <small className="muted">Tu calificación: {("★").repeat(c.rating)}{("☆").repeat(5 - c.rating)}</small>
+                      <small className="muted">
+                        Tu calificación: {"★".repeat(c.rating)}
+                        {"☆".repeat(5 - c.rating)}
+                      </small>
                     )}
                   </button>
                   <div className="appt__status">
-                    {c.canceled ? <span className="badge warn">Cancelada</span> : <span className="badge ok">Completada</span>}
+                    {c.canceled ? (
+                      <span className="badge warn">Cancelada</span>
+                    ) : (
+                      <span className="badge ok">Completada</span>
+                    )}
                   </div>
                 </li>
               ))}
@@ -403,7 +534,6 @@ const Profile = () => {
         </section>
       </div>
 
-      {/* Modal reprogramación */}
       {showCalendar && (
         <div className="calendar-modal-overlay" role="dialog" aria-modal="true">
           <div className="calendar-modal">
@@ -415,44 +545,96 @@ const Profile = () => {
               setSelectedHour={setNewHour}
             />
             <div className="modal-buttons">
-              <button onClick={handleConfirmHourChange} className="btn primary">Confirmar</button>
-              <button onClick={() => setShowCalendar(false)} className="btn ghost">Cancelar</button>
+              <button onClick={handleConfirmHourChange} className="btn primary">
+                Confirmar
+              </button>
+              <button
+                onClick={() => setShowCalendar(false)}
+                className="btn ghost"
+              >
+                Cancelar
+              </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Modal detalles de cita + reseña */}
       {showDetails && selectedCita && (
-        <div className="dialog-overlay" role="dialog" aria-modal="true" onClick={(e) => e.target.classList.contains("dialog-overlay") && closeDetails()}>
+        <div
+          className="dialog-overlay"
+          role="dialog"
+          aria-modal="true"
+          onClick={(e) =>
+            e.target.classList.contains("dialog-overlay") && closeDetails()
+          }
+        >
           <div className="dialog">
             <div className="dialog-header">
               <h3>Detalle de la cita</h3>
-              <button className="dialog-close" onClick={closeDetails} aria-label="Cerrar">×</button>
+              <button
+                className="dialog-close"
+                onClick={closeDetails}
+                aria-label="Cerrar"
+              >
+                ×
+              </button>
             </div>
 
             <div className="dialog-body">
               <div className="detail-grid">
-                <div><span className="label">Servicio</span><strong>{selectedCita.service || "-"}</strong></div>
-                <div><span className="label">Modalidad</span><span>{selectedCita.mode || "-"}</span></div>
-                <div><span className="label">Fecha</span><span>{selectedCita.date || "-"}</span></div>
-                <div><span className="label">Hora</span><span>{selectedCita.hour || "-"}</span></div>
-                {selectedCita.duration && <div><span className="label">Duración</span><span>{selectedCita.duration} min</span></div>}
-                {selectedCita.price && <div><span className="label">Precio</span><span>${selectedCita.price}</span></div>}
-                {selectedCita.address && <div className="col-span"><span className="label">Dirección</span><span>{selectedCita.address}</span></div>}
-                {selectedCita.notes && <div className="col-span"><span className="label">Notas</span><span>{selectedCita.notes}</span></div>}
+                <div>
+                  <span className="label">Servicio</span>
+                  <strong>{selectedCita.service || "-"}</strong>
+                </div>
+                <div>
+                  <span className="label">Modalidad</span>
+                  <span>{selectedCita.mode || "-"}</span>
+                </div>
+                <div>
+                  <span className="label">Fecha</span>
+                  <span>{selectedCita.date || "-"}</span>
+                </div>
+                <div>
+                  <span className="label">Hora</span>
+                  <span>{selectedCita.hour || "-"}</span>
+                </div>
+                {selectedCita.duration && (
+                  <div>
+                    <span className="label">Duración</span>
+                    <span>{selectedCita.duration} min</span>
+                  </div>
+                )}
+                {selectedCita.price && (
+                  <div>
+                    <span className="label">Precio</span>
+                    <span>${selectedCita.price}</span>
+                  </div>
+                )}
+                {selectedCita.address && (
+                  <div className="col-span">
+                    <span className="label">Dirección</span>
+                    <span>{selectedCita.address}</span>
+                  </div>
+                )}
+                {selectedCita.notes && (
+                  <div className="col-span">
+                    <span className="label">Notas</span>
+                    <span>{selectedCita.notes}</span>
+                  </div>
+                )}
               </div>
 
-              {/* Reseña si está completada y no cancelada */}
               {selectedCita.completed && !selectedCita.canceled && (
                 <div className="review">
                   <h4>Tu reseña</h4>
                   <div className="stars">
-                    {[1,2,3,4,5].map((n) => (
+                    {[1, 2, 3, 4, 5].map((n) => (
                       <button
                         key={n}
                         type="button"
-                        className={(hoverRating || rating) >= n ? "star on" : "star"}
+                        className={
+                          (hoverRating || rating) >= n ? "star on" : "star"
+                        }
                         onMouseEnter={() => setHoverRating(n)}
                         onMouseLeave={() => setHoverRating(0)}
                         onClick={() => setRating(n)}
@@ -470,7 +652,11 @@ const Profile = () => {
                     onChange={(e) => setReview(e.target.value)}
                   />
                   <div className="review-actions">
-                    <button className="btn primary" onClick={handleSubmitReview} disabled={submittingReview}>
+                    <button
+                      className="btn primary"
+                      onClick={handleSubmitReview}
+                      disabled={submittingReview}
+                    >
                       {submittingReview ? "Enviando…" : "Enviar reseña"}
                     </button>
                   </div>
@@ -480,10 +666,21 @@ const Profile = () => {
 
             <div className="dialog-footer">
               {!selectedCita.canceled && !selectedCita.completed && (
-                <button className="btn danger" onClick={() => askCancel(selectedCita.id)}>Cancelar cita</button>
+                <button
+                  className="btn danger"
+                  onClick={() => askCancel(selectedCita.id)}
+                >
+                  Cancelar cita
+                </button>
               )}
               {!selectedCita.canceled && !selectedCita.completed && (
-                <button className="btn ghost" onClick={() => { setShowDetails(false); handleRequestChangeHour(selectedCita); }}>
+                <button
+                  className="btn ghost"
+                  onClick={() => {
+                    setShowDetails(false);
+                    handleRequestChangeHour(selectedCita);
+                  }}
+                >
                   Reprogramar
                 </button>
               )}
@@ -492,23 +689,35 @@ const Profile = () => {
         </div>
       )}
 
-      {/* Confirmación cancelación */}
       {confirmData.open && (
-        <div className="confirm-overlay" role="dialog" aria-modal="true" onClick={(e) => e.target.classList.contains("confirm-overlay") && closeConfirm()}>
+        <div
+          className="confirm-overlay"
+          role="dialog"
+          aria-modal="true"
+          onClick={(e) =>
+            e.target.classList.contains("confirm-overlay") && closeConfirm()
+          }
+        >
           <div className="confirm">
             <h3>¿Cancelar cita?</h3>
             <p className="muted">Esta acción no se puede deshacer.</p>
             <div className="confirm-actions">
-              <button className="btn ghost" onClick={closeConfirm}>No, volver</button>
-              <button className="btn danger" onClick={confirmCancel}>Sí, cancelar</button>
+              <button className="btn ghost" onClick={closeConfirm}>
+                No, volver
+              </button>
+              <button className="btn danger" onClick={confirmCancel}>
+                Sí, cancelar
+              </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Toast */}
       {toast.show && (
-        <div className={`toast ${toast.type}`} onAnimationEnd={() => setToast((t) => ({ ...t, show: false }))}>
+        <div
+          className={`toast ${toast.type}`}
+          onAnimationEnd={() => setToast((t) => ({ ...t, show: false }))}
+        >
           {toast.msg}
         </div>
       )}

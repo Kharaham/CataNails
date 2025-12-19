@@ -23,21 +23,19 @@ import emailjs from "emailjs-com";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import "../../styles/components/appointment.css";
 
-/* ========== Utils ========== */
-// formateo CLP seguro (devuelve string o null)
 const fmtCLP = (v) => {
   if (v == null || v === "") return null;
   const n = Number(v);
   if (Number.isNaN(n)) return null;
   return new Intl.NumberFormat("es-CL").format(n);
 };
-// fechas 100% locales (evita corrimiento por UTC)
+
 const formatYMD = (d) => {
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, "0");
   const day = String(d.getDate()).padStart(2, "0");
   return `${y}-${m}-${day}`;
-};  
+};
 const parseLocalISO = (iso) => {
   const [y, m, d] = (iso || "").split("-").map(Number);
   return new Date(y, (m || 1) - 1, d || 1);
@@ -55,7 +53,6 @@ const useDebounced = (value, ms = 250) => {
   return v;
 };
 
-/* ========== Config ========== */
 const SERVICE_COLLECTIONS = [
   "manicure",
   "pedicure",
@@ -64,7 +61,6 @@ const SERVICE_COLLECTIONS = [
 ];
 const WORKING_HOURS = ["10:00", "12:00", "14:00", "16:00", "18:00", "20:00"];
 
-/* ========== Autocomplete ========== */
 function ServiceAutocomplete({ value, onSelect, services, loading }) {
   const [input, setInput] = useState(value || "");
   const [open, setOpen] = useState(false);
@@ -178,10 +174,9 @@ function ServiceAutocomplete({ value, onSelect, services, loading }) {
   );
 }
 
-/* ========== Calendario compacto (sin libs) ========== */
 const monthMatrix = (year, month) => {
   const first = new Date(year, month, 1);
-  const startDay = (first.getDay() + 6) % 7; // lunes=0
+  const startDay = (first.getDay() + 6) % 7;
   const grid = [];
   let day = new Date(year, month, 1 - startDay);
   for (let r = 0; r < 6; r++) {
@@ -302,7 +297,6 @@ function AgenCCalendar({
   );
 }
 
-/* ========== Vista principal ========== */
 const ScheduleAppointmentView = ({ allowPrefill = true }) => {
   const location = useLocation();
   const [searchParams] = useSearchParams();
@@ -311,9 +305,9 @@ const ScheduleAppointmentView = ({ allowPrefill = true }) => {
   const [loadingServices, setLoadingServices] = useState(true);
 
   const [bookedHours, setBookedHours] = useState([]);
-  const [blockedDays, setBlockedDays] = useState([]); // ["YYYY-MM-DD"]
-  const [blockedHours, setBlockedHours] = useState([]); // [{date, hour}]
-  const [selectedDate, setSelectedDate] = useState(""); // "YYYY-MM-DD"
+  const [blockedDays, setBlockedDays] = useState([]);
+  const [blockedHours, setBlockedHours] = useState([]);
+  const [selectedDate, setSelectedDate] = useState("");
 
   const [mode, setMode] = useState("");
   const [address, setAddress] = useState("");
@@ -333,7 +327,6 @@ const ScheduleAppointmentView = ({ allowPrefill = true }) => {
     comment: "",
   });
 
-  /* ---- Carga inicial ---- */
   useEffect(() => {
     (async () => {
       const auth = getAuth();
@@ -366,7 +359,6 @@ const ScheduleAppointmentView = ({ allowPrefill = true }) => {
         }
       }
     })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.state, searchParams, allowPrefill]);
 
   const applyPrefill = (pf) => {
@@ -386,7 +378,6 @@ const ScheduleAppointmentView = ({ allowPrefill = true }) => {
     });
   };
 
-  /* ---- Firestore ---- */
   const loadBlockedDays = async () => {
     const snap = await getDocs(collection(db, "blockedDays"));
     const days = [],
@@ -458,7 +449,6 @@ const ScheduleAppointmentView = ({ allowPrefill = true }) => {
     else setBookedHours([]);
   }, [selectedDate, blockedDays, getAvailableHours]);
 
-  /* ---- Handlers ---- */
   const onField = (e) =>
     setFormData((p) => ({ ...p, [e.target.name]: e.target.value }));
   const onSelectService = (s) => {
@@ -479,7 +469,6 @@ const ScheduleAppointmentView = ({ allowPrefill = true }) => {
     reader.readAsDataURL(f);
   };
 
-  /* ---- Disponibilidad ---- */
   const availableHoursForDate = useMemo(() => {
     if (!selectedDate || blockedDays.includes(selectedDate)) return [];
     return WORKING_HOURS.filter((hour) => {
@@ -516,7 +505,6 @@ const ScheduleAppointmentView = ({ allowPrefill = true }) => {
     [blockedDays, blockedHours, bookedHours]
   );
 
-  /* ---- Email ---- */
   const sendConfirmationEmail = (appointmentData) => {
     const [year, month, day] = appointmentData.date.split("-");
     const formattedDate = `${day}-${month}-${year}`;
@@ -542,7 +530,6 @@ CataNails.`,
     );
   };
 
-  /* ---- Submit ---- */
   const onSubmit = async (e) => {
     e.preventDefault();
     if (
@@ -588,7 +575,6 @@ CataNails.`,
         toast.warn("Cita creada, pero no se pudo enviar el correo.");
       }
 
-      // reset
       setFormData({
         name: "",
         email: "",
@@ -613,8 +599,105 @@ CataNails.`,
     }
   };
 
-  /* ---- Render ---- */
-  const priceRef = selectedService?.price ?? prefilledService?.price;
+  const [showPaypalModal, setShowPaypalModal] = useState(false);
+  const [paypalMode, setPaypalMode] = useState("abono");
+  const abrirPayPal = (mode) => {
+    setPaypalMode(mode);
+    setShowPaypalModal(true);
+  };
+  const priceRef = selectedService?.price ?? prefilledService?.price ?? 0;
+  const abono40 = Math.round(priceRef * 0.4);
+
+  useEffect(() => {
+    if (!showPaypalModal) return;
+
+    if (!window.paypal) {
+      console.error("PayPal SDK no cargado.");
+      toast.error("Error cargando PayPal.");
+      return;
+    }
+
+    const montoCLP = paypalMode === "abono" ? abono40 : priceRef;
+    const amountUSD = (montoCLP / 1000).toFixed(2);
+
+    window.paypal
+      .Buttons({
+        createOrder: function (data, actions) {
+          return actions.order.create({
+            purchase_units: [
+              {
+                amount: {
+                  value: amountUSD,
+                  currency_code: "USD",
+                },
+                description:
+                  paypalMode === "abono"
+                    ? `Abono 40% — ${formData.service}`
+                    : `Pago Completo — ${formData.service}`,
+              },
+            ],
+          });
+        },
+
+        onApprove: async function (data, actions) {
+          const details = await actions.order.capture();
+
+          try {
+            const montoCLP = paypalMode === "abono" ? abono40 : priceRef;
+            const amountUSD = (montoCLP / 1000).toFixed(2);
+
+            await addDoc(collection(db, "appointments"), {
+              ...formData,
+              mode,
+              address: mode === "Domicilio" ? address : "",
+              serviceId: selectedService?.id || prefilledService?.id || null,
+              servicePrice: priceRef,
+
+              abonoCLP: montoCLP,
+              abonoUSD: amountUSD,
+
+              paypalOrderID: data.orderID,
+
+              paymentStatus: paypalMode === "abono" ? "paid_40" : "paid_full",
+
+              createdAt: new Date().toISOString(),
+            });
+
+            toast.success("Pago recibido y cita agendada 🎉");
+
+            setShowPaypalModal(false);
+
+            setFormData({
+              name: "",
+              email: "",
+              date: "",
+              hour: "",
+              service: "",
+              comment: "",
+            });
+            setSelectedService(null);
+            setPrefilledService(null);
+            setImageFile(null);
+
+            setTimeout(() => setImagePreview(null), 150);
+
+            setMode("");
+            setAddress("");
+            setSelectedDate("");
+            setBookedHours([]);
+          } catch (e) {
+            console.error("Error:", e);
+            toast.error("No se pudo guardar la cita.");
+          }
+        },
+
+        onError: function (err) {
+          console.error(err);
+          toast.error("Hubo un error durante el pago.");
+        },
+      })
+      .render("#paypal-button-container");
+  }, [showPaypalModal, paypalMode]);
 
   return (
     <div className="agenC_page">
@@ -654,7 +737,6 @@ CataNails.`,
       >
         <section className="agenC_grid agenC_gridTight">
           <div className="agenC_colMain">
-            {/* Servicio */}
             <div className="agenC_field">
               <label>
                 Servicio <span className="agenC_req">*</span>
@@ -693,7 +775,6 @@ CataNails.`,
               )}
             </div>
 
-            {/* Calendario + Horas */}
             <div className="agenC_row agenC_rowTight">
               <div className="agenC_field">
                 <label>
@@ -747,7 +828,6 @@ CataNails.`,
               </div>
             </div>
 
-            {/* Modalidad */}
             <div className="agenC_row agenC_rowTight">
               <div className="agenC_field">
                 <label>
@@ -812,7 +892,6 @@ CataNails.`,
               )}
             </div>
 
-            {/* Datos personales */}
             <div className="agenC_row agenC_rowTight">
               <div className="agenC_field">
                 <label htmlFor="name">
@@ -844,7 +923,6 @@ CataNails.`,
               </div>
             </div>
 
-            {/* Foto + comentario */}
             <div className="agenC_row agenC_rowTight">
               <div className="agenC_field">
                 <label htmlFor="photo">Foto de referencia (opcional)</label>
@@ -890,7 +968,6 @@ CataNails.`,
             </div>
           </div>
 
-          {/* Resumen */}
           <aside className="agenC_colAside">
             <div className="agenC_summary agenC_card agenC_summaryTight">
               <h4>Resumen</h4>
@@ -935,7 +1012,6 @@ CataNails.`,
           </aside>
         </section>
 
-        {/* Barra acciones */}
         <div className="agenC_actionBar">
           <div className="agenC_actionBarInfo">
             <span className="agenC_badge tone">
@@ -961,11 +1037,66 @@ CataNails.`,
             >
               Revisar
             </button>
-            <button type="submit" className="agenC_btn" disabled={submitting}>
-              {submitting ? "Agendando…" : "Agendar Cita"}
+
+            <button
+              type="button"
+              className="agenC_btn"
+              onClick={() => abrirPayPal("abono")}
+              disabled={
+                !formData.name ||
+                !formData.email ||
+                !formData.date ||
+                !formData.hour ||
+                !formData.service
+              }
+            >
+              Abonar 40% y Agendar
+            </button>
+
+            <button
+              type="button"
+              className="agenC_btn agenC_btnFull"
+              onClick={() => abrirPayPal("full")}
+              disabled={
+                !formData.name ||
+                !formData.email ||
+                !formData.date ||
+                !formData.hour ||
+                !formData.service
+              }
+            >
+              Pagar Completo y Agendar
             </button>
           </div>
         </div>
+
+        {showPaypalModal && (
+          <div className="paypalModal">
+            <div className="paypalModal-content">
+              <h3>
+                {paypalMode === "abono" ? "Pagar Abono 40%" : "Pagar Total"}
+              </h3>
+
+              <p>Monto a pagar:</p>
+
+              <h2>
+                {paypalMode === "abono"
+                  ? `$${fmtCLP(abono40)}`
+                  : `$${fmtCLP(priceRef)}`}
+              </h2>
+
+              <div id="paypal-button-container"></div>
+
+              <button
+                className="agenC_ghost"
+                onClick={() => setShowPaypalModal(false)}
+                style={{ marginTop: "12px" }}
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        )}
 
         <ToastContainer />
       </form>

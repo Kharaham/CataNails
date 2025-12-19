@@ -12,13 +12,11 @@
   --citaAd-warn: #f59e0b;
   --citaAd-home: #fff3e0;
 
-  /* helpers */
   --citaAd-container-max: 1280px;
   --citaAd-gap: 1rem;
   --citaAd-focus: 0 0 0 3px rgba(216, 27, 96, 0.12);
 }
 
-/* Contenedor */
 .citaAd_container {
   padding: 1.25rem var(--citaAd-gap);
   background: var(--citaAd-bg);
@@ -27,7 +25,6 @@
   margin-inline: auto;
 }
 
-/* Título fluido */
 .citaAd_h2 {
   font-family: "Montserrat", system-ui, -apple-system, Segoe UI, Roboto,
     sans-serif;
@@ -37,7 +34,6 @@
   font-size: clamp(1.35rem, 1.1rem + 1vw, 1.75rem);
 }
 
-/* Header responsive */
 .citaAd_header {
   display: grid;
   grid-template-columns: 1fr auto;
@@ -52,7 +48,6 @@
   }
 }
 
-/* Stats */
 .citaAd_stats {
   display: grid;
   grid-template-columns: repeat(3, minmax(90px, 1fr));
@@ -87,7 +82,6 @@
   }
 }
 
-/* Toolbar sticky (segura en notch y barras) */
 .citaAd_toolbar {
   position: sticky;
   top: max(0px, env(safe-area-inset-top));
@@ -103,7 +97,6 @@
   margin-bottom: 1rem;
 }
 
-/* Filtro */
 .citaAd_filter {
   display: flex;
   gap: 0.75rem;
@@ -145,7 +138,6 @@
   color: #fff;
 }
 
-/* Tabs */
 .citaAd_tabs .nav-link {
   border: none !important;
   color: var(--citaAd-primary);
@@ -157,22 +149,17 @@
   background: var(--citaAd-primary) !important;
 }
 
-/* Alert */
 .citaAd_alert {
   border-radius: 14px;
   border: 1px solid var(--citaAd-border);
 }
 
-/* =======================
-   GRID RESPONSIVE DE CARDS
-   ======================= */
-/* Auto-fit para que las tarjetas fluyan solas */
 .citaAd_grid {
   display: grid;
   gap: 1rem;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 }
-/* Elimina dependencias de spans fijos en responsive */
+
 .citaAd_card {
   background: var(--citaAd-card);
   border: 1px solid var(--citaAd-border);
@@ -182,16 +169,14 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  min-width: 0; /* evita overflow en textos largos */
+  min-width: 0;
 }
 
-/* Modo domicilio */
 .citaAd_card--home {
   background: var(--citaAd-home);
   border-left: 6px solid #ffa726;
 }
 
-/* Ribbon de estado (se reduce en móvil) */
 .citaAd_ribbon {
   position: absolute;
   right: -46px;
@@ -223,7 +208,6 @@
   }
 }
 
-/* Imagen */
 .citaAd_imgWrap {
   width: 100%;
   aspect-ratio: 16/9;
@@ -236,7 +220,6 @@
   display: block;
 }
 
-/* Cuerpo */
 .citaAd_body {
   padding: 0.9rem 1rem 1rem;
   display: flex;
@@ -245,7 +228,6 @@
   flex: 1;
 }
 
-/* Encabezado de card */
 .citaAd_head {
   display: flex;
   align-items: start;
@@ -264,10 +246,9 @@
 .citaAd_email {
   font-size: 0.85rem;
   color: var(--citaAd-muted);
-  word-break: break-word; /* mejor que break-all para emails */
+  word-break: break-word;
 }
 
-/* Chips */
 .citaAd_tags {
   display: flex;
   flex-wrap: wrap;
@@ -307,7 +288,6 @@
   border-color: #ffe9a6;
 }
 
-/* Info en grilla */
 .citaAd_infoGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -332,7 +312,6 @@
   }
 }
 
-/* Acciones (mejor en móvil) */
 .citaAd_cardActions {
   margin-top: auto;
   display: grid;
@@ -351,7 +330,6 @@
   }
 }
 
-/* Precio */
 .citaAd_priceGroup {
   display: grid;
   gap: 4px;
@@ -364,7 +342,7 @@
 .citaAd_input {
   border: 1px solid var(--citaAd-border);
   border-radius: 10px;
-  height: 42px; /* touch friendly */
+  height: 42px;
   padding: 0 10px;
   outline: none;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
@@ -375,7 +353,6 @@
   box-shadow: var(--citaAd-focus);
 }
 
-/* Botones */
 .citaAd_btn--ok {
   background: var(--citaAd-ok) !important;
   border: none !important;
@@ -395,7 +372,6 @@
   color: #fff !important;
 }
 
-/* Empty state */
 .citaAd_empty {
   background: var(--citaAd-card);
   border: 1px dashed var(--citaAd-border);
@@ -405,13 +381,11 @@
   color: var(--citaAd-muted);
 }
 
-/* Compat (por si existe el contenedor legacy) */
 .citas-list-container {
   background: transparent;
   padding: 0;
 }
 
-/* Accesibilidad/motion */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation: none !important;
@@ -419,39 +393,36 @@
     scroll-behavior: auto !important;
   }
 }
-/* Grilla: las tarjetas se estiran a la misma altura */
+
 .citaAd_grid {
   display: grid;
   gap: 1rem;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  align-items: stretch; /* 🔑 hace que todas las cards tengan misma altura */
+  align-items: stretch;
 }
 
-/* Tarjeta ocupa toda la altura asignada por la grilla */
 .citaAd_card {
   display: flex;
   flex-direction: column;
-  min-height: 100%; /* 🔑 asegura que se estire */
+  min-height: 100%;
 }
 
-/* El body se expande y empuja las acciones hacia abajo */
 .citaAd_body {
-  flex: 1; /* 🔑 ocupa todo el espacio disponible */
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
 }
 
-/* Acciones siempre al final */
 .citaAd_cardActions {
-  margin-top: auto; /* 🔑 empuja acciones al fondo de la tarjeta */
+  margin-top: auto;
   display: block;
   grid-template-columns: 1fr auto auto auto;
   gap: 8px;
   align-items: end;
 }
 .citaAd_btn--tryon {
-  background-color: #6c63ff; /* ejemplo morado */
+  background-color: #6c63ff;
   color: white;
 }
 .citaAd_btn--tryon:hover {

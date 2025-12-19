@@ -1,4 +1,3 @@
-// src/components/admin/UserList.jsx
 import React, { useMemo, useState } from "react";
 
 const SafeText = ({ children }) => (
@@ -16,7 +15,7 @@ export default function UserList({
 }) {
   const [q, setQ] = useState("");
   const [minPts, setMinPts] = useState("");
-  const [sort, setSort] = useState("name"); // name | points
+  const [sort, setSort] = useState("name");
 
   const filtered = useMemo(() => {
     const term = q.trim().toLowerCase();
@@ -89,7 +88,6 @@ export default function UserList({
         </div>
       </div>
 
-      {/* Tabla / Lista */}
       <div className="table-responsive user-management-table-wrapper">
         <table className="table user-management-table mb-0">
           <thead>

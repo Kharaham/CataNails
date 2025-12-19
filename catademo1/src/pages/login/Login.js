@@ -34,7 +34,7 @@ import {
   FaEye,
   FaEyeSlash,
 } from "react-icons/fa";
-import "../../styles/components/login.css"; // puedes mantener la misma ruta
+import "../../styles/components/login.css";
 
 const loginC_auth = getAuth(firebaseApp);
 const loginC_firestore = getFirestore(firebaseApp);
@@ -73,7 +73,6 @@ export default function Login() {
     first && first.focus();
   }, [loginC_tab]);
 
-  // Redirección si ya está logueado
   useEffect(() => {
     const unsub = onAuthStateChanged(loginC_auth, async (user) => {
       if (user) {
@@ -112,7 +111,6 @@ export default function Login() {
     );
   };
 
-  // ===== LOGIN (sin exigir verificación) =====
   const loginC_handleLogin = async (e) => {
     e.preventDefault();
     loginC_setMessages({ error: "", success: "" });
@@ -137,7 +135,6 @@ export default function Login() {
     }
   };
 
-  // ===== REGISTER (redirige directo) =====
   const loginC_handleRegister = async (e) => {
     e.preventDefault();
     loginC_setMessages({ error: "", success: "" });
@@ -175,7 +172,6 @@ export default function Login() {
     }
   };
 
-  // ===== RESET (siempre intenta enviar) =====
   const loginC_handlePasswordReset = async (e) => {
     e.preventDefault();
     loginC_setMessages({ error: "", success: "" });
@@ -205,7 +201,6 @@ export default function Login() {
     }
   };
 
-  // ===== GOOGLE =====
   const loginC_handleGoogleSignIn = async () => {
     loginC_setMessages({ error: "", success: "" });
     loginC_setLoading(true);
@@ -274,7 +269,6 @@ export default function Login() {
                   </div>
                 </Col>
 
-                {/* Formulario */}
                 <Col md={7} xs={12} className="loginC-form-col">
                   <div className="loginC-header">
                     <h3 className="loginC-title">Bienvenida ✨</h3>
@@ -283,9 +277,7 @@ export default function Login() {
                     </p>
                   </div>
 
-                  {/* Ocultamos la navegación de Tabs, usamos los links de abajo */}
                   <Tabs>
-                    {/* -------- LOGIN -------- */}
                     <Tab eventKey="login" title="Iniciar sesión">
                       <Form
                         onSubmit={loginC_handleLogin}
@@ -335,7 +327,6 @@ export default function Login() {
                             </Button>
                           </InputGroup>
 
-                          {/* Olvidaste debajo del campo */}
                           <div className="d-flex justify-content-end mt-2">
                             <Button
                               variant="link"
@@ -346,7 +337,6 @@ export default function Login() {
                             </Button>
                           </div>
 
-                          {/* Recordarme */}
                           <div className="d-flex align-items-center gap-2 mt-2">
                             <Form.Check
                               type="checkbox"
@@ -360,7 +350,6 @@ export default function Login() {
                           </div>
                         </Form.Group>
 
-                        {/* Acciones */}
                         <div className="loginC-form-actions">
                           <Button
                             className="loginC-button w-100"
@@ -402,7 +391,6 @@ export default function Login() {
                       </Form>
                     </Tab>
 
-                    {/* -------- REGISTRO -------- */}
                     <Tab eventKey="register" title="Crear cuenta">
                       <Form
                         onSubmit={loginC_handleRegister}
@@ -555,7 +543,6 @@ export default function Login() {
                       </Form>
                     </Tab>
 
-                    {/* -------- RECUPERAR -------- */}
                     <Tab eventKey="reset" title="Recuperar">
                       <Form
                         onSubmit={loginC_handlePasswordReset}
